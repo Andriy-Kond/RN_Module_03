@@ -14,7 +14,6 @@ import { KeyboardStateProvider } from "./utils/keyboardContext";
 
 export default function App() {
 	const [fontsLoaded] = useFonts({
-		// "Inter-Black": require("./assets/fonts/Inter-Black.otf"),
 		regular400,
 		medium500,
 		bold700,

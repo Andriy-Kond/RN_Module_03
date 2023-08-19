@@ -1,15 +1,14 @@
-// Для роботи із firebase обовʼязково треба ініціалізувати проект
+// Project initialization
 import { initializeApp } from "firebase/app";
-// Функція для підключення авторизації в проект
+// Connection db authorization to project
 import { getAuth } from "firebase/auth";
-// Функція для підключення сховища файлів в проект
+// Connection db storage to project
 import { getStorage } from "firebase/storage";
 
 import "firebase/storage";
 import "firebase/firestore";
-// import { getAnalytics } from "firebase/analytics";
 
-// Функції для підключення бази даних у проект
+// Connection different db in project
 import { getFirestore } from "firebase/firestore";
 // import { getDatabase } from "firebase/database";
 
@@ -31,4 +30,3 @@ export const auth = getAuth(app);
 export const dbFirestore = getFirestore(app);
 export const storage = getStorage(app);
 // export const dbDatabase = getDatabase(app);
-// export const analytics = getAnalytics(app);

@@ -19,8 +19,8 @@ import {
 // components
 import { useButtonState } from "../utils/tabBtnsContext";
 
-const MainStack = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
+const MainStack = createBottomTabNavigator();
 
 function AuthNavigation() {
 	return (
@@ -104,12 +104,6 @@ function TabsNavigation() {
 				}}
 			/>
 		</MainStack.Navigator>
-	);
-}
-
-function CustomProfileButton() {
-	return ({ focused, color, size }) => (
-		<SimpleLineIcons name="user" size={size} color={color} />
 	);
 }
 
