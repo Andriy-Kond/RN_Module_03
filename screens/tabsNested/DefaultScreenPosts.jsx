@@ -35,7 +35,7 @@ export default function DefaultScreenPosts() {
 
 	return (
 		<View style={styles.container}>
-			<Text>It is PostScreen</Text>
+			<Text>It is PostsScreen</Text>
 			<FlatList
 				data={posts}
 				keyExtractor={(item, indx) => item.id}

@@ -2,14 +2,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+// styles
+import { styles } from "./routerStyles";
+
 // screens
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegsisterScreen";
-import PostScreen from "../screens/tabs/PostScreen";
+import PostsScreen from "../screens/tabs/PostsScreen";
 import CreateScreen from "../screens/tabs/CreateScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
 
-// icons
+//! НЕ ІМПОРТОВАНИЙ ПАКЕТ! icons
 import {
 	FontAwesome5,
 	MaterialCommunityIcons,
@@ -18,15 +21,28 @@ import {
 
 // components
 import { useButtonState } from "../utils/tabBtnsContext";
+import { BtnGoBack } from "../components/btns/BtnGoBack";
+import { BtnLogout } from "../components/btns/BtnLogout";
 
 const AuthStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
 
 function AuthNavigation() {
 	return (
-		<AuthStack.Navigator screenOptions={{ headerShown: false }}>
-			<AuthStack.Screen name="Login" component={LoginScreen} />
-			<AuthStack.Screen name="Register" component={RegisterScreen} />
+		<AuthStack.Navigator
+			initialRouteName="Login"
+			screenOptions={{ headerShown: false }} // settings for all screens
+		>
+			<AuthStack.Screen
+				name="Login"
+				component={LoginScreen}
+				options={{ title: "Login screen" }} // settings for current screen
+			/>
+			<AuthStack.Screen
+				name="Register"
+				component={RegisterScreen}
+				options={{ title: "Registration screen" }}
+			/>
 		</AuthStack.Navigator>
 	);
 }
@@ -37,14 +53,19 @@ function TabsNavigation() {
 	return (
 		<MainStack.Navigator
 			screenOptions={{
-				// tabBarHideOnKeyboard: true, // Встановлюємо властивість для таб-бара
-				tabBarShowLabel: false,
-				headerShown: false,
+				// tabBarHideOnKeyboard: true, // Hide tab-bar when keyboard shown
+				tabBarShowLabel: false, // Show title on bottom tab-buttons
+				headerStyle: styles.headerStyle,
 			}}>
 			<MainStack.Screen
-				name="Post"
-				component={PostScreen}
+				name="Posts"
+				component={PostsScreen}
 				options={{
+					title: "Публікації",
+					headerTitleStyle: styles.headerTitle,
+					headerTitleAlign: "center",
+					headerRight: () => <BtnLogout buttonStyle={styles.container} />,
+
 					tabBarIcon: ({ focused, color, size }) => (
 						<MaterialCommunityIcons
 							name="postage-stamp"
@@ -56,8 +77,8 @@ function TabsNavigation() {
 				listeners={{
 					tabPress: (e) => {
 						if (!isTabButtonsEnabled) {
-							e.preventDefault(); // Заборонити перехід на інший екран
-							// someFn(); // Викликати функцію перед переходом
+							e.preventDefault(); // Prohibit switching to another screen
+							// someFn(); // Call function before transition to another screen
 						}
 					},
 				}}
@@ -66,6 +87,11 @@ function TabsNavigation() {
 				name="Create"
 				component={CreateScreen}
 				options={{
+					title: "Створити публікацію",
+					headerTitleStyle: styles.headerTitle,
+					headerTitleAlign: "center",
+					headerLeft: () => <BtnGoBack />,
+
 					tabBarIcon: ({ focused, color, size }) => (
 						<FontAwesome5
 							name="plus"
@@ -74,7 +100,7 @@ function TabsNavigation() {
 						/>
 					),
 				}}
-				unmountOnBlur={true}
+				unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
 				listeners={{
 					tabPress: (e) => {
 						if (!isTabButtonsEnabled) {
@@ -87,6 +113,10 @@ function TabsNavigation() {
 				name="Profile"
 				component={ProfileScreen}
 				options={{
+					title: "Профіль",
+					headerTitleAlign: "center",
+					headerShown: false,
+
 					tabBarIcon: ({ focused, color, size }) => (
 						<SimpleLineIcons
 							name="user"

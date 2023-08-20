@@ -1,4 +1,5 @@
 import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 // fonts
 import { useFonts } from "expo-font";
@@ -7,7 +8,6 @@ import medium500 from "./assets/fonts/Roboto-Medium-500.ttf";
 import bold700 from "./assets/fonts/Roboto-Bold-700.ttf";
 
 // components
-import { store } from "./redux/store";
 import Main from "./components/Main";
 import { ButtonStateProvider } from "./utils/tabBtnsContext";
 import { KeyboardStateProvider } from "./utils/keyboardContext";
