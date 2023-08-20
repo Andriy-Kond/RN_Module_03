@@ -1,12 +1,19 @@
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { authSingOutUser } from "../../redux/auth/authOperations";
 
 export function BtnLogout({ buttonStyle }) {
-	const navigation = useNavigation();
+	// const navigation = useNavigation();
+	const dispatch = useDispatch();
+
+	// const handleLogout = () => {
+	// 	navigation.navigate("Login");
+	// };
 
 	const handleLogout = () => {
-		navigation.navigate("Login");
+		dispatch(authSingOutUser());
 	};
 
 	return (

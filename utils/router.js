@@ -12,7 +12,6 @@ import PostsScreen from "../screens/tabs/PostsScreen";
 import CreateScreen from "../screens/tabs/CreateScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
 
-//! НЕ ІМПОРТОВАНИЙ ПАКЕТ! icons
 import {
 	FontAwesome5,
 	MaterialCommunityIcons,

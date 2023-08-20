@@ -9,6 +9,7 @@ import { authStateChangeUser } from "../redux/auth/authOperations";
 
 // Components
 import { InputsContextContainer } from "./inputs/InputsContextContainer";
+import { InitStateProvider } from "../utils/initStateContext";
 
 const Main = () => {
 	const dispatch = useDispatch();
@@ -22,12 +23,14 @@ const Main = () => {
 	const routing = useMyRoutes(stateChange);
 
 	return (
-		<InputsContextContainer>
+		// <InputsContextContainer>
+		<InitStateProvider>
 			<NavigationContainer>
 				<StatusBar />
 				{routing}
 			</NavigationContainer>
-		</InputsContextContainer>
+		</InitStateProvider>
+		// </InputsContextContainer>
 	);
 };
 

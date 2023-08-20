@@ -4,10 +4,13 @@ import { inputsReducer, inputsInitialState } from "./inputsReducer";
 export const InputsStateContext = createContext();
 
 export const InputsContextContainer = ({ children }) => {
-	const [inputsState, dispatch] = useReducer(inputsReducer, inputsInitialState);
+	const [inputsState, inputsStateDispatch] = useReducer(
+		inputsReducer,
+		inputsInitialState
+	);
 
 	return (
-		<InputsStateContext.Provider value={{ inputsState, dispatch }}>
+		<InputsStateContext.Provider value={{ inputsState, inputsStateDispatch }}>
 			{children}
 		</InputsStateContext.Provider>
 	);
