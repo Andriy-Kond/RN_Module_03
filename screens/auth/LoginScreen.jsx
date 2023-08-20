@@ -22,14 +22,15 @@ import { useKeyboardState } from "../../utils/keyboardContext";
 // import { BtnMain } from "../../components/btns/BtnMain";
 // import { BtnSecond } from "../../components/btns/BtnSecond";
 import bgImage from "../../assets/img/bg_photo.jpg";
+import { useInitStateContext } from "../../utils/initStateContext";
 
-const initialState = {
-	nickname: "",
-	email: "",
-	password: "",
-	currentFocusInput: "",
-	showPassword: false,
-};
+// const initialState = {
+// 	nickname: "",
+// 	email: "",
+// 	password: "",
+// 	currentFocusInput: "",
+// 	showPassword: false,
+// };
 
 export default function LoginScreen() {
 	const { initialState, initStateDispatch } = useInitStateContext();
@@ -37,34 +38,39 @@ export default function LoginScreen() {
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 	// const navigation = useNavigation();
-	const [state, setState] = useState(initialState);
+	// const [state, setState] = useState(initialState);
+
+	// const handleNicknameChange = (newNickname) => {
+	// 	dispatch({ type: "UPDATE_FIELD", field: "nickname", value: newNickname });
+	// };
 
 	const submitForm = () => {
 		hideKB();
-		dispatch(authSingInUser(state));
-		setState(initialState);
+		dispatch(authSingInUser(initialState));
+		initStateDispatch({ type: "RESET_FIELDS" });
 	};
 
 	const mainBtnText = "Увійти";
 	const secondBtnText = "Немає акаунту? Зареєструватися";
+	const loginScreen = true;
 
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
+				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
+
 				<KeyboardAvoidingView
 					style={styles.kbAvoidingContainer}
 					behavior={Platform.OS === "ios" ? "padding" : null}>
-					<Image style={styles.imgBg} source={bgImage} resizeMode="cover" />
 					<AuthForm
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						// initialState={initialState}
 						submitForm={submitForm}
+						loginScreen={loginScreen}
 						// style={styles.loginFormContainer}
 					/>
 				</KeyboardAvoidingView>
-
-				<StatusBar style="auto" />
 			</View>
 		</TouchableWithoutFeedback>
 	);

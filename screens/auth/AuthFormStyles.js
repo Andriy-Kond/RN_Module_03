@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
+const regImgHeight = 120;
+
 export const styles = StyleSheet.create({
+	// Login styles
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
@@ -25,12 +28,48 @@ export const styles = StyleSheet.create({
 		width: "100%",
 	},
 
-	// Form styles
+	// Register styles
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+	},
+
+	kbAvoidingContainer: {
+		flex: 1,
+		justifyContent: "flex-end",
+		alignItems: "center",
+		width: "100%",
+	},
+
+	registrationContainer: {
+		flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "flex-end",
+	},
+
+	keyboardContainer: {
+		width: "100%",
+	},
+
+	imgBg: {
+		flex: 1,
+		position: "absolute",
+		resizeMode: "cover",
+		justifyContent: "center",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		width: "100%",
+	},
+
+	// form styles
 	form: {
 		width: "100%",
 		paddingLeft: 16,
 		paddingRight: 16,
-		paddingBottom: 144,
+		// paddingBottom: 112,
+		// paddingBottom: 144,
 
 		alignItems: "center",
 		backgroundColor: "#fff",
@@ -40,8 +79,37 @@ export const styles = StyleSheet.create({
 		justifyContent: "flex-end",
 	},
 
+	regImageContainer: {
+		position: "relative",
+	},
+
+	regEmptyImg: {
+		position: "absolute",
+		width: regImgHeight,
+		height: regImgHeight,
+
+		borderRadius: 16,
+		backgroundColor: "#F6F6F6",
+
+		top: 0,
+		left: 0,
+
+		transform: [
+			{ translateY: -regImgHeight / 2 },
+			{ translateX: -regImgHeight / 2 },
+		],
+	},
+
+	regAddImgBtn: {
+		position: "absolute",
+		top: 20,
+		transform: [{ translateX: regImgHeight / 2 - 12.5 }],
+
+		width: 25,
+		height: 25,
+	},
+
 	formTitle: {
-		marginTop: 32,
 		marginBottom: 32,
 		color: "#212121",
 		fontFamily: "RobotoMedium500",

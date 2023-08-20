@@ -22,6 +22,10 @@ function initStateReducer(state, action) {
 	switch (action.type) {
 		case "UPDATE_FIELD":
 			return { ...state, [action.field]: action.value };
+		case "TOGGLE_FIELD":
+			return { ...state, [action.field]: !state[action.field] };
+		case "RESET_FIELDS":
+			return initialState;
 		default:
 			return state;
 	}
@@ -29,13 +33,13 @@ function initStateReducer(state, action) {
 
 // Компонент-постачальник контексту
 export function InitStateProvider({ children }) {
-	const [initState, initStateDispatch] = useReducer(
+	const [initialState, initStateDispatch] = useReducer(
 		initStateReducer,
 		initialState
 	);
 
 	return (
-		<InitStateContext.Provider value={{ initState, initStateDispatch }}>
+		<InitStateContext.Provider value={{ initialState, initStateDispatch }}>
 			{children}
 		</InitStateContext.Provider>
 	);

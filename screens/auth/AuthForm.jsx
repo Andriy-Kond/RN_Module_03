@@ -1,70 +1,140 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import Svg, { Circle, Path } from "react-native-svg";
 
-import { styles } from "./LoginScreenStyles";
+import { styles } from "./AuthFormStyles";
 
-import { authSingInUser } from "../../redux/auth/authOperations";
 import { useKeyboardState } from "../../utils/keyboardContext";
 import { useInitStateContext } from "../../utils/initStateContext";
 
 import { BtnMain } from "../../components/btns/BtnMain";
 import { BtnSecond } from "../../components/btns/BtnSecond";
+import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export function AuthForm({
 	mainBtnText,
 	secondBtnText,
-	// initialState,
 	submitForm,
+	loginScreen,
 }) {
 	const { initialState, initStateDispatch } = useInitStateContext();
-
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
-	// const dispatch = useDispatch();
 	const navigation = useNavigation();
-	// const [state, setState] = useState(initialState);
-
-	// const submitForm = () => {
-	// 	hideKB();
-	// 	dispatch(authSingInUser(state));
-	// 	setState(initialState);
-	// };
-
+	// console.log("initialState?.showPassword:", initialState.showPassword);
 	return (
-		<View style={[styles.form, isKeyboardShown && { paddingBottom: 32 }]}>
-			<Text style={styles.formTitle}>Увійти</Text>
+		<View
+			style={[
+				styles.form,
+				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
+				isKeyboardShown && { paddingBottom: 16 },
+			]}>
+			{!loginScreen && (
+				<View style={styles.regImageContainer}>
+					<Image style={styles.regEmptyImg} source={regEmptyImg} />
+
+					<TouchableOpacity
+						style={[styles.regAddImgBtn]}
+						onPress={() => console.log("Button regAddImgBtn pressed")}>
+						<Svg
+							width="25"
+							height="25"
+							viewBox="0 0 25 25"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<Circle cx="12.5" cy="12.5" r="12" fill="#fff" stroke="#FF6C00" />
+							<Path
+								fillRule="evenodd"
+								clipRule="evenodd"
+								d="M13 6H12V12H6V13H12V19H13V13H19V12H13V6Z"
+								fill="#FF6C00"
+							/>
+						</Svg>
+					</TouchableOpacity>
+				</View>
+			)}
+
+			<Text
+				style={[
+					styles.formTitle,
+					loginScreen ? { marginTop: 32 } : { marginTop: 92 },
+				]}>
+				{loginScreen ? "Увійти" : "Реєстрація"}
+			</Text>
 
 			<View
 				style={{
 					...styles.inputsWrapper,
 				}}>
+				{!loginScreen && (
+					<TextInput
+						autoFocus
+						value={initialState?.nickname}
+						placeholder={"Логін"}
+						placeholderTextColor={"#BDBDBD"}
+						style={[
+							styles.input,
+							initialState?.currentFocusInput === "nickname" &&
+								styles.inputFocused,
+							// inputsState.inputs["loginInput"] ? styles.inputFocused : null,
+						]}
+						onSubmitEditing={hideKB} // press OK key on KB
+						onFocus={() => {
+							setIsKeyboardShown(true);
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "nickname",
+							});
+						}}
+						onBlur={() =>
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "",
+							})
+						}
+						onChangeText={(value) =>
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "nickname",
+								value,
+							})
+						}
+					/>
+				)}
+
 				<TextInput
-					autoFocus
-					value={state.email}
+					autoFocus={loginScreen}
+					value={initialState?.email}
 					placeholder={"Адреса електронної пошти"}
 					placeholderTextColor={"#BDBDBD"}
 					keyboardType="email-address"
 					style={[
 						styles.input,
-						state.currentFocusInput === "email" && styles.inputFocused,
+						initialState?.currentFocusInput === "email" && styles.inputFocused,
 					]}
 					onSubmitEditing={hideKB} // press OK key on KB
 					onFocus={() => {
 						setIsKeyboardShown(true);
-						setState((prevState) => ({
-							...prevState,
-							currentFocusInput: "email",
-						}));
+						initStateDispatch({
+							type: "UPDATE_FIELD",
+							field: "currentFocusInput",
+							value: "email",
+						});
 					}}
 					onBlur={() =>
-						setState((prevState) => ({
-							...prevState,
-							currentFocusInput: "",
-						}))
+						initStateDispatch({
+							type: "UPDATE_FIELD",
+							field: "currentFocusInput",
+							value: "",
+						})
 					}
 					onChangeText={(value) =>
-						setState((prevState) => ({ ...prevState, email: value }))
+						initStateDispatch({
+							type: "UPDATE_FIELD",
+							field: "email",
+							value,
+						})
 					}
 				/>
 
@@ -72,44 +142,51 @@ export function AuthForm({
 					style={[
 						styles.input,
 						styles.passwordInputContainer,
-						state.currentFocusInput === "password" && styles.inputFocused,
+						initialState?.currentFocusInput === "password" &&
+							styles.inputFocused,
 					]}>
 					<TextInput
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
-						value={state.password}
+						value={initialState?.password}
 						style={styles.passwordInput}
-						secureTextEntry={!state.showPassword}
+						secureTextEntry={!initialState?.showPassword}
 						onSubmitEditing={hideKB}
 						onFocus={() => {
 							setIsKeyboardShown(true);
-							setState((prevState) => ({
-								...prevState,
-								currentFocusInput: "password",
-							}));
+
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "password",
+							});
 						}}
 						onBlur={() =>
-							setState((prevState) => ({
-								...prevState,
-								currentFocusInput: "",
-							}))
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "",
+							})
 						}
 						onChangeText={(value) => {
-							setState((prevState) => {
-								return { ...prevState, password: value };
+							initStateDispatch({
+								type: "UPDATE_FIELD",
+								field: "password",
+								value,
 							});
 						}}
 					/>
+
 					<TouchableOpacity
 						name="passwordBtn"
 						onPress={() =>
-							setState((prevState) => ({
-								...prevState,
-								showPassword: !prevState.showPassword,
-							}))
+							initStateDispatch({
+								type: "TOGGLE_FIELD",
+								field: "showPassword",
+							})
 						}>
 						<Text style={styles.passwordToggleText}>
-							{state.showPassword ? "Приховати" : "Показати"}
+							{initialState?.showPassword ? "Приховати" : "Показати"}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -125,7 +202,9 @@ export function AuthForm({
 						<BtnSecond
 							title={secondBtnText}
 							onPress={() => {
-								navigation.navigate("Register");
+								loginScreen
+									? navigation.navigate("Register")
+									: navigation.navigate("Login");
 							}}
 						/>
 					</>
