@@ -3,9 +3,9 @@
 // todo: додати кнопки наближення і віддалення на мапі
 // todo: Об'єднати логінскрін і регітрскрін
 
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
 import {
 	Image,
 	StyleSheet,
@@ -13,20 +13,23 @@ import {
 	TouchableOpacity,
 	View,
 	TextInput,
+	TouchableWithoutFeedback,
 } from "react-native";
+
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraType } from "expo-camera";
 
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 import { dbFirestore, storage } from "../../firebase/config";
+
 import { uriToBlob } from "../../utils/uriToBlob";
 import { useButtonState } from "../../utils/tabBtnsContext";
-
 import { useKeyboardState } from "../../utils/keyboardContext";
-import { TouchableWithoutFeedback } from "react-native";
+
+import { ModalWindow } from "../../components/ModalWindow";
+import { useModalContext } from "../../utils/modalWindowContext";
 
 export default function CreateScreen() {
 	const { hideKB } = useKeyboardState();
@@ -56,6 +59,8 @@ export default function CreateScreen() {
 	const [imageTitle, setImageTitle] = useState("");
 	const { userId, nickname } = useSelector((state) => state.auth);
 
+	const { showModalMessagePopup } = useModalContext();
+
 	// request accesses to camera, location and mediaLibrary
 	useEffect(() => {
 		(async () => {
@@ -84,7 +89,15 @@ export default function CreateScreen() {
 				// Обробка фото
 				if (photo && photo.uri) {
 					setCapturedPhoto(photo.uri);
-					await MediaLibrary.createAssetAsync(photo.uri);
+
+					if (permissionMediaLibrary) {
+						await MediaLibrary.createAssetAsync(photo.uri);
+					} else {
+						showModalMessagePopup(
+							"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку"
+						);
+					}
+
 					if (permissionLocation) {
 						const newLocation = await Location.getCurrentPositionAsync();
 						setCapturedLocation(newLocation);
@@ -219,6 +232,8 @@ export default function CreateScreen() {
 						</Text>
 					</TouchableOpacity>
 				</View>
+
+				<ModalWindow />
 			</View>
 		</TouchableWithoutFeedback>
 	);

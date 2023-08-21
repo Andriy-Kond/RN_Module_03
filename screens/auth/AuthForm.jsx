@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
@@ -11,16 +12,45 @@ import { BtnMain } from "../../components/btns/BtnMain";
 import { BtnSecond } from "../../components/btns/BtnSecond";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
+import { dbFirestore, storage } from "../../firebase/config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
+import { useModalContext } from "../../utils/modalWindowContext";
+import { uriToBlob } from "../../utils/uriToBlob";
+import { useDispatch, useSelector } from "react-redux";
+import { initStateReducer } from "../../redux/auth/authOperations";
+
 export function AuthForm({
 	mainBtnText,
 	secondBtnText,
 	submitForm,
 	loginScreen,
 }) {
-	const { initialState, initStateDispatch } = useInitStateContext();
-	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const navigation = useNavigation();
-	// console.log("initialState?.showPassword:", initialState.showPassword);
+	// const { initialState, initStateDispatch } = useInitStateContext();
+	const initialState = useSelector((state) => state.auth.initState);
+	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
+	const { showModalMessagePopup } = useModalContext();
+	const [urlAvatar, setUrlAvatar] = useState(null);
+	const dispatch = useDispatch();
+
+	async function addAvatar() {
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [3, 3],
+			quality: 1,
+		});
+
+		if (!result.canceled) {
+			setUrlAvatar(result.assets[0].uri);
+		} else {
+			showModalMessagePopup("Доступ до сховища не наданий");
+		}
+	}
+
 	return (
 		<View
 			style={[
@@ -30,11 +60,12 @@ export function AuthForm({
 			]}>
 			{!loginScreen && (
 				<View style={styles.regImageContainer}>
-					<Image style={styles.regEmptyImg} source={regEmptyImg} />
+					<Image
+						style={styles.avatarImg}
+						source={urlAvatar ? { uri: urlAvatar } : regEmptyImg}
+					/>
 
-					<TouchableOpacity
-						style={[styles.regAddImgBtn]}
-						onPress={() => console.log("Button regAddImgBtn pressed")}>
+					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
 						<Svg
 							width="25"
 							height="25"
@@ -75,30 +106,35 @@ export function AuthForm({
 							styles.input,
 							initialState?.currentFocusInput === "nickname" &&
 								styles.inputFocused,
-							// inputsState.inputs["loginInput"] ? styles.inputFocused : null,
 						]}
 						onSubmitEditing={hideKB} // press OK key on KB
 						onFocus={() => {
 							setIsKeyboardShown(true);
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "currentFocusInput",
-								value: "nickname",
-							});
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "currentFocusInput",
+									value: "nickname",
+								})
+							);
 						}}
 						onBlur={() =>
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "currentFocusInput",
-								value: "",
-							})
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "currentFocusInput",
+									value: "",
+								})
+							)
 						}
 						onChangeText={(value) =>
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "nickname",
-								value,
-							})
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "nickname",
+									value,
+								})
+							)
 						}
 					/>
 				)}
@@ -116,25 +152,31 @@ export function AuthForm({
 					onSubmitEditing={hideKB} // press OK key on KB
 					onFocus={() => {
 						setIsKeyboardShown(true);
-						initStateDispatch({
-							type: "UPDATE_FIELD",
-							field: "currentFocusInput",
-							value: "email",
-						});
+						dispatch(
+							initStateReducer({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "email",
+							})
+						);
 					}}
 					onBlur={() =>
-						initStateDispatch({
-							type: "UPDATE_FIELD",
-							field: "currentFocusInput",
-							value: "",
-						})
+						dispatch(
+							initStateReducer({
+								type: "UPDATE_FIELD",
+								field: "currentFocusInput",
+								value: "",
+							})
+						)
 					}
 					onChangeText={(value) =>
-						initStateDispatch({
-							type: "UPDATE_FIELD",
-							field: "email",
-							value,
-						})
+						dispatch(
+							initStateReducer({
+								type: "UPDATE_FIELD",
+								field: "email",
+								value,
+							})
+						)
 					}
 				/>
 
@@ -155,35 +197,43 @@ export function AuthForm({
 						onFocus={() => {
 							setIsKeyboardShown(true);
 
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "currentFocusInput",
-								value: "password",
-							});
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "currentFocusInput",
+									value: "password",
+								})
+							);
 						}}
 						onBlur={() =>
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "currentFocusInput",
-								value: "",
-							})
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "currentFocusInput",
+									value: "",
+								})
+							)
 						}
 						onChangeText={(value) => {
-							initStateDispatch({
-								type: "UPDATE_FIELD",
-								field: "password",
-								value,
-							});
+							dispatch(
+								initStateReducer({
+									type: "UPDATE_FIELD",
+									field: "password",
+									value,
+								})
+							);
 						}}
 					/>
 
 					<TouchableOpacity
 						name="passwordBtn"
 						onPress={() =>
-							initStateDispatch({
-								type: "TOGGLE_FIELD",
-								field: "showPassword",
-							})
+							dispatch(
+								initStateReducer({
+									type: "TOGGLE_FIELD",
+									field: "showPassword",
+								})
+							)
 						}>
 						<Text style={styles.passwordToggleText}>
 							{initialState?.showPassword ? "Приховати" : "Показати"}
@@ -196,7 +246,7 @@ export function AuthForm({
 						<BtnMain
 							title={mainBtnText}
 							buttonStyle={styles.mainBtn}
-							onPress={submitForm}
+							onPress={() => submitForm(urlAvatar)}
 						/>
 
 						<BtnSecond

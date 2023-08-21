@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
 		position: "relative",
 	},
 
-	regEmptyImg: {
+	avatarImg: {
 		position: "absolute",
 		width: regImgHeight,
 		height: regImgHeight,

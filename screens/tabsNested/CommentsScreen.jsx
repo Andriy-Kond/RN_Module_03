@@ -82,7 +82,6 @@ export default function CommentsScreen() {
 					keyExtractor={(item, indx) => item.id}
 					renderItem={({ item }) => {
 						const indx = comments.indexOf(item);
-						console.log("CommentsScreen >> item:", item);
 
 						return (
 							<SafeAreaView style={styles.commentContainer}>

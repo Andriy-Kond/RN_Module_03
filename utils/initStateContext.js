@@ -15,6 +15,8 @@ const initialState = {
 	password: "",
 	currentFocusInput: "",
 	showPassword: false,
+	avatar: null,
+	error: null,
 };
 
 // Reducer for state change

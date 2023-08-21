@@ -11,6 +11,7 @@ import RobotoBold700 from "./assets/fonts/Roboto-Bold-700.ttf";
 import Main from "./components/Main";
 import { ButtonStateProvider } from "./utils/tabBtnsContext";
 import { KeyboardStateProvider } from "./utils/keyboardContext";
+import { ModalContextProvider } from "./utils/modalWindowContext";
 
 export default function App() {
 	const [fontsLoaded] = useFonts({
@@ -27,7 +28,9 @@ export default function App() {
 		<Provider store={store}>
 			<KeyboardStateProvider>
 				<ButtonStateProvider>
-					<Main></Main>
+					<ModalContextProvider>
+						<Main></Main>
+					</ModalContextProvider>
 				</ButtonStateProvider>
 			</KeyboardStateProvider>
 		</Provider>

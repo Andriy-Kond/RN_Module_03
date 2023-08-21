@@ -9,15 +9,30 @@ import {
 import { auth } from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
-const { updateUserProfile, updateStateChange, authSingOut } = authSlice.actions;
+const {
+	updateUserProfile,
+	updateStateChange,
+	authSingOut,
+	authSignError,
+	initStateChanger,
+} = authSlice.actions;
 
-export const authSingUpUser = ({ email, password, nickname }) => {
+export const authError = (errorMessage) => async (dispatch, getState) => {
+	try {
+		await dispatch(authSignError(errorMessage));
+	} catch (error) {
+		console.error("authError >> error:", error);
+	}
+};
+
+export const authSingUpUser = ({ email, password, nickname, avatar }) => {
 	return async (dispatch) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				email,
-				password
+				password,
+				avatar
 			);
 
 			if (userCredential?.user) {
@@ -26,19 +41,35 @@ export const authSingUpUser = ({ email, password, nickname }) => {
 				});
 			}
 
-			// const credentials = await signInWithEmailAndPassword(
-			// 	auth,
-			// 	email,
-			// 	password
-			// );
-
 			const userUpdateProfile = {
 				userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
 			};
 			dispatch(updateUserProfile(userUpdateProfile));
 		} catch (error) {
-			console.log("authSingUpUser >> error:", error);
+			console.log("return >> error.code:", error.code);
+			let errorMessage = "";
+			switch (error.code) {
+				case "auth/email-already-in-use":
+					errorMessage = "Email already in use. Chose other email.";
+					break;
+
+				case "auth/invalid-email":
+					errorMessage = "Email address is not valid. Please check your email.";
+					break;
+				case "auth/operation-not-allowed":
+					errorMessage =
+						"This account has been disabled. Please contact the administrator.";
+					break;
+				case "auth/weak-password":
+					errorMessage =
+						"The password is not strong enough. Make it more reliable.";
+					break;
+
+				default:
+					break;
+			}
+			await dispatch(authSignError(errorMessage));
 		}
 	};
 };
@@ -49,7 +80,7 @@ export const authSingInUser =
 		try {
 			await signInWithEmailAndPassword(auth, email, password);
 		} catch (error) {
-			console.log("authSingInUser:", error);
+			console.error("authSingInUser:", error);
 		}
 	};
 
@@ -71,6 +102,16 @@ export const authSingOutUser = () => async (dispatch, getState) => {
 		await dispatch(authSingOut()); // clear redux
 		await signOut(auth); // exit on firebase
 	} catch (error) {
-		console.log("authSingOutUser >> error:", error);
+		console.error("authSingOutUser >> error:", error);
 	}
 };
+
+export const initStateReducer =
+	({ type, field, value }) =>
+	async (dispatch, getState) => {
+		try {
+			dispatch(initStateChanger({ type, field, value }));
+		} catch (error) {
+			console.error("authSingOutUser >> error:", error);
+		}
+	};

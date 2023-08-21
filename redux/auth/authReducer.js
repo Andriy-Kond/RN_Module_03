@@ -10,27 +10,94 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initState = {
 	userId: null,
-	nickname: null,
 	stateChange: false,
+	authErrorMessage: null,
+
+	nickname: "",
+	email: "",
+	password: "",
+	currentFocusInput: "",
+	showPassword: false,
+	avatar: null,
+	error: null,
 };
 
 const actions = {
+	updateField: (state, action) => {
+		const { field, value } = action.payload;
+		state[field] = value;
+	},
+	toggleField: (state, action) => {
+		const field = action.payload;
+		state[field] = !state[field];
+	},
+	resetFields: (state, action) => ({
+		...state,
+		nickname: "",
+		email: "",
+		password: "",
+		currentFocusInput: "",
+		showPassword: false,
+		avatar: null,
+		error: null,
+	}),
+
+	// initStateChanger: (state, action) => {
+	// 	switch (action.payload.type) {
+	// 		case "UPDATE_FIELD":
+	// 			return { ...state, [action.payload.field]: action.payload.value };
+	// 		case "TOGGLE_FIELD":
+	// 			return {
+	// 				...state,
+	// 				[action.payload.field]: !state[action.payload.field],
+	// 			};
+	// 		case "RESET_FIELDS":
+	// 			return {
+	// 				...state,
+	// 				nickname: "",
+	// 				email: "",
+	// 				password: "",
+	// 				currentFocusInput: "",
+	// 				showPassword: false,
+	// 				avatar: null,
+	// 				error: null,
+	// 			};
+	// 		default:
+	// 			return state;
+	// 	}
+	// },
+
 	updateUserProfile: (state, action) => ({
 		...state,
 		userId: action.payload.userId,
 		nickname: action.payload.nickname,
 	}),
 
-	updateStateChange: (state, action) => ({
-		...state,
-		stateChange: action.payload.stateChange,
-	}),
+	updateStateChange: (state, action) => {
+		console.log("updateStateChange >> action.payload:", action.payload);
+		return {
+			...state,
+			stateChange: action.payload.stateChange,
+		};
+	},
 
 	authSingOut: (state, action) => initState,
+
+	authSignError: (state, action) => {
+		return {
+			...state,
+			authErrorMessage: action.payload,
+		};
+	},
 };
 
+// Створення slice
 export const authSlice = createSlice({
 	name: "auth",
 	initialState: initState,
 	reducers: actions,
 });
+
+// Експортуємо редуктор та дії
+export const { updateField, toggleField, resetFields } = authSlice.actions;
+export default authSlice.reducer;

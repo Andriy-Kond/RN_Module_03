@@ -2,41 +2,35 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
-	// ImageBackground,
 	Image,
-	// Text,
 	View,
-	// TextInput,
-	// TouchableOpacity,
 	Platform,
 	KeyboardAvoidingView,
 	TouchableWithoutFeedback,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { AuthForm } from "./AuthForm";
 import { styles } from "./RegsisterScreenStyles";
-import { authSingUpUser } from "../../redux/auth/authOperations";
+import { authError, authSingUpUser } from "../../redux/auth/authOperations";
 import { useKeyboardState } from "../../utils/keyboardContext";
 
-// import { BtnMain } from "../../components/btns/BtnMain";
-// import { BtnSecond } from "../../components/btns/BtnSecond";
 import bgImage from "../../assets/img/bg_photo.jpg";
 import { useInitStateContext } from "../../utils/initStateContext";
 
-// const initialState = {
-// 	nickname: "",
-// 	email: "",
-// 	password: "",
-// 	currentFocusInput: "",
-// 	showPassword: false,
-// };
+import { dbFirestore, storage } from "../../firebase/config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { uriToBlob } from "../../utils/uriToBlob";
+import { useModalContext } from "../../utils/modalWindowContext";
+import { ModalWindow } from "../../components/ModalWindow";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
 	const { initialState, initStateDispatch } = useInitStateContext();
-
+	const { showModalMessagePopup } = useModalContext();
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
+	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
+
 	// const navigation = useNavigation();
 	// const [state, setState] = useState(initialState);
 
@@ -44,10 +38,58 @@ export default function LoginScreen() {
 	// 	dispatch({ type: "UPDATE_FIELD", field: "nickname", value: newNickname });
 	// };
 
-	const submitForm = () => {
+	const uploadPhotoToServer = async (urlAvatar) => {
+		try {
+			// to BLOB from uri
+			const blobFile = await uriToBlob(urlAvatar);
+
+			// send to storage
+			const uniqPostId = Date.now().toString();
+			const storageRef = ref(storage, `${uniqPostId}`);
+			await uploadBytes(storageRef, blobFile);
+
+			// take from server
+			const url = await getDownloadURL(storageRef);
+			return url;
+		} catch (e) {
+			console.error("Error adding data: ", e);
+			throw e;
+		}
+	};
+
+	const submitForm = async (urlAvatar) => {
 		hideKB();
-		dispatch(authSingUpUser(initialState));
-		initStateDispatch({ type: "RESET_FIELDS" });
+
+		try {
+			// Очистити попередню помилку перед реєстрацією
+			dispatch(authError(null));
+
+			if (urlAvatar) {
+				// Отримання даних з серверу
+				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
+
+				await initStateDispatch({
+					type: "UPDATE_FIELD",
+					field: "avatar",
+					value: serverUrlAvatar,
+				});
+			}
+
+			// Викликати операцію реєстрації
+
+			dispatch(authSingUpUser(initialState));
+			console.log("submitForm >> initialState:", initialState);
+
+			// Показати помилку, якщо вона є
+			console.log("submitForm >> authErrorMessage:", authErrorMessage);
+			if (authErrorMessage) {
+				await showModalMessagePopup(authErrorMessage);
+			}
+
+			await initStateDispatch({ type: "RESET_FIELDS" });
+		} catch (error) {
+			console.log("submitForm >> error:", error);
+		}
 	};
 
 	const mainBtnText = "Зареєструватися";
@@ -65,71 +107,13 @@ export default function LoginScreen() {
 					<AuthForm
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
-						// initialState={initialState}
 						submitForm={submitForm}
 						loginScreen={loginScreen}
-						// style={styles.loginFormContainer}
 					/>
 				</KeyboardAvoidingView>
+
+				<ModalWindow />
 			</View>
 		</TouchableWithoutFeedback>
 	);
 }
-
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		backgroundColor: "#fff",
-// 	},
-
-// 	imageBackground: {
-// 		flex: 1,
-// 		resizeMode: "cover",
-// 		justifyContent: "flex-end",
-// 		paddingVertical: 30,
-// 	},
-// 	keyboardView: {
-// 		flex: 1,
-// 		justifyContent: "space-between",
-// 		alignItems: "center",
-// 	},
-// 	text: {
-// 		color: "#000",
-// 		fontSize: 30,
-// 	},
-// 	form: {
-// 		padding: 20,
-// 		width: "100%",
-// 	},
-// 	inputTitle: {
-// 		marginBottom: 5,
-// 		fontSize: 18,
-// 		padding: 5,
-// 		fontFamily: "RobotoBold700",
-// 		color: "#fe0606",
-// 	},
-// 	input: {
-// 		borderWidth: 2,
-// 		height: 50,
-// 		borderColor: "#000",
-// 		paddingHorizontal: 20,
-// 		borderRadius: 10,
-// 		color: "#fff",
-// 		textAlign: "center",
-// 		fontSize: 24,
-// 		backgroundColor: "rgba(0, 0, 0, 0.5)",
-// 	},
-// 	btn: {
-// 		marginVertical: 20,
-// 		backgroundColor: "blue",
-// 		height: 40,
-// 		alignItems: "center",
-// 		justifyContent: "center",
-// 		borderRadius: 10,
-// 	},
-// 	btnText: {
-// 		color: "#fff",
-// 		fontSize: 20,
-// 		fontFamily: "RobotoRegular400",
-// 	},
-// });
