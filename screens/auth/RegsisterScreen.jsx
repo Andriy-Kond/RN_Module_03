@@ -16,27 +16,21 @@ import { authError, authSingUpUser } from "../../redux/auth/authOperations";
 import { useKeyboardState } from "../../utils/keyboardContext";
 
 import bgImage from "../../assets/img/bg_photo.jpg";
-import { useInitStateContext } from "../../utils/initStateContext";
 
 import { dbFirestore, storage } from "../../firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uriToBlob } from "../../utils/uriToBlob";
 import { useModalContext } from "../../utils/modalWindowContext";
 import { ModalWindow } from "../../components/ModalWindow";
+import { resetFields, updateField } from "../../redux/auth/authReducer";
 
 export default function RegisterScreen() {
-	const { initialState, initStateDispatch } = useInitStateContext();
+	const initialState = useSelector((state) => state.auth);
+
 	const { showModalMessagePopup } = useModalContext();
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
-
-	// const navigation = useNavigation();
-	// const [state, setState] = useState(initialState);
-
-	// const handleNicknameChange = (newNickname) => {
-	// 	dispatch({ type: "UPDATE_FIELD", field: "nickname", value: newNickname });
-	// };
 
 	const uploadPhotoToServer = async (urlAvatar) => {
 		try {
@@ -67,28 +61,20 @@ export default function RegisterScreen() {
 			if (urlAvatar) {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
-
-				await initStateDispatch({
-					type: "UPDATE_FIELD",
-					field: "avatar",
-					value: serverUrlAvatar,
-				});
+				dispatch(updateField({ field: "avatar", value: serverUrlAvatar }));
 			}
 
 			// Викликати операцію реєстрації
-
 			dispatch(authSingUpUser(initialState));
-			console.log("submitForm >> initialState:", initialState);
 
 			// Показати помилку, якщо вона є
-			console.log("submitForm >> authErrorMessage:", authErrorMessage);
 			if (authErrorMessage) {
 				await showModalMessagePopup(authErrorMessage);
 			}
 
-			await initStateDispatch({ type: "RESET_FIELDS" });
+			dispatch(resetFields());
 		} catch (error) {
-			console.log("submitForm >> error:", error);
+			console.error("submitForm >>> error:", error);
 		}
 	};
 
@@ -108,11 +94,10 @@ export default function RegisterScreen() {
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						submitForm={submitForm}
-						loginScreen={loginScreen}
-					/>
+						loginScreen={loginScreen}>
+						<ModalWindow />
+					</AuthForm>
 				</KeyboardAvoidingView>
-
-				<ModalWindow />
 			</View>
 		</TouchableWithoutFeedback>
 	);

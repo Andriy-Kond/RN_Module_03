@@ -28,7 +28,7 @@ const actions = {
 		state[field] = value;
 	},
 	toggleField: (state, action) => {
-		const field = action.payload;
+		const { field } = action.payload;
 		state[field] = !state[field];
 	},
 	resetFields: (state, action) => ({
@@ -42,31 +42,12 @@ const actions = {
 		error: null,
 	}),
 
-	// initStateChanger: (state, action) => {
-	// 	switch (action.payload.type) {
-	// 		case "UPDATE_FIELD":
-	// 			return { ...state, [action.payload.field]: action.payload.value };
-	// 		case "TOGGLE_FIELD":
-	// 			return {
-	// 				...state,
-	// 				[action.payload.field]: !state[action.payload.field],
-	// 			};
-	// 		case "RESET_FIELDS":
-	// 			return {
-	// 				...state,
-	// 				nickname: "",
-	// 				email: "",
-	// 				password: "",
-	// 				currentFocusInput: "",
-	// 				showPassword: false,
-	// 				avatar: null,
-	// 				error: null,
-	// 			};
-	// 		default:
-	// 			return state;
-	// 	}
-	// },
-
+	authSignError: (state, action) => {
+		return {
+			...state,
+			authErrorMessage: action.payload,
+		};
+	},
 	updateUserProfile: (state, action) => ({
 		...state,
 		userId: action.payload.userId,
@@ -74,7 +55,6 @@ const actions = {
 	}),
 
 	updateStateChange: (state, action) => {
-		console.log("updateStateChange >> action.payload:", action.payload);
 		return {
 			...state,
 			stateChange: action.payload.stateChange,
@@ -82,13 +62,6 @@ const actions = {
 	},
 
 	authSingOut: (state, action) => initState,
-
-	authSignError: (state, action) => {
-		return {
-			...state,
-			authErrorMessage: action.payload,
-		};
-	},
 };
 
 // Створення slice
@@ -99,5 +72,39 @@ export const authSlice = createSlice({
 });
 
 // Експортуємо редуктор та дії
-export const { updateField, toggleField, resetFields } = authSlice.actions;
-export default authSlice.reducer;
+// export const {
+// 	updateField,
+// 	toggleField,
+// 	resetFields,
+// 	updateUserProfile,
+// 	updateStateChange,
+// 	authSingOut,
+// 	authSignError,
+// } = authSlice.actions;
+
+// export default authSlice.reducer; //? що це?
+
+// initStateChanger: (state, action) => {
+// 	switch (action.payload.type) {
+// 		case "UPDATE_FIELD":
+// 			return { ...state, [action.payload.field]: action.payload.value };
+// 		case "TOGGLE_FIELD":
+// 			return {
+// 				...state,
+// 				[action.payload.field]: !state[action.payload.field],
+// 			};
+// 		case "RESET_FIELDS":
+// 			return {
+// 				...state,
+// 				nickname: "",
+// 				email: "",
+// 				password: "",
+// 				currentFocusInput: "",
+// 				showPassword: false,
+// 				avatar: null,
+// 				error: null,
+// 			};
+// 		default:
+// 			return state;
+// 	}
+// },

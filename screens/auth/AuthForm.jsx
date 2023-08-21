@@ -6,7 +6,6 @@ import Svg, { Circle, Path } from "react-native-svg";
 import { styles } from "./AuthFormStyles";
 
 import { useKeyboardState } from "../../utils/keyboardContext";
-import { useInitStateContext } from "../../utils/initStateContext";
 
 import { BtnMain } from "../../components/btns/BtnMain";
 import { BtnSecond } from "../../components/btns/BtnSecond";
@@ -22,15 +21,22 @@ import { uriToBlob } from "../../utils/uriToBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { initStateReducer } from "../../redux/auth/authOperations";
 
+import { ModalWindow } from "../../components/ModalWindow";
+
+// import { toggleField, updateField } from "../../redux/auth/authReducer";
+import { authSlice } from "../../redux/auth/authReducer";
+
 export function AuthForm({
 	mainBtnText,
 	secondBtnText,
 	submitForm,
 	loginScreen,
 }) {
+	const { toggleField, updateField } = authSlice.actions;
 	const navigation = useNavigation();
-	// const { initialState, initStateDispatch } = useInitStateContext();
-	const initialState = useSelector((state) => state.auth.initState);
+
+	const initialState = useSelector((state) => state.auth);
+	console.log("initialState:", initialState);
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const { showModalMessagePopup } = useModalContext();
 	const [urlAvatar, setUrlAvatar] = useState(null);
@@ -50,6 +56,15 @@ export function AuthForm({
 			showModalMessagePopup("Доступ до сховища не наданий");
 		}
 	}
+
+	const updateCurrentField = (fieldName, value) => {
+		dispatch(
+			updateField({
+				field: fieldName,
+				value,
+			})
+		);
+	};
 
 	return (
 		<View
@@ -111,8 +126,7 @@ export function AuthForm({
 						onFocus={() => {
 							setIsKeyboardShown(true);
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "currentFocusInput",
 									value: "nickname",
 								})
@@ -120,8 +134,7 @@ export function AuthForm({
 						}}
 						onBlur={() =>
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "currentFocusInput",
 									value: "",
 								})
@@ -129,8 +142,7 @@ export function AuthForm({
 						}
 						onChangeText={(value) =>
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "nickname",
 									value,
 								})
@@ -153,8 +165,7 @@ export function AuthForm({
 					onFocus={() => {
 						setIsKeyboardShown(true);
 						dispatch(
-							initStateReducer({
-								type: "UPDATE_FIELD",
+							updateField({
 								field: "currentFocusInput",
 								value: "email",
 							})
@@ -162,8 +173,7 @@ export function AuthForm({
 					}}
 					onBlur={() =>
 						dispatch(
-							initStateReducer({
-								type: "UPDATE_FIELD",
+							updateField({
 								field: "currentFocusInput",
 								value: "",
 							})
@@ -171,8 +181,7 @@ export function AuthForm({
 					}
 					onChangeText={(value) =>
 						dispatch(
-							initStateReducer({
-								type: "UPDATE_FIELD",
+							updateField({
 								field: "email",
 								value,
 							})
@@ -198,8 +207,7 @@ export function AuthForm({
 							setIsKeyboardShown(true);
 
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "currentFocusInput",
 									value: "password",
 								})
@@ -207,8 +215,7 @@ export function AuthForm({
 						}}
 						onBlur={() =>
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "currentFocusInput",
 									value: "",
 								})
@@ -216,8 +223,7 @@ export function AuthForm({
 						}
 						onChangeText={(value) => {
 							dispatch(
-								initStateReducer({
-									type: "UPDATE_FIELD",
+								updateField({
 									field: "password",
 									value,
 								})
@@ -229,8 +235,7 @@ export function AuthForm({
 						name="passwordBtn"
 						onPress={() =>
 							dispatch(
-								initStateReducer({
-									type: "TOGGLE_FIELD",
+								toggleField({
 									field: "showPassword",
 								})
 							)
@@ -239,6 +244,7 @@ export function AuthForm({
 							{initialState?.showPassword ? "Приховати" : "Показати"}
 						</Text>
 					</TouchableOpacity>
+					<ModalWindow />
 				</View>
 
 				{!isKeyboardShown && (
