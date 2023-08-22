@@ -24,7 +24,7 @@ export function AuthForm({
 	const dispatch = useDispatch();
 	const { toggleField, updateField } = authSlice.actions;
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
-	const initialState = useSelector((state) => state.auth);
+	const initState = useSelector((state) => state.auth);
 
 	async function updateCurrentField(field, value) {
 		dispatch(
@@ -44,23 +44,11 @@ export function AuthForm({
 
 		if (!result.canceled) {
 			await updateCurrentField("avatar", result.assets[0].uri);
-			// dispatch(
-			// 	updateField({
-			// 		field: "avatar",
-			// 		value: result.assets[0].uri,
-			// 	})
-			// );
 		} else {
 			await updateCurrentField(
 				"authErrorMessage",
 				"Доступ до сховища не наданий"
 			);
-			// dispatch(
-			// 	updateField({
-			// 		field: "authErrorMessage",
-			// 		value: "Доступ до сховища не наданий",
-			// 	})
-			// );
 		}
 	}
 
@@ -73,16 +61,14 @@ export function AuthForm({
 				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
 				isKeyboardShown && { paddingBottom: 16 },
 			]}>
-			{initialState.authErrorMessage && (
+			{initState.authErrorMessage && (
 				<ModalWindow modalMessage={authErrorMessage} />
 			)}
 			{!loginScreen && (
 				<View style={styles.regImageContainer}>
 					<Image
 						style={styles.avatarImg}
-						source={
-							initialState?.avatar ? { uri: initialState.avatar } : regEmptyImg
-						}
+						source={initState?.avatar ? { uri: initState.avatar } : regEmptyImg}
 					/>
 
 					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
@@ -116,130 +102,63 @@ export function AuthForm({
 				{!loginScreen && (
 					<TextInput
 						autoFocus
-						value={initialState?.nickname}
+						value={initState?.nickname}
 						placeholder={"Логін"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[
 							styles.input,
-							initialState?.currentFocusInput === "nickname" &&
+							initState?.currentFocusInput === "nickname" &&
 								styles.inputFocused,
 						]}
 						onSubmitEditing={hideKB} // press OK key on KB
 						onFocus={() => {
 							setIsKeyboardShown(true);
 							updateCurrentField("currentFocusInput", "nickname");
-							// dispatch(
-							// 	updateField({
-							// 		field: "currentFocusInput",
-							// 		value: "nickname",
-							// 	})
-							// );
 						}}
-						onBlur={
-							() => updateCurrentField("currentFocusInput", "")
-							// dispatch(
-							// 	updateField({
-							// 		field: "currentFocusInput",
-							// 		value: "",
-							// 	})
-							// )
-						}
-						onChangeText={
-							(value) => updateCurrentField("nickname", value)
-							// dispatch(
-							// 	updateField({
-							// 		field: "nickname",
-							// 		value,
-							// 	})
-							// )
-						}
+						onBlur={() => updateCurrentField("currentFocusInput", "")}
+						onChangeText={(value) => updateCurrentField("nickname", value)}
 					/>
 				)}
 
 				<TextInput
-					value={initialState?.email}
+					value={initState?.email}
 					placeholder={"Адреса електронної пошти"}
 					placeholderTextColor={"#BDBDBD"}
 					keyboardType="email-address"
 					autoFocus={loginScreen}
 					style={[
 						styles.input,
-						initialState?.currentFocusInput === "email" && styles.inputFocused,
+						initState?.currentFocusInput === "email" && styles.inputFocused,
 					]}
-					onSubmitEditing={hideKB} // press OK key on KB
+					onSubmitEditing={hideKB}
 					onFocus={() => {
 						setIsKeyboardShown(true);
 						updateCurrentField("currentFocusInput", "email");
-						// dispatch(
-						// 	updateField({
-						// 		field: "currentFocusInput",
-						// 		value: "email",
-						// 	})
-						// );
 					}}
-					onBlur={
-						() => updateCurrentField("currentFocusInput", "")
-						// dispatch(
-						// 	updateField({
-						// 		field: "currentFocusInput",
-						// 		value: "",
-						// 	})
-						// )
-					}
-					onChangeText={
-						(value) => updateCurrentField("email", value)
-						// dispatch(
-						// 	updateField({
-						// 		field: "email",
-						// 		value,
-						// 	})
-						// )
-					}
+					onBlur={() => updateCurrentField("currentFocusInput", "")}
+					onChangeText={(value) => updateCurrentField("email", value)}
 				/>
 
 				<View
-					pointerEvents="box-none"
+					// pointerEvents="box-none"
 					style={[
 						styles.input,
 						styles.passwordInputContainer,
-						initialState?.currentFocusInput === "password" &&
-							styles.inputFocused,
+						initState?.currentFocusInput === "password" && styles.inputFocused,
 					]}>
 					<TextInput
-						value={initialState?.password}
+						value={initState?.password}
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[styles.passwordInput]}
-						secureTextEntry={!initialState?.showPassword}
+						secureTextEntry={!initState?.showPassword}
 						onSubmitEditing={hideKB}
 						onFocus={() => {
 							setIsKeyboardShown(true);
 							updateCurrentField("currentFocusInput", "password");
-							// dispatch(
-							// 	updateField({
-							// 		field: "currentFocusInput",
-							// 		value: "password",
-							// 	})
-							// );
 						}}
-						onBlur={
-							() => updateCurrentField("currentFocusInput", "")
-							// dispatch(
-							// 	updateField({
-							// 		field: "currentFocusInput",
-							// 		value: "",
-							// 	})
-							// )
-						}
-						onChangeText={
-							(value) => updateCurrentField("password", value)
-							// dispatch(
-							// 	updateField({
-							// 		field: "password",
-							// 		value,
-							// 	})
-							// );
-						}
+						onBlur={() => updateCurrentField("currentFocusInput", "")}
+						onChangeText={(value) => updateCurrentField("password", value)}
 					/>
 
 					<TouchableOpacity
@@ -253,7 +172,7 @@ export function AuthForm({
 							)
 						}>
 						<Text style={styles.passwordToggleBtnText}>
-							{initialState?.showPassword ? "Приховати" : "Показати"}
+							{initState?.showPassword ? "Приховати" : "Показати"}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -263,7 +182,7 @@ export function AuthForm({
 						<BtnMain
 							title={mainBtnText}
 							buttonStyle={styles.mainBtn}
-							onPress={() => submitForm(initialState.avatar)}
+							onPress={() => submitForm(initState.avatar)}
 						/>
 
 						<BtnSecond

@@ -16,13 +16,14 @@ export default function NestedNavigation() {
 		<NestedStack.Navigator
 			screenOptions={{
 				headerStyle: styles.headerStyle,
+				headerTitleStyle: styles.headerTitleStyle,
 			}}>
 			<NestedStack.Screen
 				name="DefaultScreenPosts"
 				component={DefaultScreenPosts}
 				options={{
 					title: "Публікації",
-					headerTitleStyle: styles.headerTitle,
+					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
 
 					headerRight: () => <BtnLogout buttonStyle={styles.container} />,
@@ -33,7 +34,7 @@ export default function NestedNavigation() {
 				component={MapScreen}
 				options={{
 					title: "Мапа",
-					headerTitleStyle: styles.headerTitle,
+					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
 					headerLeft: () => <BtnGoBack />,
 				}}
@@ -43,7 +44,7 @@ export default function NestedNavigation() {
 				component={CommentsScreen}
 				options={{
 					title: "Коментарі",
-					headerTitleStyle: styles.headerTitle,
+					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
 					headerLeft: () => <BtnGoBack />,
 				}}
@@ -61,10 +62,11 @@ export const styles = StyleSheet.create({
 
 	headerStyle: {
 		borderBottomWidth: 0.5,
-		borderBottomColor: "rgba(0, 0, 0, 0.30)",
+		borderBottomColor: "rgba(0, 0, 0, 0.3)",
+		height: 88,
 	},
 
-	headerTitle: {
+	headerTitleStyle: {
 		alignItems: "center",
 		color: "#212121",
 

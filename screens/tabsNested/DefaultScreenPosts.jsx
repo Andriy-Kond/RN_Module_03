@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
 	currentImg: {
 		width: "100%",
 		height: 200,
-		borderRadius: 20,
+		borderRadius: 8,
 		borderColor: "#fff",
 		marginTop: 10,
 		marginBottom: 10,
