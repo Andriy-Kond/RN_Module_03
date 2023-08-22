@@ -20,7 +20,7 @@ import bgImage from "../../assets/img/bg_photo.jpg";
 import { dbFirestore, storage } from "../../firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uriToBlob } from "../../utils/uriToBlob";
-import { useModalContext } from "../../utils/modalWindowContext";
+// import { useModalContext } from "../../utils/modalWindowContext";
 import { ModalWindow } from "../../components/ModalWindow";
 // import { resetFields, updateField } from "../../redux/auth/authReducer";
 import { authSlice } from "../../redux/auth/authReducer";
@@ -29,7 +29,7 @@ export default function RegisterScreen() {
 	const initialState = useSelector((state) => state.auth);
 	const { resetFields, updateField, authSignError } = authSlice.actions;
 
-	const { showModalMessagePopup } = useModalContext();
+	// const { showModalMessagePopup } = useModalContext();
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
@@ -69,14 +69,12 @@ export default function RegisterScreen() {
 			}
 
 			// Викликати операцію реєстрації
-			console.log("submitForm >> initialState:", initialState);
 			await dispatch(authSingUpUser(initialState));
-			console.log("submitForm >> initialState:", initialState);
 
-			// Показати помилку, якщо вона є
-			if (authErrorMessage) {
-				await showModalMessagePopup(authErrorMessage);
-			}
+			// // Показати помилку, якщо вона є
+			// if (authErrorMessage) {
+			// 	await showModalMessagePopup(authErrorMessage);
+			// }
 
 			// dispatch(resetFields());
 		} catch (error) {
@@ -91,6 +89,9 @@ export default function RegisterScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.registrationContainer}>
+				{initialState.authErrorMessage && (
+					<ModalWindow modalMessage={authErrorMessage} />
+				)}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
 
 				<KeyboardAvoidingView
@@ -100,9 +101,7 @@ export default function RegisterScreen() {
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						submitForm={submitForm}
-						loginScreen={loginScreen}>
-						<ModalWindow />
-					</AuthForm>
+						loginScreen={loginScreen}></AuthForm>
 				</KeyboardAvoidingView>
 			</View>
 		</TouchableWithoutFeedback>

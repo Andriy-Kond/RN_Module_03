@@ -24,17 +24,19 @@ import bgImage from "../../assets/img/bg_photo.jpg";
 import { ModalWindow } from "../../components/ModalWindow";
 
 import { authSlice } from "../../redux/auth/authReducer";
-import { useModalContext } from "../../utils/modalWindowContext";
+// import { useModalContext } from "../../utils/modalWindowContext";
 
 export default function LoginScreen() {
 	const initialState = useSelector((state) => state.auth);
+	console.log("LoginScreen >> initialState:", initialState);
+
 	const { resetFields, authSignError } = authSlice.actions;
 
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
 
-	const { showModalMessagePopup } = useModalContext();
+	// const { showModalMessagePopup } = useModalContext();
 
 	const submitForm = async () => {
 		hideKB();
@@ -45,9 +47,9 @@ export default function LoginScreen() {
 
 			await dispatch(authSingInUser(initialState));
 
-			if (authErrorMessage) {
-				await showModalMessagePopup(authErrorMessage);
-			}
+			// if (authErrorMessage) {
+			// 	await showModalMessagePopup(authErrorMessage);
+			// }
 
 			// dispatch(resetFields());
 		} catch (error) {
@@ -62,8 +64,10 @@ export default function LoginScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
+				{initialState.authErrorMessage && (
+					<ModalWindow modalMessage={authErrorMessage} />
+				)}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
-
 				<KeyboardAvoidingView
 					style={styles.kbAvoidingContainer}
 					behavior={Platform.OS === "ios" ? "padding" : null}>
@@ -71,9 +75,7 @@ export default function LoginScreen() {
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						submitForm={submitForm}
-						loginScreen={loginScreen}>
-						<ModalWindow />
-					</AuthForm>
+						loginScreen={loginScreen}></AuthForm>
 				</KeyboardAvoidingView>
 			</View>
 		</TouchableWithoutFeedback>

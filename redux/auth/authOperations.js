@@ -80,6 +80,13 @@ export const authSingUpUser = ({ email, password, nickname, avatar }) => {
 						"The password is not strong enough. Make it more reliable.";
 					break;
 
+				case "auth/missing-password":
+					errorMessage = "Enter password registration";
+					break;
+				case "auth/missing-email":
+					errorMessage = "Enter email for registration";
+					break;
+
 				default:
 					errorMessage = "Unknown error";
 					break;
@@ -95,38 +102,39 @@ export const authSingInUser =
 	async (dispatch, getState) => {
 		try {
 			const result = await signInWithEmailAndPassword(auth, email, password);
+			// console.log("result:", result);
 
-			const {
-				displayName: nickname,
-				email: baseEmail,
-				photoURL: avatar,
-				uid: userId,
-			} = result;
+			// const {
+			// 	displayName: nickname,
+			// 	email: baseEmail,
+			// 	photoURL: avatar,
+			// 	uid: userId,
+			// } = result.user;
 
-			await dispatch(
-				updateField({
-					field: "nickname",
-					value: nickname,
-				})
-			);
-			await dispatch(
-				updateField({
-					field: "email",
-					value: baseEmail,
-				})
-			);
-			await dispatch(
-				updateField({
-					field: "avatar",
-					value: avatar,
-				})
-			);
-			await dispatch(
-				updateField({
-					field: "userId",
-					value: userId,
-				})
-			);
+			// await dispatch(
+			// 	updateField({
+			// 		field: "nickname",
+			// 		value: nickname,
+			// 	})
+			// );
+			// await dispatch(
+			// 	updateField({
+			// 		field: "email",
+			// 		value: baseEmail,
+			// 	})
+			// );
+			// await dispatch(
+			// 	updateField({
+			// 		field: "avatar",
+			// 		value: result.user.photoURL,
+			// 	})
+			// );
+			// await dispatch(
+			// 	updateField({
+			// 		field: "userId",
+			// 		value: userId,
+			// 	})
+			// );
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 
@@ -146,12 +154,22 @@ export const authSingInUser =
 					errorMessage = "The password is invalid. Try again.";
 					break;
 
+				case "auth/missing-password":
+					errorMessage = "Enter password login";
+					break;
+				case "auth/missing-email":
+					errorMessage = "Enter email for login";
+					break;
+
 				default:
 					errorMessage = "Unknown error";
 					break;
 			}
 
 			await dispatch(authSignError(errorMessage));
+			// await dispatch(
+			// 	updateField({ field: "authErrorMessage", value: errorMessage })
+			// );
 		}
 	};
 
@@ -162,6 +180,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 				const userUpdateProfile = {
 					userId: user.uid,
 					nickname: user.displayName,
+					avatar: user.photoURL,
 				};
 				dispatch(updateUserProfile(userUpdateProfile));
 				dispatch(updateStateChange({ stateChange: true }));

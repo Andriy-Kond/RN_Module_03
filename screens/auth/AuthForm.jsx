@@ -16,7 +16,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-import { useModalContext } from "../../utils/modalWindowContext";
+// import { useModalContext } from "../../utils/modalWindowContext";
 import { uriToBlob } from "../../utils/uriToBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { initStateReducer } from "../../redux/auth/authOperations";
@@ -37,7 +37,7 @@ export function AuthForm({
 
 	const initialState = useSelector((state) => state.auth);
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
-	const { showModalMessagePopup } = useModalContext();
+	// const { showModalMessagePopup } = useModalContext();
 
 	const dispatch = useDispatch();
 
@@ -57,7 +57,13 @@ export function AuthForm({
 				})
 			);
 		} else {
-			showModalMessagePopup("Доступ до сховища не наданий");
+			dispatch(
+				updateField({
+					field: "authErrorMessage",
+					value: "Доступ до сховища не наданий",
+				})
+			);
+			// showModalMessagePopup("Доступ до сховища не наданий");
 		}
 	}
 
@@ -70,6 +76,8 @@ export function AuthForm({
 		);
 	};
 
+	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
+
 	return (
 		<View
 			style={[
@@ -77,6 +85,10 @@ export function AuthForm({
 				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
 				isKeyboardShown && { paddingBottom: 16 },
 			]}>
+			{/* <ModalWindow /> */}
+			{initialState.authErrorMessage && (
+				<ModalWindow modalMessage={authErrorMessage} />
+			)}
 			{!loginScreen && (
 				<View style={styles.regImageContainer}>
 					<Image
@@ -104,7 +116,7 @@ export function AuthForm({
 					</TouchableOpacity>
 				</View>
 			)}
-			<ModalWindow />
+
 			<Text
 				style={[
 					styles.formTitle,

@@ -23,7 +23,15 @@ const initState = {
 };
 
 const actions = {
+	authSignError: (state, action) => {
+		return {
+			...state,
+			authErrorMessage: action.payload,
+		};
+	},
+
 	updateField: (state, action) => {
+		console.log("action.payload:", action.payload);
 		const { field, value } = action.payload;
 		state[field] = value;
 	},
@@ -42,17 +50,11 @@ const actions = {
 	// 	error: null,
 	// }),
 
-	authSignError: (state, action) => {
-		return {
-			...state,
-			authErrorMessage: action.payload,
-		};
-	},
-
 	updateUserProfile: (state, action) => ({
 		...state,
 		userId: action.payload.userId,
 		nickname: action.payload.nickname,
+		avatar: action.payload.avatar,
 	}),
 
 	updateStateChange: (state, action) => {

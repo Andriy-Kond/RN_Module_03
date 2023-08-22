@@ -3,9 +3,29 @@ import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 import { useModalContext } from "../utils/modalWindowContext";
 import { View, Text, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 
-export function ModalWindow() {
-	const { modalMessage, hideMOdalMessagePopup } = useModalContext();
+import { authSlice } from "../redux/auth/authReducer";
+
+const {
+	updateUserProfile,
+	updateStateChange,
+	authSingOut,
+	authSignError,
+	updateField,
+} = authSlice.actions;
+
+export function ModalWindow({ modalMessage }) {
+	// const { modalMessage, hideMOdalMessagePopup } = useModalContext();
+	const dispatch = useDispatch();
+	const hideMOdalMessagePopup = () => {
+		dispatch(
+			updateField({
+				field: "authErrorMessage",
+				value: "",
+			})
+		);
+	};
 
 	return (
 		<Modal
