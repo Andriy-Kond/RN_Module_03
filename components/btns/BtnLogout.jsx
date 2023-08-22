@@ -5,12 +5,7 @@ import Svg, { Path } from "react-native-svg";
 import { authSingOutUser } from "../../redux/auth/authOperations";
 
 export function BtnLogout({ buttonStyle }) {
-	// const navigation = useNavigation();
 	const dispatch = useDispatch();
-
-	// const handleLogout = () => {
-	// 	navigation.navigate("Login");
-	// };
 
 	const handleLogout = () => {
 		dispatch(authSingOutUser());

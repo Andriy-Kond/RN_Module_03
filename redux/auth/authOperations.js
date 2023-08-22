@@ -15,31 +15,39 @@ import { auth } from "../../firebase/config";
 // } from "./authReducer";
 import { authSlice } from "./authReducer";
 
-const { updateUserProfile, updateStateChange, authSingOut, authSignError } =
-	authSlice.actions;
+const {
+	updateUserProfile,
+	updateStateChange,
+	authSingOut,
+	authSignError,
+	updateField,
+} = authSlice.actions;
 
-export const authError = (errorMessage) => async (dispatch, getState) => {
-	try {
-		await dispatch(authSignError(errorMessage));
-	} catch (error) {
-		console.error("authError >> error:", error);
-	}
-};
+// export const authError = (errorMessage) => async (dispatch, getState) => {
+// 	try {
+// 		await dispatch(authSignError(errorMessage));
+// 	} catch (error) {
+// 		console.error("authError >> error:", error);
+// 	}
+// };
 
 export const authSingUpUser = ({ email, password, nickname, avatar }) => {
+	console.log("authSingUpUser >> avatar:", avatar);
 	return async (dispatch) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				email,
-				password,
-				avatar
+				password
 			);
+			console.log("return >> userCredential:", userCredential);
 
 			if (userCredential?.user) {
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
+					photoURL: avatar,
 				});
+				console.log("return >> userCredential:", userCredential);
 			}
 
 			const userUpdateProfile = {
@@ -86,7 +94,39 @@ export const authSingInUser =
 	({ email, password }) =>
 	async (dispatch, getState) => {
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
+			const result = await signInWithEmailAndPassword(auth, email, password);
+
+			const {
+				displayName: nickname,
+				email: baseEmail,
+				photoURL: avatar,
+				uid: userId,
+			} = result;
+
+			await dispatch(
+				updateField({
+					field: "nickname",
+					value: nickname,
+				})
+			);
+			await dispatch(
+				updateField({
+					field: "email",
+					value: baseEmail,
+				})
+			);
+			await dispatch(
+				updateField({
+					field: "avatar",
+					value: avatar,
+				})
+			);
+			await dispatch(
+				updateField({
+					field: "userId",
+					value: userId,
+				})
+			);
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 

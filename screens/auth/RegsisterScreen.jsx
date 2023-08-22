@@ -22,10 +22,12 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uriToBlob } from "../../utils/uriToBlob";
 import { useModalContext } from "../../utils/modalWindowContext";
 import { ModalWindow } from "../../components/ModalWindow";
-import { resetFields, updateField } from "../../redux/auth/authReducer";
+// import { resetFields, updateField } from "../../redux/auth/authReducer";
+import { authSlice } from "../../redux/auth/authReducer";
 
 export default function RegisterScreen() {
 	const initialState = useSelector((state) => state.auth);
+	const { resetFields, updateField, authSignError } = authSlice.actions;
 
 	const { showModalMessagePopup } = useModalContext();
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
@@ -56,23 +58,27 @@ export default function RegisterScreen() {
 
 		try {
 			// Очистити попередню помилку перед реєстрацією
-			dispatch(authError(null));
+			await dispatch(authSignError(null));
 
 			if (urlAvatar) {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
-				dispatch(updateField({ field: "avatar", value: serverUrlAvatar }));
+				await dispatch(
+					updateField({ field: "avatar", value: serverUrlAvatar })
+				);
 			}
 
 			// Викликати операцію реєстрації
-			dispatch(authSingUpUser(initialState));
+			console.log("submitForm >> initialState:", initialState);
+			await dispatch(authSingUpUser(initialState));
+			console.log("submitForm >> initialState:", initialState);
 
 			// Показати помилку, якщо вона є
 			if (authErrorMessage) {
 				await showModalMessagePopup(authErrorMessage);
 			}
 
-			dispatch(resetFields());
+			// dispatch(resetFields());
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}

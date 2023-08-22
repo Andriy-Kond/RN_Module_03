@@ -21,7 +21,6 @@ import {
 // components
 import { useButtonState } from "../utils/tabBtnsContext";
 import { BtnGoBack } from "../components/btns/BtnGoBack";
-import { BtnLogout } from "../components/btns/BtnLogout";
 
 const AuthStack = createStackNavigator();
 const MainStack = createBottomTabNavigator();
@@ -60,10 +59,10 @@ function TabsNavigation() {
 				name="Posts"
 				component={PostsScreen}
 				options={{
+					headerShown: false,
 					title: "Публікації",
 					headerTitleStyle: styles.headerTitle,
 					headerTitleAlign: "center",
-					headerRight: () => <BtnLogout buttonStyle={styles.container} />,
 
 					tabBarIcon: ({ focused, color, size }) => (
 						<MaterialCommunityIcons
@@ -99,7 +98,7 @@ function TabsNavigation() {
 						/>
 					),
 				}}
-				unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
+				// unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
 				listeners={{
 					tabPress: (e) => {
 						if (!isTabButtonsEnabled) {

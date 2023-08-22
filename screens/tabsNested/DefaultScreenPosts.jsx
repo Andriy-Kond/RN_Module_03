@@ -10,8 +10,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
+import { useSelector } from "react-redux";
+
+import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function DefaultScreenPosts() {
+	const initState = useSelector((state) => state.auth);
+	console.log("DefaultScreenPosts >> initState:", initState);
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
 
@@ -35,7 +40,17 @@ export default function DefaultScreenPosts() {
 
 	return (
 		<View style={styles.container}>
-			<Text>It is PostsScreen</Text>
+			<View style={styles.item}>
+				<Image
+					style={styles.userImg}
+					source={initState?.avatar ? { uri: initState.avatar } : regEmptyImg}
+				/>
+				<View>
+					<Text style={styles.userName}>{initState.nickname}</Text>
+					<Text style={styles.userEmail}>{initState.email}</Text>
+				</View>
+			</View>
+
 			<FlatList
 				data={posts}
 				keyExtractor={(item, indx) => item.id}
@@ -78,9 +93,34 @@ export default function DefaultScreenPosts() {
 
 const styles = StyleSheet.create({
 	container: {
+		paddingHorizontal: 16,
+		paddingTop: 32,
 		flex: 1,
-		paddingHorizontal: 30,
-		paddingVertical: 30,
+		width: "100%",
+		backgroundColor: "white",
+	},
+
+	item: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+
+	userImg: {
+		borderRadius: 16,
+		marginRight: 8,
+		width: 60,
+		height: 60,
+	},
+	userName: {
+		color: "#212121",
+		fontFamily: "RobotoBold700",
+		fontSize: 13,
+	},
+
+	userEmail: {
+		color: "rgba(33, 33, 33, 0.80)",
+		fontFamily: "RobotoRegular400",
+		fontSize: 11,
 	},
 
 	imgContainer: {

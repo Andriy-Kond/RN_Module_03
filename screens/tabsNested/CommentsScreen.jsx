@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-end",
 		paddingHorizontal: 20,
 		paddingBottom: 20,
+		backgroundColor: "#fff",
 	},
 
 	screenTitle: {

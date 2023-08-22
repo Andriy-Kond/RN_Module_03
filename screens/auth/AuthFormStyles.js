@@ -148,13 +148,22 @@ export const styles = StyleSheet.create({
 	passwordInputContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		paddingHorizontal: 0,
 	},
 
 	passwordInput: {
 		flex: 1,
+		height: "100%",
+		paddingHorizontal: 16,
 	},
 
-	passwordToggleText: {
+	passwordToggleBtn: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: "100%",
+		paddingHorizontal: 16,
+	},
+	passwordToggleBtnText: {
 		color: "#1B4371",
 	},
 

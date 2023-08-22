@@ -31,16 +31,16 @@ const actions = {
 		const { field } = action.payload;
 		state[field] = !state[field];
 	},
-	resetFields: (state, action) => ({
-		...state,
-		nickname: "",
-		email: "",
-		password: "",
-		currentFocusInput: "",
-		showPassword: false,
-		avatar: null,
-		error: null,
-	}),
+	// resetFields: (state, action) => ({
+	// 	...state,
+	// 	nickname: "",
+	// 	email: "",
+	// 	password: "",
+	// 	currentFocusInput: "",
+	// 	showPassword: false,
+	// 	avatar: null,
+	// 	error: null,
+	// }),
 
 	authSignError: (state, action) => {
 		return {
@@ -48,6 +48,7 @@ const actions = {
 			authErrorMessage: action.payload,
 		};
 	},
+
 	updateUserProfile: (state, action) => ({
 		...state,
 		userId: action.payload.userId,

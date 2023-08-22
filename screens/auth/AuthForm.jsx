@@ -36,10 +36,9 @@ export function AuthForm({
 	const navigation = useNavigation();
 
 	const initialState = useSelector((state) => state.auth);
-	console.log("initialState:", initialState);
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const { showModalMessagePopup } = useModalContext();
-	const [urlAvatar, setUrlAvatar] = useState(null);
+
 	const dispatch = useDispatch();
 
 	async function addAvatar() {
@@ -51,7 +50,12 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
-			setUrlAvatar(result.assets[0].uri);
+			dispatch(
+				updateField({
+					field: "avatar",
+					value: result.assets[0].uri,
+				})
+			);
 		} else {
 			showModalMessagePopup("Доступ до сховища не наданий");
 		}
@@ -77,7 +81,9 @@ export function AuthForm({
 				<View style={styles.regImageContainer}>
 					<Image
 						style={styles.avatarImg}
-						source={urlAvatar ? { uri: urlAvatar } : regEmptyImg}
+						source={
+							initialState?.avatar ? { uri: initialState.avatar } : regEmptyImg
+						}
 					/>
 
 					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
@@ -98,7 +104,7 @@ export function AuthForm({
 					</TouchableOpacity>
 				</View>
 			)}
-
+			<ModalWindow />
 			<Text
 				style={[
 					styles.formTitle,
@@ -107,10 +113,7 @@ export function AuthForm({
 				{loginScreen ? "Увійти" : "Реєстрація"}
 			</Text>
 
-			<View
-				style={{
-					...styles.inputsWrapper,
-				}}>
+			<View style={styles.inputsWrapper}>
 				{!loginScreen && (
 					<TextInput
 						autoFocus
@@ -152,11 +155,11 @@ export function AuthForm({
 				)}
 
 				<TextInput
-					autoFocus={loginScreen}
 					value={initialState?.email}
 					placeholder={"Адреса електронної пошти"}
 					placeholderTextColor={"#BDBDBD"}
 					keyboardType="email-address"
+					autoFocus={loginScreen}
 					style={[
 						styles.input,
 						initialState?.currentFocusInput === "email" && styles.inputFocused,
@@ -190,6 +193,7 @@ export function AuthForm({
 				/>
 
 				<View
+					pointerEvents="box-none"
 					style={[
 						styles.input,
 						styles.passwordInputContainer,
@@ -197,10 +201,10 @@ export function AuthForm({
 							styles.inputFocused,
 					]}>
 					<TextInput
+						value={initialState?.password}
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
-						value={initialState?.password}
-						style={styles.passwordInput}
+						style={[styles.passwordInput]}
 						secureTextEntry={!initialState?.showPassword}
 						onSubmitEditing={hideKB}
 						onFocus={() => {
@@ -232,7 +236,8 @@ export function AuthForm({
 					/>
 
 					<TouchableOpacity
-						name="passwordBtn"
+						style={styles.passwordToggleBtn}
+						name="showPasswordBtn"
 						onPress={() =>
 							dispatch(
 								toggleField({
@@ -240,11 +245,10 @@ export function AuthForm({
 								})
 							)
 						}>
-						<Text style={styles.passwordToggleText}>
+						<Text style={styles.passwordToggleBtnText}>
 							{initialState?.showPassword ? "Приховати" : "Показати"}
 						</Text>
 					</TouchableOpacity>
-					<ModalWindow />
 				</View>
 
 				{!isKeyboardShown && (
@@ -252,7 +256,7 @@ export function AuthForm({
 						<BtnMain
 							title={mainBtnText}
 							buttonStyle={styles.mainBtn}
-							onPress={() => submitForm(urlAvatar)}
+							onPress={() => submitForm(initialState.avatar)}
 						/>
 
 						<BtnSecond

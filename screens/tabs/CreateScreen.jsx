@@ -2,6 +2,7 @@
 // todo: кнопка для повторного фото, якщо перше не сподобалось
 // todo: додати кнопки наближення і віддалення на мапі
 // todo: Об'єднати логінскрін і регітрскрін
+// todo: розширити натискання в TextInput, бо по краю клікаєш і воно зникає.
 
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";

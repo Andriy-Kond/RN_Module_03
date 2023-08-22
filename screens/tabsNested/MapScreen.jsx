@@ -9,7 +9,7 @@ export default function MapScreen() {
 
 	return (
 		<View style={styles.container}>
-			<Text>It is MapScreen</Text>
+			{/* <Text>It is MapScreen</Text> */}
 			<MapView
 				style={styles.map}
 				initialRegion={{
@@ -31,6 +31,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: "#fff",
 	},
 
 	map: {
