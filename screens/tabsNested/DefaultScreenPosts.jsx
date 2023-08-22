@@ -77,6 +77,7 @@ export default function DefaultScreenPosts() {
 										navigation.navigate("CommentsScreen", {
 											imageTitle: item.data.imageTitle,
 											postId: item.id,
+											image: item.data.photo,
 										})
 									}>
 									<Text>Add COMMENT</Text>
