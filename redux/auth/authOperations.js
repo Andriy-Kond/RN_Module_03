@@ -31,8 +31,61 @@ const {
 // 	}
 // };
 
+function switchError(errorCode) {
+	let errorMessage = "";
+	switch (errorCode) {
+		case "auth/email-already-in-use":
+			return (errorMessage = "Email already in use. Chose other email.");
+
+		case "auth/invalid-email":
+			return (errorMessage =
+				"Email address is not valid. Please check your email.");
+
+		case "auth/operation-not-allowed":
+			return (errorMessage =
+				"This account has been disabled. Please contact the administrator.");
+
+		case "auth/weak-password":
+			return (errorMessage =
+				"The password is not strong enough. Make it more reliable.");
+
+		case "auth/missing-password":
+			return (errorMessage = "Enter password");
+
+		case "auth/missing-email":
+			return (errorMessage = "Enter email");
+
+		case "auth/user-disabled":
+			return (errorMessage =
+				"The user corresponding to the given email has been disabled");
+
+		case "auth/user-not-found":
+			return (errorMessage =
+				"There is no user corresponding to the given email.");
+
+		case "auth/wrong-password":
+			return (errorMessage = "The password is invalid. Try again.");
+
+		case "auth/invalid-user-token":
+			return (errorMessage =
+				"The user to be updated belongs to a different Firebase project");
+
+		case "auth/user-token-expired":
+			return (errorMessage = "Session time is out. Please login again.");
+
+		case "auth/null-user":
+			return (errorMessage = "The user to be updated is null.");
+
+		case "auth/tenant-id-mismatch":
+			return (errorMessage =
+				"The provided user's tenant ID does not match the underlying Auth instance's configured tenant ID");
+
+		default:
+			return (errorMessage = "Unknown error");
+	}
+}
+
 export const authSingUpUser = ({ email, password, nickname, avatar }) => {
-	console.log("authSingUpUser >> avatar:", avatar);
 	return async (dispatch) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
@@ -40,19 +93,18 @@ export const authSingUpUser = ({ email, password, nickname, avatar }) => {
 				email,
 				password
 			);
-			console.log("return >> userCredential:", userCredential);
 
 			if (userCredential?.user) {
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
 					photoURL: avatar,
 				});
-				console.log("return >> userCredential:", userCredential);
 			}
 
 			const userUpdateProfile = {
 				userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
+				avatar: userCredential.user.photoURL,
 			};
 
 			dispatch(updateUserProfile(userUpdateProfile));
@@ -62,36 +114,7 @@ export const authSingUpUser = ({ email, password, nickname, avatar }) => {
 				error.code
 			);
 
-			let errorMessage = "";
-			switch (error.code) {
-				case "auth/email-already-in-use":
-					errorMessage = "Email already in use. Chose other email.";
-					break;
-
-				case "auth/invalid-email":
-					errorMessage = "Email address is not valid. Please check your email.";
-					break;
-				case "auth/operation-not-allowed":
-					errorMessage =
-						"This account has been disabled. Please contact the administrator.";
-					break;
-				case "auth/weak-password":
-					errorMessage =
-						"The password is not strong enough. Make it more reliable.";
-					break;
-
-				case "auth/missing-password":
-					errorMessage = "Enter password registration";
-					break;
-				case "auth/missing-email":
-					errorMessage = "Enter email for registration";
-					break;
-
-				default:
-					errorMessage = "Unknown error";
-					break;
-			}
-
+			const errorMessage = switchError(error.code);
 			await dispatch(authSignError(errorMessage));
 		}
 	};
@@ -138,38 +161,9 @@ export const authSingInUser =
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 
-			let errorMessage = "";
-			switch (error.code) {
-				case "auth/invalid-email":
-					errorMessage = "Email address is not valid. Please check your email.";
-					break;
-				case "auth/user-disabled":
-					errorMessage =
-						"The user corresponding to the given email has been disabled";
-					break;
-				case "auth/user-not-found":
-					errorMessage = "There is no user corresponding to the given email.";
-					break;
-				case "auth/wrong-password":
-					errorMessage = "The password is invalid. Try again.";
-					break;
-
-				case "auth/missing-password":
-					errorMessage = "Enter password login";
-					break;
-				case "auth/missing-email":
-					errorMessage = "Enter email for login";
-					break;
-
-				default:
-					errorMessage = "Unknown error";
-					break;
-			}
+			const errorMessage = switchError(error.code);
 
 			await dispatch(authSignError(errorMessage));
-			// await dispatch(
-			// 	updateField({ field: "authErrorMessage", value: errorMessage })
-			// );
 		}
 	};
 
@@ -189,28 +183,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 	} catch (error) {
 		console.error("onAuthStateChanged >> error.code:", error.code);
 
-		let errorMessage = "";
-		switch (error.code) {
-			case "auth/invalid-user-token":
-				errorMessage =
-					"The user to be updated belongs to a different Firebase project";
-				break;
-			case "auth/user-token-expired":
-				errorMessage = "Session time is out. Please login again.";
-				break;
-			case "auth/null-user":
-				errorMessage = "The user to be updated is null.";
-				break;
-			case "auth/tenant-id-mismatch":
-				errorMessage =
-					"The provided user's tenant ID does not match the underlying Auth instance's configured tenant ID";
-				break;
-
-			default:
-				errorMessage = "Unknown error";
-				break;
-		}
-
+		const errorMessage = switchError(error.code);
 		await dispatch(authSignError(errorMessage));
 	}
 };
@@ -222,28 +195,7 @@ export const authSingOutUser = () => async (dispatch, getState) => {
 	} catch (error) {
 		console.error("signOut >> error.code:", error.code);
 
-		let errorMessage = "";
-		switch (error.code) {
-			case "auth/invalid-user-token":
-				errorMessage =
-					"The user to be updated belongs to a different Firebase project";
-				break;
-			case "auth/user-token-expired":
-				errorMessage = "Session time is out. Please login again.";
-				break;
-			case "auth/null-user":
-				errorMessage = "The user to be updated is null.";
-				break;
-			case "auth/tenant-id-mismatch":
-				errorMessage =
-					"The provided user's tenant ID does not match the underlying Auth instance's configured tenant ID";
-				break;
-
-			default:
-				errorMessage = "Unknown error";
-				break;
-		}
-
+		const errorMessage = switchError(error.code);
 		await dispatch(authSignError(errorMessage));
 	}
 };

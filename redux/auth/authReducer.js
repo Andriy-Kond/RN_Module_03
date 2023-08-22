@@ -31,7 +31,6 @@ const actions = {
 	},
 
 	updateField: (state, action) => {
-		console.log("action.payload:", action.payload);
 		const { field, value } = action.payload;
 		state[field] = value;
 	},

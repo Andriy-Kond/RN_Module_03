@@ -1,6 +1,3 @@
-// import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import {
 	Image,
 	View,
@@ -10,27 +7,24 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthForm } from "./AuthForm";
-import { styles } from "./RegsisterScreenStyles";
-import { authError, authSingUpUser } from "../../redux/auth/authOperations";
-import { useKeyboardState } from "../../utils/keyboardContext";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase/config";
 
+import { AuthForm } from "./AuthForm";
+import { authSlice } from "../../redux/auth/authReducer";
+import { authSingUpUser } from "../../redux/auth/authOperations";
+
+import { useKeyboardState } from "../../utils/keyboardContext";
+import { uriToBlob } from "../../utils/uriToBlob";
+import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
-import { dbFirestore, storage } from "../../firebase/config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { uriToBlob } from "../../utils/uriToBlob";
-// import { useModalContext } from "../../utils/modalWindowContext";
-import { ModalWindow } from "../../components/ModalWindow";
-// import { resetFields, updateField } from "../../redux/auth/authReducer";
-import { authSlice } from "../../redux/auth/authReducer";
+import { styles } from "./RegsisterScreenStyles";
 
 export default function RegisterScreen() {
 	const initialState = useSelector((state) => state.auth);
-	const { resetFields, updateField, authSignError } = authSlice.actions;
-
-	// const { showModalMessagePopup } = useModalContext();
-	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
+	const { updateField, authSignError } = authSlice.actions;
+	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
 
@@ -58,25 +52,16 @@ export default function RegisterScreen() {
 
 		try {
 			// Очистити попередню помилку перед реєстрацією
-			await dispatch(authSignError(null));
+			dispatch(authSignError(null));
 
 			if (urlAvatar) {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
-				await dispatch(
-					updateField({ field: "avatar", value: serverUrlAvatar })
-				);
+				dispatch(updateField({ field: "avatar", value: serverUrlAvatar }));
 			}
 
-			// Викликати операцію реєстрації
-			await dispatch(authSingUpUser(initialState));
-
-			// // Показати помилку, якщо вона є
-			// if (authErrorMessage) {
-			// 	await showModalMessagePopup(authErrorMessage);
-			// }
-
-			// dispatch(resetFields());
+			// Call register operation
+			dispatch(authSingUpUser(initialState));
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}

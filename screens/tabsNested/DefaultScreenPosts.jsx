@@ -16,8 +16,6 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function DefaultScreenPosts() {
 	const initState = useSelector((state) => state.auth);
-	console.log("DefaultScreenPosts >> initState:", initState);
-
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
 

@@ -1,30 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import Svg, { Circle, Path } from "react-native-svg";
+import * as ImagePicker from "expo-image-picker";
 
-import { styles } from "./AuthFormStyles";
-
+import { authSlice } from "../../redux/auth/authReducer";
 import { useKeyboardState } from "../../utils/keyboardContext";
 
-import { BtnMain } from "../../components/btns/BtnMain";
+import { ModalWindow } from "../../components/ModalWindow";
 import { BtnSecond } from "../../components/btns/BtnSecond";
+import { BtnMain } from "../../components/btns/BtnMain";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
-import { dbFirestore, storage } from "../../firebase/config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-import * as MediaLibrary from "expo-media-library";
-import * as ImagePicker from "expo-image-picker";
-// import { useModalContext } from "../../utils/modalWindowContext";
-import { uriToBlob } from "../../utils/uriToBlob";
-import { useDispatch, useSelector } from "react-redux";
-import { initStateReducer } from "../../redux/auth/authOperations";
-
-import { ModalWindow } from "../../components/ModalWindow";
-
-// import { toggleField, updateField } from "../../redux/auth/authReducer";
-import { authSlice } from "../../redux/auth/authReducer";
+import { styles } from "./AuthFormStyles";
 
 export function AuthForm({
 	mainBtnText,
@@ -32,15 +20,20 @@ export function AuthForm({
 	submitForm,
 	loginScreen,
 }) {
-	const { toggleField, updateField } = authSlice.actions;
 	const navigation = useNavigation();
-
-	const initialState = useSelector((state) => state.auth);
-	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
-	// const { showModalMessagePopup } = useModalContext();
-
 	const dispatch = useDispatch();
+	const { toggleField, updateField } = authSlice.actions;
+	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
+	const initialState = useSelector((state) => state.auth);
 
+	async function updateCurrentField(field, value) {
+		dispatch(
+			updateField({
+				field,
+				value,
+			})
+		);
+	}
 	async function addAvatar() {
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -50,31 +43,26 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
-			dispatch(
-				updateField({
-					field: "avatar",
-					value: result.assets[0].uri,
-				})
-			);
+			await updateCurrentField("avatar", result.assets[0].uri);
+			// dispatch(
+			// 	updateField({
+			// 		field: "avatar",
+			// 		value: result.assets[0].uri,
+			// 	})
+			// );
 		} else {
-			dispatch(
-				updateField({
-					field: "authErrorMessage",
-					value: "Доступ до сховища не наданий",
-				})
+			await updateCurrentField(
+				"authErrorMessage",
+				"Доступ до сховища не наданий"
 			);
-			// showModalMessagePopup("Доступ до сховища не наданий");
+			// dispatch(
+			// 	updateField({
+			// 		field: "authErrorMessage",
+			// 		value: "Доступ до сховища не наданий",
+			// 	})
+			// );
 		}
 	}
-
-	const updateCurrentField = (fieldName, value) => {
-		dispatch(
-			updateField({
-				field: fieldName,
-				value,
-			})
-		);
-	};
 
 	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
 
@@ -85,7 +73,6 @@ export function AuthForm({
 				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
 				isKeyboardShown && { paddingBottom: 16 },
 			]}>
-			{/* <ModalWindow /> */}
 			{initialState.authErrorMessage && (
 				<ModalWindow modalMessage={authErrorMessage} />
 			)}
@@ -140,28 +127,31 @@ export function AuthForm({
 						onSubmitEditing={hideKB} // press OK key on KB
 						onFocus={() => {
 							setIsKeyboardShown(true);
-							dispatch(
-								updateField({
-									field: "currentFocusInput",
-									value: "nickname",
-								})
-							);
+							updateCurrentField("currentFocusInput", "nickname");
+							// dispatch(
+							// 	updateField({
+							// 		field: "currentFocusInput",
+							// 		value: "nickname",
+							// 	})
+							// );
 						}}
-						onBlur={() =>
-							dispatch(
-								updateField({
-									field: "currentFocusInput",
-									value: "",
-								})
-							)
+						onBlur={
+							() => updateCurrentField("currentFocusInput", "")
+							// dispatch(
+							// 	updateField({
+							// 		field: "currentFocusInput",
+							// 		value: "",
+							// 	})
+							// )
 						}
-						onChangeText={(value) =>
-							dispatch(
-								updateField({
-									field: "nickname",
-									value,
-								})
-							)
+						onChangeText={
+							(value) => updateCurrentField("nickname", value)
+							// dispatch(
+							// 	updateField({
+							// 		field: "nickname",
+							// 		value,
+							// 	})
+							// )
 						}
 					/>
 				)}
@@ -179,28 +169,31 @@ export function AuthForm({
 					onSubmitEditing={hideKB} // press OK key on KB
 					onFocus={() => {
 						setIsKeyboardShown(true);
-						dispatch(
-							updateField({
-								field: "currentFocusInput",
-								value: "email",
-							})
-						);
+						updateCurrentField("currentFocusInput", "email");
+						// dispatch(
+						// 	updateField({
+						// 		field: "currentFocusInput",
+						// 		value: "email",
+						// 	})
+						// );
 					}}
-					onBlur={() =>
-						dispatch(
-							updateField({
-								field: "currentFocusInput",
-								value: "",
-							})
-						)
+					onBlur={
+						() => updateCurrentField("currentFocusInput", "")
+						// dispatch(
+						// 	updateField({
+						// 		field: "currentFocusInput",
+						// 		value: "",
+						// 	})
+						// )
 					}
-					onChangeText={(value) =>
-						dispatch(
-							updateField({
-								field: "email",
-								value,
-							})
-						)
+					onChangeText={
+						(value) => updateCurrentField("email", value)
+						// dispatch(
+						// 	updateField({
+						// 		field: "email",
+						// 		value,
+						// 	})
+						// )
 					}
 				/>
 
@@ -221,30 +214,32 @@ export function AuthForm({
 						onSubmitEditing={hideKB}
 						onFocus={() => {
 							setIsKeyboardShown(true);
-
-							dispatch(
-								updateField({
-									field: "currentFocusInput",
-									value: "password",
-								})
-							);
+							updateCurrentField("currentFocusInput", "password");
+							// dispatch(
+							// 	updateField({
+							// 		field: "currentFocusInput",
+							// 		value: "password",
+							// 	})
+							// );
 						}}
-						onBlur={() =>
-							dispatch(
-								updateField({
-									field: "currentFocusInput",
-									value: "",
-								})
-							)
+						onBlur={
+							() => updateCurrentField("currentFocusInput", "")
+							// dispatch(
+							// 	updateField({
+							// 		field: "currentFocusInput",
+							// 		value: "",
+							// 	})
+							// )
 						}
-						onChangeText={(value) => {
-							dispatch(
-								updateField({
-									field: "password",
-									value,
-								})
-							);
-						}}
+						onChangeText={
+							(value) => updateCurrentField("password", value)
+							// dispatch(
+							// 	updateField({
+							// 		field: "password",
+							// 		value,
+							// 	})
+							// );
+						}
 					/>
 
 					<TouchableOpacity
