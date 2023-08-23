@@ -55,8 +55,10 @@ export default function CommentsScreen() {
 
 		await addDoc(collection(currentPostRef, "comments"), {
 			comment: imageComment,
-			userNickName: initState.nickname,
-			data: Date.now(),
+			// userNickName: initState.nickname,
+			avatar: initState.avatar,
+			commentDate: Date.now(),
+			userId: initState.userId,
 		});
 		setImageComment("");
 	};
@@ -85,7 +87,7 @@ export default function CommentsScreen() {
 						data={comments}
 						keyExtractor={(item, indx) => item.id}
 						renderItem={({ item }) => {
-							const commentDate = new Date(item.data.data);
+							const commentDate = new Date(item.data.commentDate);
 							const day = commentDate.getDate();
 							const month = commentDate.getMonth();
 							const year = commentDate.getFullYear();
@@ -97,12 +99,38 @@ export default function CommentsScreen() {
 								.toString()
 								.padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 
-							const resultDate = `${formattedDate} | ${formattedTime}`;
+							const formattedDateTime = `${formattedDate} | ${formattedTime}`;
+
+							const isCurrentUser = item.data.userId === initState.userId;
+
 							return (
-								<SafeAreaView style={styles.currentCommentContainer}>
-									<Text>User: {item.data.userNickName}</Text>
-									<Text>Comment: {item.data.comment}</Text>
-									<Text>DATA: {resultDate}</Text>
+								<SafeAreaView
+									style={[
+										styles.currentCommentContainer,
+										{ flexDirection: isCurrentUser ? "row" : "row-reverse" },
+									]}>
+									{/* <Text>User: {item.data.userNickName}</Text> */}
+									<Image
+										style={[
+											styles.avatarOfComment,
+											isCurrentUser ? { marginLeft: 16 } : { marginRight: 16 },
+										]}
+										source={{ uri: item.data.avatar }}
+									/>
+									<View style={styles.currentCommentWrapper}>
+										<Text style={styles.currentCommentText}>
+											{item.data.comment}
+										</Text>
+										<Text
+											style={[
+												styles.currentCommentDateTime,
+												{
+													alignSelf: isCurrentUser ? "flex-start" : "flex-end",
+												},
+											]}>
+											{formattedDateTime}
+										</Text>
+									</View>
 								</SafeAreaView>
 							);
 						}}

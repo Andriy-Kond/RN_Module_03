@@ -3,17 +3,17 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: "flex-end",
+		// justifyContent: "flex-end",
 		paddingHorizontal: 16,
 		paddingBottom: 16,
 		paddingTop: 32,
 		backgroundColor: "#fff",
 	},
 
-	screenTitle: {
-		alignSelf: "center",
-		marginVertical: 15,
-		fontSize: 20,
+	currentImg: {
+		width: "100%",
+		height: 240,
+		borderRadius: 8,
 	},
 
 	commentsContainer: {
@@ -23,22 +23,42 @@ export const styles = StyleSheet.create({
 
 	currentCommentContainer: {
 		flex: 1,
-		borderColor: "#007BFF",
-		borderWidth: 2,
-		marginBottom: 5,
-		padding: 5,
+		marginBottom: 24,
+		flexDirection: "row",
 	},
 
-	currentImg: {
-		width: "100%",
-		height: 240,
-		borderRadius: 8,
-		borderColor: "#fff",
-
-		marginBottom: 10,
+	avatarOfComment: {
+		width: 28,
+		height: 28,
+		borderRadius: 50,
+		marginRight: 16, //* or marginLeft: 16,
 	},
 
-	// Image Comment
+	currentCommentWrapper: {
+		flex: 1,
+		borderRadius: 6,
+		backgroundColor: "rgba(0, 0, 0, 0.03);",
+		padding: 16,
+	},
+
+	currentCommentText: {
+		flex: 1,
+		paddingBottom: 8,
+
+		color: "#212121",
+		fontFamily: "RobotoRegular400",
+		fontSize: 13,
+		lineHeight: 18,
+	},
+
+	currentCommentDateTime: {
+		color: "#BDBDBD",
+		fontFamily: "RobotoRegular400",
+		fontSize: 10,
+		alignSelf: "flex-end", //* or alignSelf: "flex-start"
+	},
+
+	// Comment Input
 	imageCommentContainer: {
 		borderWidth: 1,
 		borderRadius: 50,
@@ -55,6 +75,7 @@ export const styles = StyleSheet.create({
 	inputFocused: {
 		backgroundColor: "#FFF",
 		borderColor: "#FF6C00",
+		padding: 16,
 	},
 
 	imageComment: {
