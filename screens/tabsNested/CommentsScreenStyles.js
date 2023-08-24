@@ -87,16 +87,6 @@ export const styles = StyleSheet.create({
 		color: "#212121",
 	},
 
-	addCommentBtn: {
-		// alignItems: "center",
-		// justifyContent: "center",
-		// marginBottom: 15,
-		// padding: 10,
-		// borderWidth: 2,
-		// borderRadius: 50,
-		// borderColor: "#0d0d0d7f",
-	},
-
 	disabled: {
 		borderColor: "#d7d7d7",
 		color: "#d7d7d7",

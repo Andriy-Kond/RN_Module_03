@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import Svg, { Circle, Path } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 
 import { authSlice } from "../../redux/auth/authReducer";
@@ -11,6 +10,7 @@ import { ModalWindow } from "../../components/ModalWindow";
 import { BtnSecond } from "../../components/btns/BtnSecond";
 import { BtnMain } from "../../components/btns/BtnMain";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
+import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 
 import { styles } from "./AuthFormStyles";
 
@@ -34,6 +34,7 @@ export function AuthForm({
 			})
 		);
 	}
+
 	async function addAvatar() {
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -43,6 +44,7 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
+			console.log("result.assets[0].uri :>> ", result.assets[0].uri);
 			await updateCurrentField("avatar", result.assets[0].uri);
 		} else {
 			await updateCurrentField(
@@ -64,28 +66,17 @@ export function AuthForm({
 			{initState.authErrorMessage && (
 				<ModalWindow modalMessage={authErrorMessage} />
 			)}
+
+			{/* ADD AVATAR */}
 			{!loginScreen && (
 				<View style={styles.regImageContainer}>
 					<Image
 						style={styles.avatarImg}
 						source={initState?.avatar ? { uri: initState.avatar } : regEmptyImg}
 					/>
-
+					{/* ADD AVATAR BTN */}
 					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
-						<Svg
-							width="25"
-							height="25"
-							viewBox="0 0 25 25"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg">
-							<Circle cx="12.5" cy="12.5" r="12" fill="#fff" stroke="#FF6C00" />
-							<Path
-								fillRule="evenodd"
-								clipRule="evenodd"
-								d="M13 6H12V12H6V13H12V19H13V13H19V12H13V6Z"
-								fill="#FF6C00"
-							/>
-						</Svg>
+						<AddAvatarBtn />
 					</TouchableOpacity>
 				</View>
 			)}
@@ -177,6 +168,7 @@ export function AuthForm({
 					</TouchableOpacity>
 				</View>
 
+				{/* REGISTRATION/LOGIN BTN */}
 				{!isKeyboardShown && (
 					<>
 						<BtnMain

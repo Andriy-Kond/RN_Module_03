@@ -7,13 +7,7 @@ import { useDispatch } from "react-redux";
 
 import { authSlice } from "../redux/auth/authReducer";
 
-const {
-	updateUserProfile,
-	updateStateChange,
-	authSingOut,
-	authSignError,
-	updateField,
-} = authSlice.actions;
+const { updateField } = authSlice.actions;
 
 export function ModalWindow({ modalMessage }) {
 	// const { modalMessage, hideMOdalMessagePopup } = useModalContext();

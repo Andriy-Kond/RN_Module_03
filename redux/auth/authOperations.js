@@ -7,29 +7,10 @@ import {
 	signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
-// import {
-// 	authSignError,
-// 	authSingOut,
-// 	updateStateChange,
-// 	updateUserProfile,
-// } from "./authReducer";
 import { authSlice } from "./authReducer";
 
-const {
-	updateUserProfile,
-	updateStateChange,
-	authSingOut,
-	authSignError,
-	updateField,
-} = authSlice.actions;
-
-// export const authError = (errorMessage) => async (dispatch, getState) => {
-// 	try {
-// 		await dispatch(authSignError(errorMessage));
-// 	} catch (error) {
-// 		console.error("authError >> error:", error);
-// 	}
-// };
+const { updateUserProfile, updateStateChange, authSingOut, authSignError } =
+	authSlice.actions;
 
 function switchError(errorCode) {
 	let errorMessage = "";
@@ -85,19 +66,24 @@ function switchError(errorCode) {
 	}
 }
 
-export const authSingUpUser = ({ email, password, nickname, avatar }) => {
-	return async (dispatch) => {
+// export const authSingUpUser = ({ email, password, nickname, avatar }) => {
+export const authSingUpUser = (initState) => {
+	console.log("authSingUpUser >> initState:", initState);
+
+	return async (dispatch, getState) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
-				email,
-				password
+				initState.email,
+				initState.password
 			);
+			console.log("return >> userCredential:", userCredential);
 
 			if (userCredential?.user) {
+				console.log("return >> userCredential?.user:", userCredential.user);
 				await updateProfile(userCredential.user, {
-					displayName: nickname,
-					photoURL: avatar,
+					displayName: initState.nickname,
+					photoURL: initState.avatar,
 				});
 			}
 
@@ -125,39 +111,6 @@ export const authSingInUser =
 	async (dispatch, getState) => {
 		try {
 			const result = await signInWithEmailAndPassword(auth, email, password);
-			// console.log("result:", result);
-
-			// const {
-			// 	displayName: nickname,
-			// 	email: baseEmail,
-			// 	photoURL: avatar,
-			// 	uid: userId,
-			// } = result.user;
-
-			// await dispatch(
-			// 	updateField({
-			// 		field: "nickname",
-			// 		value: nickname,
-			// 	})
-			// );
-			// await dispatch(
-			// 	updateField({
-			// 		field: "email",
-			// 		value: baseEmail,
-			// 	})
-			// );
-			// await dispatch(
-			// 	updateField({
-			// 		field: "avatar",
-			// 		value: result.user.photoURL,
-			// 	})
-			// );
-			// await dispatch(
-			// 	updateField({
-			// 		field: "userId",
-			// 		value: userId,
-			// 	})
-			// );
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 

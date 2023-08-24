@@ -33,21 +33,13 @@ const actions = {
 	updateField: (state, action) => {
 		const { field, value } = action.payload;
 		state[field] = value;
+		console.log("after updateField state.avatar:", state.avatar);
 	},
+
 	toggleField: (state, action) => {
 		const { field } = action.payload;
 		state[field] = !state[field];
 	},
-	// resetFields: (state, action) => ({
-	// 	...state,
-	// 	nickname: "",
-	// 	email: "",
-	// 	password: "",
-	// 	currentFocusInput: "",
-	// 	showPassword: false,
-	// 	avatar: null,
-	// 	error: null,
-	// }),
 
 	updateUserProfile: (state, action) => ({
 		...state,

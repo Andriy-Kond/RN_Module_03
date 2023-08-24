@@ -22,7 +22,7 @@ import bgImage from "../../assets/img/bg_photo.jpg";
 import { styles } from "./RegsisterScreenStyles";
 
 export default function RegisterScreen() {
-	const initialState = useSelector((state) => state.auth);
+	const initState = useSelector((state) => state.auth);
 	const { updateField, authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
@@ -58,10 +58,12 @@ export default function RegisterScreen() {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
 				dispatch(updateField({ field: "avatar", value: serverUrlAvatar }));
+				console.log("submitForm >> initState.avatar:", initState.avatar);
 			}
 
 			// Call register operation
-			dispatch(authSingUpUser(initialState));
+			// dispatch(authSingUpUser(initState));
+			console.log("submitForm >> initState:", initState);
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}
@@ -74,7 +76,7 @@ export default function RegisterScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.registrationContainer}>
-				{initialState.authErrorMessage && (
+				{initState.authErrorMessage && (
 					<ModalWindow modalMessage={authErrorMessage} />
 				)}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
