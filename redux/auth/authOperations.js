@@ -66,24 +66,21 @@ function switchError(errorCode) {
 	}
 }
 
-// export const authSingUpUser = ({ email, password, nickname, avatar }) => {
-export const authSingUpUser = (initState) => {
-	console.log("authSingUpUser >> initState:", initState);
-
+export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 	return async (dispatch, getState) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
-				initState.email,
-				initState.password
+				email,
+				password
 			);
 			console.log("return >> userCredential:", userCredential);
 
 			if (userCredential?.user) {
 				console.log("return >> userCredential?.user:", userCredential.user);
 				await updateProfile(userCredential.user, {
-					displayName: initState.nickname,
-					photoURL: initState.serverAvatar,
+					displayName: nickname,
+					photoURL: serverAvatar,
 				});
 			}
 

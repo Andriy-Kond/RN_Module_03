@@ -26,7 +26,6 @@ export default function RegisterScreen() {
 	const { updateField, authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
-	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
 
 	const uploadPhotoToServer = async (urlAvatar) => {
 		try {
@@ -47,17 +46,7 @@ export default function RegisterScreen() {
 		}
 	};
 
-	// async function updateCurrentField(field, value) {
-	// 	dispatch(
-	// 		updateField({
-	// 			field,
-	// 			value,
-	// 		})
-	// 	);
-	// }
-
 	const submitForm = async (urlAvatar) => {
-		console.log("submitForm >> initState 01:", initState);
 		hideKB();
 
 		try {
@@ -68,7 +57,6 @@ export default function RegisterScreen() {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
 
-				// updateCurrentField("avatar", serverUrlAvatar);
 				dispatch(
 					updateField({ field: "serverAvatar", value: serverUrlAvatar })
 				);
@@ -89,9 +77,7 @@ export default function RegisterScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.registrationContainer}>
-				{initState.authErrorMessage && (
-					<ModalWindow modalMessage={authErrorMessage} />
-				)}
+				{initState.authErrorMessage && <ModalWindow />}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
 
 				<KeyboardAvoidingView

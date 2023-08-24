@@ -1,16 +1,16 @@
 // Модальне вікно з повідомленням
 import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
-import { useModalContext } from "../utils/modalWindowContext";
+
 import { View, Text, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { authSlice } from "../redux/auth/authReducer";
 
 const { updateField } = authSlice.actions;
 
-export function ModalWindow({ modalMessage }) {
-	// const { modalMessage, hideMOdalMessagePopup } = useModalContext();
+export function ModalWindow() {
+	const modalMessage = useSelector((state) => state.auth.authErrorMessage);
 	const dispatch = useDispatch();
 	const hideMOdalMessagePopup = () => {
 		dispatch(

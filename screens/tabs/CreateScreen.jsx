@@ -30,7 +30,6 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 import { useKeyboardState } from "../../utils/keyboardContext";
 
 import { ModalWindow } from "../../components/ModalWindow";
-import { useModalContext } from "../../utils/modalWindowContext";
 
 export default function CreateScreen() {
 	const { hideKB } = useKeyboardState();
@@ -60,7 +59,7 @@ export default function CreateScreen() {
 	const [imageTitle, setImageTitle] = useState("");
 	const { userId, nickname } = useSelector((state) => state.auth);
 
-	const { showModalMessagePopup } = useModalContext();
+	const initState = useSelector((state) => state.auth);
 
 	// request accesses to camera, location and mediaLibrary
 	useEffect(() => {
@@ -94,9 +93,16 @@ export default function CreateScreen() {
 					if (permissionMediaLibrary) {
 						await MediaLibrary.createAssetAsync(photo.uri);
 					} else {
-						showModalMessagePopup(
-							"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку"
+						dispatch(
+							updateField({
+								field: "authErrorMessage",
+								value:
+									"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку",
+							})
 						);
+						// showModalMessagePopup(
+						// 	"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку"
+						// );
 					}
 
 					if (permissionLocation) {
@@ -233,8 +239,10 @@ export default function CreateScreen() {
 						</Text>
 					</TouchableOpacity>
 				</View>
-
-				<ModalWindow />
+				{initState.authErrorMessage && (
+					<ModalWindow modalMessage={authErrorMessage} />
+				)}
+				{/* <ModalWindow /> */}
 			</View>
 		</TouchableWithoutFeedback>
 	);

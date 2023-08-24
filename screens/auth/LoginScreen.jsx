@@ -18,11 +18,10 @@ import bgImage from "../../assets/img/bg_photo.jpg";
 import { styles } from "./LoginScreenStyles";
 
 export default function LoginScreen() {
-	const initialState = useSelector((state) => state.auth);
+	const initState = useSelector((state) => state.auth);
 	const { authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
-	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
 
 	const submitForm = async () => {
 		hideKB();
@@ -32,7 +31,7 @@ export default function LoginScreen() {
 			dispatch(authSignError(null));
 
 			// Call login operation
-			dispatch(authSingInUser(initialState));
+			dispatch(authSingInUser(initState));
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}
@@ -45,9 +44,7 @@ export default function LoginScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
-				{initialState.authErrorMessage && (
-					<ModalWindow modalMessage={authErrorMessage} />
-				)}
+				{initState.authErrorMessage && <ModalWindow />}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
 				<KeyboardAvoidingView
 					style={styles.kbAvoidingContainer}

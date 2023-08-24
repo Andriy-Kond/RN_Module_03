@@ -54,8 +54,6 @@ export function AuthForm({
 		}
 	}
 
-	const authErrorMessage = useSelector((state) => state.auth.authErrorMessage);
-
 	return (
 		<View
 			style={[
@@ -63,9 +61,7 @@ export function AuthForm({
 				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
 				isKeyboardShown && { paddingBottom: 16 },
 			]}>
-			{initState.authErrorMessage && (
-				<ModalWindow modalMessage={authErrorMessage} />
-			)}
+			{initState.authErrorMessage && <ModalWindow />}
 
 			{/* ADD AVATAR */}
 			{!loginScreen && (
