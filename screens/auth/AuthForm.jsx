@@ -44,7 +44,6 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
-			console.log("result.assets[0].uri :>> ", result.assets[0].uri);
 			await updateCurrentField("avatar", result.assets[0].uri);
 		} else {
 			await updateCurrentField(

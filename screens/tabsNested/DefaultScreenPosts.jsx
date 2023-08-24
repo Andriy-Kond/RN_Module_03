@@ -16,6 +16,7 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function DefaultScreenPosts() {
 	const initState = useSelector((state) => state.auth);
+	console.log("DefaultScreenPosts >> initState:", initState);
 
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
@@ -43,7 +44,11 @@ export default function DefaultScreenPosts() {
 			<View style={styles.item}>
 				<Image
 					style={styles.userImg}
-					source={initState?.avatar ? { uri: initState.avatar } : regEmptyImg}
+					source={
+						initState?.serverAvatar
+							? { uri: initState.serverAvatar }
+							: regEmptyImg
+					}
 				/>
 				<View>
 					<Text style={styles.userName}>{initState.nickname}</Text>

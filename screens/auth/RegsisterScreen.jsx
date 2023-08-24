@@ -23,7 +23,8 @@ import { styles } from "./RegsisterScreenStyles";
 
 export default function RegisterScreen() {
 	const initState = useSelector((state) => state.auth);
-	const { updateField, authSignError } = authSlice.actions;
+	console.log("RegisterScreen >> initState:", initState);
+	const { updateField, authSignError, updateServerAvatar } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 
@@ -57,10 +58,11 @@ export default function RegisterScreen() {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
 
+				console.log("submitForm >> serverUrlAvatar 01:", serverUrlAvatar);
+				// dispatch(updateServerAvatar(serverUrlAvatar));
 				dispatch(
 					updateField({ field: "serverAvatar", value: serverUrlAvatar })
 				);
-				console.log("submitForm >> initState 02:", initState);
 			}
 
 			// Call register operation

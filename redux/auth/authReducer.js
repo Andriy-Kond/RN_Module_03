@@ -33,9 +33,16 @@ const actions = {
 
 	updateField: (state, action) => {
 		const { field, value } = action.payload;
-		state[field] = value;
-		// console.log("after updateField state.avatar:", state.avatar);
+		return {
+			...state,
+			[field]: value,
+		};
 	},
+
+	// updateServerAvatar: (state, action) => ({
+	// 	...state,
+	// 	serverAvatar: action.payload,
+	// }),
 
 	toggleField: (state, action) => {
 		const { field } = action.payload;

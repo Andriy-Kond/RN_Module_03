@@ -74,10 +74,8 @@ export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 				email,
 				password
 			);
-			console.log("return >> userCredential:", userCredential);
 
 			if (userCredential?.user) {
-				console.log("return >> userCredential?.user:", userCredential.user);
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
 					photoURL: serverAvatar,
