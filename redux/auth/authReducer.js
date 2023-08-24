@@ -19,6 +19,7 @@ const initState = {
 	currentFocusInput: "",
 	showPassword: false,
 	avatar: null,
+	serverAvatar: null,
 	error: null,
 };
 
@@ -33,7 +34,7 @@ const actions = {
 	updateField: (state, action) => {
 		const { field, value } = action.payload;
 		state[field] = value;
-		console.log("after updateField state.avatar:", state.avatar);
+		// console.log("after updateField state.avatar:", state.avatar);
 	},
 
 	toggleField: (state, action) => {

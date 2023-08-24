@@ -47,7 +47,17 @@ export default function RegisterScreen() {
 		}
 	};
 
+	// async function updateCurrentField(field, value) {
+	// 	dispatch(
+	// 		updateField({
+	// 			field,
+	// 			value,
+	// 		})
+	// 	);
+	// }
+
 	const submitForm = async (urlAvatar) => {
+		console.log("submitForm >> initState 01:", initState);
 		hideKB();
 
 		try {
@@ -57,13 +67,16 @@ export default function RegisterScreen() {
 			if (urlAvatar) {
 				// Отримання даних з серверу
 				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
-				dispatch(updateField({ field: "avatar", value: serverUrlAvatar }));
-				console.log("submitForm >> initState.avatar:", initState.avatar);
+
+				// updateCurrentField("avatar", serverUrlAvatar);
+				dispatch(
+					updateField({ field: "serverAvatar", value: serverUrlAvatar })
+				);
+				console.log("submitForm >> initState 02:", initState);
 			}
 
 			// Call register operation
-			// dispatch(authSingUpUser(initState));
-			console.log("submitForm >> initState:", initState);
+			dispatch(authSingUpUser(initState));
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}

@@ -83,7 +83,7 @@ export const authSingUpUser = (initState) => {
 				console.log("return >> userCredential?.user:", userCredential.user);
 				await updateProfile(userCredential.user, {
 					displayName: initState.nickname,
-					photoURL: initState.avatar,
+					photoURL: initState.serverAvatar,
 				});
 			}
 
