@@ -14,7 +14,7 @@ import { AuthForm } from "./AuthForm";
 import { authSlice } from "../../redux/auth/authReducer";
 import {
 	authSingUpUser,
-	updateUserField,
+	// updateUserField,
 } from "../../redux/auth/authOperations";
 
 import { uriToBlob } from "../../utils/uriToBlob";

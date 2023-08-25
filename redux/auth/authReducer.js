@@ -31,11 +31,18 @@ const actions = {
 		};
 	},
 
+	// updateField: (state, action) => {
+	// 	const { field, value } = action.payload;
+	// 	return {
+	// 		...state,
+	// 		[field]: value,
+	// 	};
+	// },
+
 	updateField: (state, action) => {
-		const { field, value } = action.payload;
 		return {
 			...state,
-			[field]: value,
+			...action.payload,
 		};
 	},
 
@@ -51,10 +58,11 @@ const actions = {
 	updateUserProfile: (state, action) => {
 		return {
 			...state,
-			userId: action.payload.userId,
-			nickname: action.payload.nickname,
-			serverAvatar: action.payload.serverAvatar,
-			phoneAvatar: action.payload.phoneAvatar,
+			...action.payload,
+			// userId: action.payload.userId,
+			// nickname: action.payload.nickname,
+			// serverAvatar: action.payload.serverAvatar,
+			// // phoneAvatar: action.payload.phoneAvatar,
 		};
 	},
 

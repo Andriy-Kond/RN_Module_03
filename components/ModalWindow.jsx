@@ -13,12 +13,7 @@ export function ModalWindow() {
 	const modalMessage = useSelector((state) => state.auth.authErrorMessage);
 	const dispatch = useDispatch();
 	const hideMOdalMessagePopup = () => {
-		dispatch(
-			updateField({
-				field: "authErrorMessage",
-				value: "",
-			})
-		);
+		dispatch(updateField({ authErrorMessage: "" }));
 	};
 
 	return (

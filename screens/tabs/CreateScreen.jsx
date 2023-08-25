@@ -22,14 +22,13 @@ import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraType } from "expo-camera";
 
 import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { dbFirestore, storage } from "../../firebase/config";
+import { dbFirestore } from "../../firebase/config";
 
-import { uriToBlob } from "../../utils/uriToBlob";
 import { useButtonState } from "../../utils/tabBtnsContext";
 import { useKeyboardState } from "../../utils/keyboardContext";
 
 import { ModalWindow } from "../../components/ModalWindow";
+import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 
 export default function CreateScreen() {
 	const { hideKB } = useKeyboardState();
@@ -95,14 +94,10 @@ export default function CreateScreen() {
 					} else {
 						dispatch(
 							updateField({
-								field: "authErrorMessage",
-								value:
+								authErrorMessage:
 									"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку",
 							})
 						);
-						// showModalMessagePopup(
-						// 	"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку"
-						// );
 					}
 
 					if (permissionLocation) {
@@ -132,7 +127,7 @@ export default function CreateScreen() {
 	};
 
 	const uploadPostToServer = async () => {
-		const photo = await uploadPhotoToServer();
+		const photo = await uploadPhotoToServer(capturedPhoto);
 		// send to db
 		if (capturedLocation) {
 			await addDoc(collection(dbFirestore, "dcim"), {
@@ -142,24 +137,6 @@ export default function CreateScreen() {
 				userId,
 				nickname,
 			});
-		}
-	};
-
-	const uploadPhotoToServer = async () => {
-		try {
-			// to BLOB from uri
-			const blobFile = await uriToBlob(capturedPhoto);
-
-			// send to storage
-			const uniqPostId = Date.now().toString();
-			const storageRef = ref(storage, `${uniqPostId}`);
-			await uploadBytes(storageRef, blobFile);
-			// take from server
-			const url = await getDownloadURL(storageRef);
-			return url;
-		} catch (e) {
-			console.error("Error adding data: ", e);
-			throw e;
 		}
 	};
 

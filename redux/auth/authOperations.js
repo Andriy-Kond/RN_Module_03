@@ -8,11 +8,9 @@ import {
 } from "firebase/auth";
 
 import { auth } from "../../firebase/config";
+import { switchError } from "../../utils/switchError";
+import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 import { authSlice } from "./authReducer";
-
-import { uriToBlob } from "../../utils/uriToBlob";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase/config";
 
 const {
 	updateUserProfile,
@@ -22,80 +20,6 @@ const {
 	updateField,
 	toggleField,
 } = authSlice.actions;
-
-function switchError(errorCode) {
-	let errorMessage = "";
-	switch (errorCode) {
-		case "auth/email-already-in-use":
-			return (errorMessage = "Email already in use. Chose other email.");
-
-		case "auth/invalid-email":
-			return (errorMessage =
-				"Email address is not valid. Please check your email.");
-
-		case "auth/operation-not-allowed":
-			return (errorMessage =
-				"This account has been disabled. Please contact the administrator.");
-
-		case "auth/weak-password":
-			return (errorMessage =
-				"The password is not strong enough. Make it more reliable.");
-
-		case "auth/missing-password":
-			return (errorMessage = "Enter password");
-
-		case "auth/missing-email":
-			return (errorMessage = "Enter email");
-
-		case "auth/user-disabled":
-			return (errorMessage =
-				"The user corresponding to the given email has been disabled");
-
-		case "auth/user-not-found":
-			return (errorMessage =
-				"There is no user corresponding to the given email.");
-
-		case "auth/wrong-password":
-			return (errorMessage = "The password is invalid. Try again.");
-
-		case "auth/invalid-user-token":
-			return (errorMessage =
-				"The user to be updated belongs to a different Firebase project");
-
-		case "auth/user-token-expired":
-			return (errorMessage = "Session time is out. Please login again.");
-
-		case "auth/null-user":
-			return (errorMessage = "The user to be updated is null.");
-
-		case "auth/tenant-id-mismatch":
-			return (errorMessage =
-				"The provided user's tenant ID does not match the underlying Auth instance's configured tenant ID");
-
-		default:
-			return (errorMessage = "Unknown error");
-	}
-}
-
-// uri to blob and upload to server storage
-const uploadPhotoToServer = async (urlAvatar) => {
-	try {
-		// to BLOB from uri
-		const blobFile = await uriToBlob(urlAvatar);
-
-		// send to storage
-		const uniqPostId = Date.now().toString();
-		const storageRef = ref(storage, `${uniqPostId}`);
-		await uploadBytes(storageRef, blobFile);
-
-		// take from server
-		const url = await getDownloadURL(storageRef);
-		return url;
-	} catch (e) {
-		console.error("Error adding data: ", e);
-		throw e;
-	}
-};
 
 export const authSingUpUser = ({
 	email,
@@ -116,7 +40,7 @@ export const authSingUpUser = ({
 			if (userCredential?.user) {
 				// Update userId field in Redux state
 
-				await dispatch(updateField("userId", userCredential.user.uid));
+				await dispatch(updateField({ userId: userCredential.user.uid }));
 				let serverUrlAvatar = null;
 
 				if (phoneAvatar) {
@@ -125,9 +49,7 @@ export const authSingUpUser = ({
 					// Update field "serverAvatar" in state
 					await dispatch(updateUserField("serverAvatar", serverUrlAvatar));
 
-					dispatch(
-						updateField({ field: "serverAvatar", value: serverUrlAvatar })
-					);
+					dispatch(updateField({ serverAvatar: serverUrlAvatar }));
 				}
 
 				// Update Firebase userCredential
@@ -157,13 +79,13 @@ export const authSingUpUser = ({
 	};
 };
 
-export const updateUserField = (field, value) => async (dispatch, getState) => {
+export async function updateCurrentField(field, value) {
 	try {
-		await dispatch(updateField({ field, value }));
+		dispatch(updateField({ [field]: value }));
 	} catch (error) {
-		console.log("updateUserFeild >> error:", error);
+		console.log("updateCurrentField >> error:", error);
 	}
-};
+}
 
 export const authSingInUser =
 	({ email, password }) =>
@@ -175,9 +97,17 @@ export const authSingInUser =
 				password
 			);
 			console.log("result:", userCredential.user);
-			dispatch(updateUserField("serverAvatar", userCredential.user.photoURL));
-			dispatch(updateUserField("userId", userCredential.user.uid));
-			dispatch(updateUserField("nickname", userCredential.user.displayName));
+
+			const newProfileFields = {
+				userId: userCredential.user.uid,
+				nickname: userCredential.user.displayName,
+				serverAvatar: userCredential.user.photoURL,
+				// phoneAvatar: user.photoURL,
+			};
+			dispatch(updateUserProfile(newProfileFields));
+			// dispatch(updateUserField("serverAvatar", userCredential.user.photoURL));
+			// dispatch(updateUserField("userId", userCredential.user.uid));
+			// dispatch(updateUserField("nickname", userCredential.user.displayName));
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 			const errorMessage = switchError(error.code);

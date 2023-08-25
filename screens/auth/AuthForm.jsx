@@ -13,6 +13,7 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 
 import { styles } from "./AuthFormStyles";
+import { updateCurrentField } from "../../redux/auth/authOperations";
 
 export function AuthForm({
 	mainBtnText,
@@ -26,14 +27,9 @@ export function AuthForm({
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
 	const state = useSelector((state) => state.auth);
 
-	async function updateCurrentField(field, value) {
-		dispatch(
-			updateField({
-				field,
-				value,
-			})
-		);
-	}
+	// async function updateCurrentField(field, value) {
+	// 	dispatch(updateField({ [field]: value }));
+	// }
 
 	// set avatar to initial state
 	async function addAvatar() {
