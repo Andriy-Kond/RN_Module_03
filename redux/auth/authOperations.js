@@ -115,17 +115,22 @@ export const authSingUpUser = ({
 
 			if (userCredential?.user) {
 				// Update userId field in Redux state
-				await dispatch(updateField("userId", userCredential.user.uid));
 
-				let serverUrlAvatar;
+				await dispatch(updateField("userId", userCredential.user.uid));
+				let serverUrlAvatar = null;
 
 				if (phoneAvatar) {
 					// Upload avatar to server
 					serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
 					// Update field "serverAvatar" in state
-					dispatch(updateUserField("serverAvatar", serverUrlAvatar));
+					await dispatch(updateUserField("serverAvatar", serverUrlAvatar));
+
+					dispatch(
+						updateField({ field: "serverAvatar", value: serverUrlAvatar })
+					);
 				}
 
+				// Update Firebase userCredential
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
 					photoURL: serverUrlAvatar,
@@ -164,8 +169,15 @@ export const authSingInUser =
 	({ email, password }) =>
 	async (dispatch, getState) => {
 		try {
-			const result = await signInWithEmailAndPassword(auth, email, password);
-			// Хіба не треба тут записати щось у стейт?
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+			console.log("result:", userCredential.user);
+			dispatch(updateUserField("serverAvatar", userCredential.user.photoURL));
+			dispatch(updateUserField("userId", userCredential.user.uid));
+			dispatch(updateUserField("nickname", userCredential.user.displayName));
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 			const errorMessage = switchError(error.code);

@@ -22,8 +22,7 @@ import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
 
 export default function CommentsScreen() {
 	const { hideKB } = useKeyboardState();
-	const initState = useSelector((store) => store.auth);
-	console.log("CommentsScreen >> initState:", initState);
+	const state = useSelector((store) => store.auth);
 
 	const {
 		params: { postId, imageTitle, image },
@@ -55,14 +54,15 @@ export default function CommentsScreen() {
 		hideKB();
 		const currentPostRef = doc(dbFirestore, "dcim", postId);
 
+		console.log("запуск addDoc :>> ");
 		await addDoc(collection(currentPostRef, "comments"), {
+			// userNickName: state.nickname,
 			comment: imageComment,
-			// userNickName: initState.nickname,
-			avatar: initState.avatar,
+			avatar: state.serverAvatar,
 			commentDate: Date.now(),
-			userId: initState.userId,
+			userId: state.userId,
 		});
-		console.log("awaitaddDoc >> initState:", initState);
+
 		setImageComment("");
 	};
 
@@ -102,7 +102,7 @@ export default function CommentsScreen() {
 								.toString()
 								.padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 							const formattedDateTime = `${formattedDate} | ${formattedTime}`;
-							const isCurrentUser = item.data.userId === initState.userId;
+							const isCurrentUser = item.data.userId === state.userId;
 							return (
 								<SafeAreaView
 									style={[
@@ -115,7 +115,7 @@ export default function CommentsScreen() {
 											isCurrentUser ? { marginLeft: 16 } : { marginRight: 16 },
 										]}
 										source={
-											initState?.avatar
+											state?.serverAvatar
 												? { uri: item.data.avatar }
 												: regEmptyImg
 										}
@@ -144,8 +144,7 @@ export default function CommentsScreen() {
 				<View
 					style={[
 						styles.imageCommentContainer,
-						initState?.currentFocusInput === "imageComment" &&
-							styles.inputFocused,
+						state?.currentFocusInput === "imageComment" && styles.inputFocused,
 					]}>
 					<TextInput
 						value={imageComment}
