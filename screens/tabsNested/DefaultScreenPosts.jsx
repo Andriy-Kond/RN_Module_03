@@ -6,7 +6,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
@@ -15,8 +15,8 @@ import { useSelector } from "react-redux";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function DefaultScreenPosts() {
-	const initState = useSelector((state) => state.auth);
-	console.log("DefaultScreenPosts >> initState:", initState);
+	const state = useSelector((state) => state.auth);
+	console.log("DefaultScreenPosts >> state:", state);
 
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
@@ -45,14 +45,13 @@ export default function DefaultScreenPosts() {
 				<Image
 					style={styles.userImg}
 					source={
-						initState?.serverAvatar
-							? { uri: initState.serverAvatar }
-							: regEmptyImg
+						state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
+						// state?.avatar ? { uri: state.avatar } : regEmptyImg
 					}
 				/>
 				<View>
-					<Text style={styles.userName}>{initState.nickname}</Text>
-					<Text style={styles.userEmail}>{initState.email}</Text>
+					<Text style={styles.userName}>{state.nickname}</Text>
+					<Text style={styles.userEmail}>{state.email}</Text>
 				</View>
 			</View>
 

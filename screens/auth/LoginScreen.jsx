@@ -27,7 +27,7 @@ export default function LoginScreen() {
 		hideKB();
 
 		try {
-			// Очистити попередню помилку перед реєстрацією
+			// Clear error field in state
 			dispatch(authSignError(null));
 
 			// Call login operation

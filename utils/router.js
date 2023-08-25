@@ -36,6 +36,7 @@ function AuthNavigation() {
 				component={LoginScreen}
 				options={{ title: "Login screen" }} // settings for current screen
 			/>
+
 			<AuthStack.Screen
 				name="Register"
 				component={RegisterScreen}
@@ -60,9 +61,9 @@ function TabsNavigation() {
 				component={PostsScreen}
 				options={{
 					headerShown: false,
-					title: "Публікації",
-					headerTitleStyle: styles.headerTitle,
-					headerTitleAlign: "center",
+					// title: "Публікації",
+					// headerTitleStyle: styles.headerTitleStyle,
+					// headerTitleAlign: "center",
 
 					tabBarIcon: ({ focused, color, size }) => (
 						<MaterialCommunityIcons
@@ -81,12 +82,13 @@ function TabsNavigation() {
 					},
 				}}
 			/>
+
 			<MainStack.Screen
 				name="Create"
 				component={CreateScreen}
 				options={{
 					title: "Створити публікацію",
-					headerTitleStyle: styles.headerTitle,
+					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
 					headerLeft: () => <BtnGoBack />,
 
@@ -107,6 +109,7 @@ function TabsNavigation() {
 					},
 				}}
 			/>
+
 			<MainStack.Screen
 				name="Profile"
 				component={ProfileScreen}

@@ -6,11 +6,22 @@ import {
 	updateProfile,
 	signOut,
 } from "firebase/auth";
+
 import { auth } from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
-const { updateUserProfile, updateStateChange, authSingOut, authSignError } =
-	authSlice.actions;
+import { uriToBlob } from "../../utils/uriToBlob";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase/config";
+
+const {
+	updateUserProfile,
+	updateStateChange,
+	authSingOut,
+	authSignError,
+	updateField,
+	toggleField,
+} = authSlice.actions;
 
 function switchError(errorCode) {
 	let errorMessage = "";
@@ -66,9 +77,36 @@ function switchError(errorCode) {
 	}
 }
 
-export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
+// uri to blob and upload to server storage
+const uploadPhotoToServer = async (urlAvatar) => {
+	try {
+		// to BLOB from uri
+		const blobFile = await uriToBlob(urlAvatar);
+
+		// send to storage
+		const uniqPostId = Date.now().toString();
+		const storageRef = ref(storage, `${uniqPostId}`);
+		await uploadBytes(storageRef, blobFile);
+
+		// take from server
+		const url = await getDownloadURL(storageRef);
+		return url;
+	} catch (e) {
+		console.error("Error adding data: ", e);
+		throw e;
+	}
+};
+
+export const authSingUpUser = ({
+	email,
+	password,
+	nickname,
+	phoneAvatar,
+	serverAvatar,
+}) => {
 	return async (dispatch, getState) => {
 		try {
+			// Create new user on the Firebase
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				email,
@@ -76,29 +114,50 @@ export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 			);
 
 			if (userCredential?.user) {
+				// Update userId field in Redux state
+				await dispatch(updateField("userId", userCredential.user.uid));
+
+				let serverUrlAvatar;
+
+				if (phoneAvatar) {
+					// Upload avatar to server
+					serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
+					// Update field "serverAvatar" in state
+					dispatch(updateUserField("serverAvatar", serverUrlAvatar));
+				}
+
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
-					photoURL: serverAvatar,
+					photoURL: serverUrlAvatar,
+					// photoURL: avatar,
 				});
 			}
 
-			const userUpdateProfile = {
-				userId: userCredential.user.uid,
-				nickname: userCredential.user.displayName,
-				avatar: userCredential.user.photoURL,
-			};
+			// const userUpdateProfile = {
+			// 	userId: userCredential.user.uid,
+			// 	nickname: userCredential.user.displayName,
+			// 	phoneAvatar: userCredential.user.photoURL,
+			// 	serverAvatar: userCredential.user.photoURL,
+			// };
 
-			dispatch(updateUserProfile(userUpdateProfile));
+			// await dispatch(updateUserProfile(userUpdateProfile));
 		} catch (error) {
 			console.error(
 				"createUserWithEmailAndPassword >> error.code:",
 				error.code
 			);
-
 			const errorMessage = switchError(error.code);
 			await dispatch(authSignError(errorMessage));
 		}
 	};
+};
+
+export const updateUserField = (field, value) => async (dispatch, getState) => {
+	try {
+		await dispatch(updateField({ field, value }));
+	} catch (error) {
+		console.log("updateUserFeild >> error:", error);
+	}
 };
 
 export const authSingInUser =
@@ -106,25 +165,32 @@ export const authSingInUser =
 	async (dispatch, getState) => {
 		try {
 			const result = await signInWithEmailAndPassword(auth, email, password);
+			// Хіба не треба тут записати щось у стейт?
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
-
 			const errorMessage = switchError(error.code);
-
 			await dispatch(authSignError(errorMessage));
 		}
 	};
 
+// Check if the user was signed in on this device
 export const authStateChangeUser = () => async (dispatch, getState) => {
 	try {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
+				// Update Redux state
 				const userUpdateProfile = {
 					userId: user.uid,
 					nickname: user.displayName,
-					avatar: user.photoURL,
+					serverAvatar: user.photoURL,
+					phoneAvatar: user.photoURL,
 				};
-				dispatch(updateUserProfile(userUpdateProfile));
+				// dispatch(updateUserProfile(userUpdateProfile));
+
+				// Set stateChange ->
+				// Set routing in Main.jsx ->
+				// Set isAuth in router.js ->
+				// "true" will show <TabsNavigation />
 				dispatch(updateStateChange({ stateChange: true }));
 			}
 		});

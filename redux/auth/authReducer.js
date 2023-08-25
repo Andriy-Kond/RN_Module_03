@@ -18,7 +18,7 @@ const initState = {
 	password: "",
 	currentFocusInput: "",
 	showPassword: false,
-	avatar: null,
+	phoneAvatar: null,
 	serverAvatar: null,
 	error: null,
 };
@@ -39,22 +39,24 @@ const actions = {
 		};
 	},
 
-	// updateServerAvatar: (state, action) => ({
-	// 	...state,
-	// 	serverAvatar: action.payload,
-	// }),
-
 	toggleField: (state, action) => {
 		const { field } = action.payload;
-		state[field] = !state[field];
+		return {
+			...state,
+			[field]: !state[field],
+		};
+		// state[field] = !state[field];
 	},
 
-	updateUserProfile: (state, action) => ({
-		...state,
-		userId: action.payload.userId,
-		nickname: action.payload.nickname,
-		avatar: action.payload.avatar,
-	}),
+	updateUserProfile: (state, action) => {
+		return {
+			...state,
+			userId: action.payload.userId,
+			nickname: action.payload.nickname,
+			serverAvatar: action.payload.serverAvatar,
+			phoneAvatar: action.payload.phoneAvatar,
+		};
+	},
 
 	updateStateChange: (state, action) => {
 		return {
@@ -72,41 +74,3 @@ export const authSlice = createSlice({
 	initialState: initState,
 	reducers: actions,
 });
-
-// Експортуємо редуктор та дії
-// export const {
-// 	updateField,
-// 	toggleField,
-// 	resetFields,
-// 	updateUserProfile,
-// 	updateStateChange,
-// 	authSingOut,
-// 	authSignError,
-// } = authSlice.actions;
-
-// export default authSlice.reducer; //? що це?
-
-// initStateChanger: (state, action) => {
-// 	switch (action.payload.type) {
-// 		case "UPDATE_FIELD":
-// 			return { ...state, [action.payload.field]: action.payload.value };
-// 		case "TOGGLE_FIELD":
-// 			return {
-// 				...state,
-// 				[action.payload.field]: !state[action.payload.field],
-// 			};
-// 		case "RESET_FIELDS":
-// 			return {
-// 				...state,
-// 				nickname: "",
-// 				email: "",
-// 				password: "",
-// 				currentFocusInput: "",
-// 				showPassword: false,
-// 				avatar: null,
-// 				error: null,
-// 			};
-// 		default:
-// 			return state;
-// 	}
-// },

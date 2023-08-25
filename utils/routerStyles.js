@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
 		borderBottomColor: "rgba(0, 0, 0, 0.30)",
 	},
 
-	headerTitle: {
+	headerTitleStyle: {
 		alignItems: "center",
 		color: "#212121",
 

@@ -12,66 +12,46 @@ import { storage } from "../../firebase/config";
 
 import { AuthForm } from "./AuthForm";
 import { authSlice } from "../../redux/auth/authReducer";
-import { authSingUpUser } from "../../redux/auth/authOperations";
+import {
+	authSingUpUser,
+	updateUserField,
+} from "../../redux/auth/authOperations";
 
-import { useKeyboardState } from "../../utils/keyboardContext";
 import { uriToBlob } from "../../utils/uriToBlob";
+import { useKeyboardState } from "../../utils/keyboardContext";
 import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./RegsisterScreenStyles";
 
 export default function RegisterScreen() {
-	const initState = useSelector((state) => state.auth);
-	console.log("RegisterScreen >> initState:", initState);
-	const { updateField, authSignError, updateServerAvatar } = authSlice.actions;
+	const state = useSelector((state) => state.auth);
+	const { updateField, authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
 	const dispatch = useDispatch();
 
-	const uploadPhotoToServer = async (urlAvatar) => {
+	const submitForm = async () => {
+		await hideKB();
 		try {
-			// to BLOB from uri
-			const blobFile = await uriToBlob(urlAvatar);
-
-			// send to storage
-			const uniqPostId = Date.now().toString();
-			const storageRef = ref(storage, `${uniqPostId}`);
-			await uploadBytes(storageRef, blobFile);
-
-			// take from server
-			const url = await getDownloadURL(storageRef);
-			return url;
-		} catch (e) {
-			console.error("Error adding data: ", e);
-			throw e;
-		}
-	};
-
-	const submitForm = async (urlAvatar) => {
-		hideKB();
-
-		try {
-			// Очистити попередню помилку перед реєстрацією
+			// Clear previous value of error
 			dispatch(authSignError(null));
 
-			if (urlAvatar) {
-				// Отримання даних з серверу
-				const serverUrlAvatar = await uploadPhotoToServer(urlAvatar);
+			// if (state.phoneAvatar) {
+			// 	// Upload avatar to server
+			// 	const serverUrlAvatar = await uploadPhotoToServer(state.phoneAvatar);
+			// 	// Update field "serverAvatar" in state
+			// 	dispatch(updateUserField("serverAvatar", serverUrlAvatar));
+			// }
 
-				console.log("submitForm >> serverUrlAvatar 01:", serverUrlAvatar);
-				// dispatch(updateServerAvatar(serverUrlAvatar));
-				dispatch(
-					updateField({ field: "serverAvatar", value: serverUrlAvatar })
-				);
-			}
-
+			console.log("submitForm >> state:", state);
 			// Call register operation
-			dispatch(authSingUpUser(initState));
+			dispatch(authSingUpUser(state));
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}
 	};
 
+	// Props for AuthForm:
 	const mainBtnText = "Зареєструватися";
 	const secondBtnText = "Вже є акаунт? Увійти";
 	const loginScreen = false;
@@ -79,7 +59,7 @@ export default function RegisterScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.registrationContainer}>
-				{initState.authErrorMessage && <ModalWindow />}
+				{state.authErrorMessage && <ModalWindow />}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
 
 				<KeyboardAvoidingView
@@ -89,7 +69,8 @@ export default function RegisterScreen() {
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						submitForm={submitForm}
-						loginScreen={loginScreen}></AuthForm>
+						loginScreen={loginScreen}
+					/>
 				</KeyboardAvoidingView>
 			</View>
 		</TouchableWithoutFeedback>

@@ -24,7 +24,7 @@ export function AuthForm({
 	const dispatch = useDispatch();
 	const { toggleField, updateField } = authSlice.actions;
 	const { isKeyboardShown, setIsKeyboardShown, hideKB } = useKeyboardState();
-	const initState = useSelector((state) => state.auth);
+	const state = useSelector((state) => state.auth);
 
 	async function updateCurrentField(field, value) {
 		dispatch(
@@ -35,7 +35,10 @@ export function AuthForm({
 		);
 	}
 
+	// set avatar to initial state
 	async function addAvatar() {
+		console.log("run addAvatar");
+
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
 			allowsEditing: true,
@@ -44,7 +47,8 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
-			await updateCurrentField("avatar", result.assets[0].uri);
+			console.log("run update phoneAvatar");
+			await updateCurrentField("phoneAvatar", result.assets[0].uri);
 		} else {
 			await updateCurrentField(
 				"authErrorMessage",
@@ -60,14 +64,16 @@ export function AuthForm({
 				loginScreen ? { paddingBottom: 132 } : { paddingBottom: 66 },
 				isKeyboardShown && { paddingBottom: 16 },
 			]}>
-			{initState.authErrorMessage && <ModalWindow />}
+			{state.authErrorMessage && <ModalWindow />}
 
 			{/* ADD AVATAR */}
 			{!loginScreen && (
 				<View style={styles.regImageContainer}>
 					<Image
 						style={styles.avatarImg}
-						source={initState?.avatar ? { uri: initState.avatar } : regEmptyImg}
+						source={
+							state?.phoneAvatar ? { uri: state.phoneAvatar } : regEmptyImg
+						}
 					/>
 					{/* ADD AVATAR BTN */}
 					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
@@ -76,6 +82,7 @@ export function AuthForm({
 				</View>
 			)}
 
+			{/* Form Title */}
 			<Text
 				style={[
 					styles.formTitle,
@@ -84,17 +91,17 @@ export function AuthForm({
 				{loginScreen ? "Увійти" : "Реєстрація"}
 			</Text>
 
+			{/* INPUT FIELDS */}
 			<View style={styles.inputsWrapper}>
 				{!loginScreen && (
 					<TextInput
 						autoFocus
-						value={initState?.nickname}
+						value={state?.nickname}
 						placeholder={"Логін"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[
 							styles.input,
-							initState?.currentFocusInput === "nickname" &&
-								styles.inputFocused,
+							state?.currentFocusInput === "nickname" && styles.inputFocused,
 						]}
 						onSubmitEditing={hideKB} // press OK key on KB
 						onFocus={() => {
@@ -107,14 +114,14 @@ export function AuthForm({
 				)}
 
 				<TextInput
-					value={initState?.email}
+					value={state?.email}
 					placeholder={"Адреса електронної пошти"}
 					placeholderTextColor={"#BDBDBD"}
 					keyboardType="email-address"
 					autoFocus={loginScreen}
 					style={[
 						styles.input,
-						initState?.currentFocusInput === "email" && styles.inputFocused,
+						state?.currentFocusInput === "email" && styles.inputFocused,
 					]}
 					onSubmitEditing={hideKB}
 					onFocus={() => {
@@ -130,14 +137,14 @@ export function AuthForm({
 					style={[
 						styles.input,
 						styles.passwordInputContainer,
-						initState?.currentFocusInput === "password" && styles.inputFocused,
+						state?.currentFocusInput === "password" && styles.inputFocused,
 					]}>
 					<TextInput
-						value={initState?.password}
+						value={state?.password}
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[styles.passwordInput]}
-						secureTextEntry={!initState?.showPassword}
+						secureTextEntry={!state?.showPassword}
 						onSubmitEditing={hideKB}
 						onFocus={() => {
 							setIsKeyboardShown(true);
@@ -158,7 +165,7 @@ export function AuthForm({
 							)
 						}>
 						<Text style={styles.passwordToggleBtnText}>
-							{initState?.showPassword ? "Приховати" : "Показати"}
+							{state?.showPassword ? "Приховати" : "Показати"}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -169,7 +176,7 @@ export function AuthForm({
 						<BtnMain
 							title={mainBtnText}
 							buttonStyle={styles.mainBtn}
-							onPress={() => submitForm(initState.avatar)}
+							onPress={() => submitForm()}
 						/>
 
 						<BtnSecond

@@ -7,10 +7,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useMyRoutes } from "../utils/router";
 import { authStateChangeUser } from "../redux/auth/authOperations";
 
+import { ButtonStateProvider } from "../utils/tabBtnsContext";
+import { KeyboardStateProvider } from "../utils/keyboardContext";
+
 const Main = () => {
 	const dispatch = useDispatch();
 
 	const stateChange = useSelector((state) => state.auth.stateChange);
+
+	const state = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		dispatch(authStateChangeUser());
@@ -19,10 +24,14 @@ const Main = () => {
 	const routing = useMyRoutes(stateChange);
 
 	return (
-		<NavigationContainer>
-			<StatusBar />
-			{routing}
-		</NavigationContainer>
+		<KeyboardStateProvider>
+			<ButtonStateProvider>
+				<NavigationContainer>
+					<StatusBar />
+					{routing}
+				</NavigationContainer>
+			</ButtonStateProvider>
+		</KeyboardStateProvider>
 	);
 };
 
