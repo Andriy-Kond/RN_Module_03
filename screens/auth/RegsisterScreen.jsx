@@ -12,10 +12,7 @@ import { storage } from "../../firebase/config";
 
 import { AuthForm } from "./AuthForm";
 import { authSlice } from "../../redux/auth/authReducer";
-import {
-	authSingUpUser,
-	// updateUserField,
-} from "../../redux/auth/authOperations";
+import { authSingUpUser } from "../../redux/auth/authOperations";
 
 import { uriToBlob } from "../../utils/uriToBlob";
 import { useKeyboardState } from "../../utils/keyboardContext";
@@ -36,14 +33,6 @@ export default function RegisterScreen() {
 			// Clear previous value of error
 			dispatch(authSignError(null));
 
-			// if (state.phoneAvatar) {
-			// 	// Upload avatar to server
-			// 	const serverUrlAvatar = await uploadPhotoToServer(state.phoneAvatar);
-			// 	// Update field "serverAvatar" in state
-			// 	dispatch(updateUserField("serverAvatar", serverUrlAvatar));
-			// }
-
-			console.log("submitForm >> state:", state);
 			// Call register operation
 			dispatch(authSingUpUser(state));
 		} catch (error) {

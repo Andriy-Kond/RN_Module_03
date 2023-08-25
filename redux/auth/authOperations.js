@@ -39,16 +39,14 @@ export const authSingUpUser = ({
 
 			if (userCredential?.user) {
 				// Update userId field in Redux state
-
 				await dispatch(updateField({ userId: userCredential.user.uid }));
 				let serverUrlAvatar = null;
 
 				if (phoneAvatar) {
 					// Upload avatar to server
 					serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
-					// Update field "serverAvatar" in state
-					await dispatch(updateUserField("serverAvatar", serverUrlAvatar));
 
+					// Update field "serverAvatar" in state
 					dispatch(updateField({ serverAvatar: serverUrlAvatar }));
 				}
 
@@ -60,13 +58,13 @@ export const authSingUpUser = ({
 				});
 			}
 
+			// ? нащо воно тут?
 			// const userUpdateProfile = {
 			// 	userId: userCredential.user.uid,
 			// 	nickname: userCredential.user.displayName,
 			// 	phoneAvatar: userCredential.user.photoURL,
 			// 	serverAvatar: userCredential.user.photoURL,
 			// };
-
 			// await dispatch(updateUserProfile(userUpdateProfile));
 		} catch (error) {
 			console.error(
@@ -79,13 +77,13 @@ export const authSingUpUser = ({
 	};
 };
 
-export async function updateCurrentField(field, value) {
-	try {
-		dispatch(updateField({ [field]: value }));
-	} catch (error) {
-		console.log("updateCurrentField >> error:", error);
-	}
-}
+// export const updateCurrentField = (field, value) => {
+// 	try {
+// 		dispatch(updateField({ [field]: value }));
+// 	} catch (error) {
+// 		console.log("updateCurrentField >> error:", error);
+// 	}
+// };
 
 export const authSingInUser =
 	({ email, password }) =>
@@ -102,12 +100,8 @@ export const authSingInUser =
 				userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
 				serverAvatar: userCredential.user.photoURL,
-				// phoneAvatar: user.photoURL,
 			};
 			dispatch(updateUserProfile(newProfileFields));
-			// dispatch(updateUserField("serverAvatar", userCredential.user.photoURL));
-			// dispatch(updateUserField("userId", userCredential.user.uid));
-			// dispatch(updateUserField("nickname", userCredential.user.displayName));
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 			const errorMessage = switchError(error.code);
@@ -121,12 +115,12 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
 				// Update Redux state
-				const userUpdateProfile = {
-					userId: user.uid,
-					nickname: user.displayName,
-					serverAvatar: user.photoURL,
-					phoneAvatar: user.photoURL,
-				};
+				// const userUpdateProfile = {
+				// 	userId: user.uid,
+				// 	nickname: user.displayName,
+				// 	serverAvatar: user.photoURL,
+				// 	phoneAvatar: user.photoURL,
+				// };
 				// dispatch(updateUserProfile(userUpdateProfile));
 
 				// Set stateChange ->

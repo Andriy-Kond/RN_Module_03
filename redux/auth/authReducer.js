@@ -59,10 +59,6 @@ const actions = {
 		return {
 			...state,
 			...action.payload,
-			// userId: action.payload.userId,
-			// nickname: action.payload.nickname,
-			// serverAvatar: action.payload.serverAvatar,
-			// // phoneAvatar: action.payload.phoneAvatar,
 		};
 	},
 
