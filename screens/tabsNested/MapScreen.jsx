@@ -4,7 +4,9 @@ import MapView, { Marker } from "react-native-maps";
 
 export default function MapScreen() {
 	const {
-		params: { latitude, longitude },
+		params: {
+			location: { latitude, longitude },
+		},
 	} = useRoute();
 
 	return (

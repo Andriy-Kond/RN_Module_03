@@ -68,7 +68,10 @@ export default function ProfileScreen() {
 								<View style={styles.buttonsWrapper}>
 									<TouchableOpacity
 										onPress={() =>
-											navigation.navigate("MapScreen", item.data.location)
+											navigation.navigate("MapScreen", {
+												location: item.data.location,
+												originScreen: "Profile",
+											})
 										}>
 										<Text>Go to MAP</Text>
 									</TouchableOpacity>
@@ -78,6 +81,8 @@ export default function ProfileScreen() {
 											navigation.navigate("CommentsScreen", {
 												imageTitle: item.data.imageTitle,
 												postId: item.id,
+												image: item.data.photo,
+												originScreen: "Profile",
 											})
 										}>
 										<Text>Add COMMENT</Text>

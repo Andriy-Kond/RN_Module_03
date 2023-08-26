@@ -94,7 +94,7 @@ export const authSingInUser =
 				email,
 				password
 			);
-			console.log("result:", userCredential.user);
+			console.log("authSingInUser:", userCredential.user);
 
 			const newProfileFields = {
 				userId: userCredential.user.uid,
@@ -115,13 +115,13 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
 				// Update Redux state
-				// const userUpdateProfile = {
-				// 	userId: user.uid,
-				// 	nickname: user.displayName,
-				// 	serverAvatar: user.photoURL,
-				// 	phoneAvatar: user.photoURL,
-				// };
-				// dispatch(updateUserProfile(userUpdateProfile));
+				const userUpdateProfile = {
+					userId: user.uid,
+					nickname: user.displayName,
+					serverAvatar: user.photoURL,
+					// phoneAvatar: user.photoURL,
+				};
+				dispatch(updateUserProfile(userUpdateProfile));
 
 				// Set stateChange ->
 				// Set routing in Main.jsx ->

@@ -16,8 +16,6 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function DefaultScreenPosts() {
 	const state = useSelector((state) => state.auth);
-	console.log("DefaultScreenPosts >> state:", state);
-
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
 
@@ -69,10 +67,14 @@ export default function DefaultScreenPosts() {
 								style={styles.currentImg}
 							/>
 							<Text>{item.data.imageTitle}</Text>
+
 							<View style={styles.buttonsWrapper}>
 								<TouchableOpacity
 									onPress={() =>
-										navigation.navigate("MapScreen", item.data.location)
+										navigation.navigate("MapScreen", {
+											location: item.data.location,
+											originScreen: "DefaultScreenPosts",
+										})
 									}>
 									<Text>Go to MAP</Text>
 								</TouchableOpacity>
@@ -83,6 +85,7 @@ export default function DefaultScreenPosts() {
 											imageTitle: item.data.imageTitle,
 											postId: item.id,
 											image: item.data.photo,
+											originScreen: "DefaultScreenPosts",
 										})
 									}>
 									<Text>Add COMMENT</Text>

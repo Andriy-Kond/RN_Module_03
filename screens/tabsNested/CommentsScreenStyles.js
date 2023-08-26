@@ -18,20 +18,21 @@ export const styles = StyleSheet.create({
 
 	commentsContainer: {
 		flex: 1,
-		paddingVertical: 32,
+		paddingTop: 32,
+		// marginVertical: 32,
 	},
 
 	currentCommentContainer: {
-		flex: 1,
+		// flex: 1,
 		marginBottom: 24,
-		flexDirection: "row",
+		// flexDirection: "row",
 	},
 
 	avatarOfComment: {
 		width: 28,
 		height: 28,
 		borderRadius: 50,
-		marginRight: 16, //* or marginLeft: 16,
+		// marginRight: 16, //* or marginLeft: 16,
 	},
 
 	currentCommentWrapper: {
@@ -55,21 +56,25 @@ export const styles = StyleSheet.create({
 		color: "#BDBDBD",
 		fontFamily: "RobotoRegular400",
 		fontSize: 10,
-		alignSelf: "flex-end", //* or alignSelf: "flex-start"
+		// alignSelf: "flex-end", //* or alignSelf: "flex-start"
 	},
 
 	// Comment Input
-	imageCommentContainer: {
-		borderWidth: 1,
-		borderRadius: 50,
-		borderColor: "#E8E8E8",
-		marginVertical: 10,
-		backgroundColor: "#F6F6F6",
-		height: 50,
+	addCommentContainer: {
+		overflow: "hidden",
+
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
+
+		height: 50,
 		paddingRight: 8,
+
+		borderWidth: 1,
+		borderRadius: 50,
+		borderColor: "#E8E8E8",
+
+		backgroundColor: "#F6F6F6",
 	},
 
 	inputFocused: {
@@ -78,7 +83,7 @@ export const styles = StyleSheet.create({
 		padding: 16,
 	},
 
-	imageComment: {
+	inputComment: {
 		paddingHorizontal: 16,
 		flex: 1,
 		height: "100%",

@@ -84,7 +84,10 @@ export default function CommentsScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
-				<Image style={styles.currentImg} source={{ uri: image }} />
+				<View style={styles.item}>
+					<Image style={styles.currentImg} source={{ uri: image }} />
+				</View>
+
 				<View style={styles.commentsContainer}>
 					<FlatList
 						data={comments}
@@ -104,7 +107,7 @@ export default function CommentsScreen() {
 							const formattedDateTime = `${formattedDate} | ${formattedTime}`;
 							const isCurrentUser = item.data.userId === state.userId;
 							return (
-								<SafeAreaView
+								<View
 									style={[
 										styles.currentCommentContainer,
 										{ flexDirection: isCurrentUser ? "row-reverse" : "row" },
@@ -134,7 +137,7 @@ export default function CommentsScreen() {
 											{formattedDateTime}
 										</Text>
 									</View>
-								</SafeAreaView>
+								</View>
 							);
 						}}
 					/>
@@ -143,14 +146,14 @@ export default function CommentsScreen() {
 				{/* INPUT FIELD */}
 				<View
 					style={[
-						styles.imageCommentContainer,
+						styles.addCommentContainer,
 						state?.currentFocusInput === "imageComment" && styles.inputFocused,
 					]}>
 					<TextInput
 						value={imageComment}
 						placeholder={"Коментувати..."}
 						placeholderTextColor={"#BDBDBD"}
-						style={styles.imageComment}
+						style={styles.inputComment}
 						multiline
 						onChangeText={(value) => {
 							setImageComment(value);

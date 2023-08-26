@@ -8,12 +8,12 @@ import CommentsScreen from "../tabsNested/CommentsScreen";
 import { BtnGoBack } from "../../components/btns/BtnGoBack";
 import { BtnLogout } from "../../components/btns/BtnLogout";
 
-// import { useSelector } from "react-redux";
 const NestedStack = createStackNavigator();
 
 export default function NestedNavigation() {
 	return (
 		<NestedStack.Navigator
+			initialRouteName="DefaultScreenPosts"
 			screenOptions={{
 				headerStyle: styles.headerStyle,
 				headerTitleStyle: styles.headerTitleStyle,
@@ -29,20 +29,24 @@ export default function NestedNavigation() {
 					headerRight: () => <BtnLogout buttonStyle={styles.container} />,
 				}}
 			/>
+
 			<NestedStack.Screen
 				name="MapScreen"
 				component={MapScreen}
 				options={{
+					// headerShown: false,
 					title: "Мапа",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
 					headerLeft: () => <BtnGoBack />,
 				}}
 			/>
+
 			<NestedStack.Screen
 				name="CommentsScreen"
 				component={CommentsScreen}
 				options={{
+					// headerShown: false,
 					title: "Коментарі",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",

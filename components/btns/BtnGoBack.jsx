@@ -1,11 +1,19 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 export function BtnGoBack({ buttonStyle }) {
 	const navigation = useNavigation();
+	const route = useRoute();
 
-	const handleGoBack = () => navigation.goBack();
+	console.log("handleGoBack >> route.params:", route?.params);
+	const handleGoBack = () => {
+		if (route.params && route.params.originScreen) {
+			navigation.navigate(route.params.originScreen);
+		} else {
+			navigation.goBack();
+		}
+	};
 
 	return (
 		// Button for GoBack
