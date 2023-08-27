@@ -1,4 +1,5 @@
 import { useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
@@ -6,8 +7,20 @@ export default function MapScreen() {
 	const {
 		params: {
 			location: { latitude, longitude },
+			originScreen,
 		},
 	} = useRoute();
+	const route = useRoute();
+
+	const [navOriginScreen, setNavOriginScreen] = useState(
+		route.params?.originScreen
+	);
+
+	useEffect(() => {
+		return () => {
+			setNavOriginScreen(""); // Очищення під час розмонтовування компонента
+		};
+	}, []);
 
 	return (
 		<View style={styles.container}>
