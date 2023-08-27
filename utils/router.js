@@ -12,13 +12,20 @@ import Home from "../screens/tabs/Home";
 import CreatePostsScreen from "../screens/tabs/CreatePostsScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
 
-import { FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
-
 // components
 import { useButtonState } from "../utils/tabBtnsContext";
 import { BtnGoBack } from "../components/btns/BtnGoBack";
-import { useNavigation } from "@react-navigation/native";
-import { HomeTabBtn } from "../components/btns/HomeTabBtn";
+import {
+	useNavigation,
+	useNavigationState,
+	useRoute,
+} from "@react-navigation/native";
+
+import { TabBtnHome } from "../components/btns/TabBtnHome";
+import { TabBtnCreatePost } from "../components/btns/TabBtnCreatePost";
+import { TabBtnProfile } from "../components/btns/TabBtnProfile";
+import { TabBtnProfileOnProfileScreen } from "../components/btns/TabBtnProfileOnProfileScreen";
+import { TabBtnCreatePostOnProfileScreen } from "../components/btns/TabBtnCreatePostonProfileScreen";
 import { useState } from "react";
 
 const AuthStack = createStackNavigator();
@@ -46,13 +53,19 @@ function AuthNavigation() {
 
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
+	// const route = useRoute();
+	// const routeName = route.name;
+	// console.log("TabsNavigation >> routeName:", routeName);
+
 	const { isTabButtonsEnabled, previousScreen } = useButtonState();
 	const navigation = useNavigation();
+	const navigationState = useNavigationState((state) => state);
+	const activeScreenIndex = navigationState?.index;
+	// console.log("TabsNavigation >> activeScreenIndex:", activeScreenIndex === 1);
+
 	const handleHomePress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
 	};
-
-	// const [activeScreen, setActiveScreen] = useState("Home");
 
 	return (
 		<MainStack.Navigator
@@ -69,7 +82,7 @@ function TabsNavigation() {
 					headerShown: false,
 
 					tabBarIcon: ({ focused, color, size }) => (
-						<HomeTabBtn focused={focused} color={color} size={size} />
+						<TabBtnHome focused={focused} color={color} size={size} />
 					),
 				}}
 				listeners={{
@@ -93,19 +106,26 @@ function TabsNavigation() {
 					headerTitleAlign: "center",
 					headerLeft: () => <BtnGoBack />,
 
-					tabBarIcon: ({ focused, color, size }) => (
-						<FontAwesome5
-							name="plus"
-							size={35}
-							color={
-								!isTabButtonsEnabled
-									? "#d7d7d7"
-									: previousScreen === "PostsScreen"
-									? "#212121"
-									: color
-							}
-						/>
-					),
+					tabBarIcon: ({ focused, color, size }) => {
+						return (
+							<>
+								{activeScreenIndex !== 2 ? (
+									<TabBtnCreatePost
+										focused={focused}
+										size={size}
+										color={color}
+									/>
+								) : (
+									<TabBtnProfileOnProfileScreen
+										focused={focused}
+										size={size}
+										color={color}
+									/>
+								)}
+							</>
+						);
+						// <TabBtnCreatePost focused={focused} size={size} color={color} />;
+					},
 				}}
 				// unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
 				listeners={{
@@ -126,13 +146,21 @@ function TabsNavigation() {
 					headerTitleAlign: "center",
 					headerShown: false,
 
-					tabBarIcon: ({ focused, color, size }) => (
-						<SimpleLineIcons
-							name="user"
-							size={size}
-							color={isTabButtonsEnabled ? color : "#d7d7d7"}
-						/>
-					),
+					tabBarIcon: ({ focused, color, size }) => {
+						return (
+							<>
+								{activeScreenIndex !== 2 ? (
+									<TabBtnProfile focused={focused} color={color} size={size} />
+								) : (
+									<TabBtnCreatePostOnProfileScreen
+										focused={focused}
+										size={size}
+										color={color}
+									/>
+								)}
+							</>
+						);
+					},
 				}}
 				listeners={{
 					tabPress: (e) => {
