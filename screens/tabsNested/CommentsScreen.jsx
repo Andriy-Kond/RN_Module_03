@@ -21,12 +21,15 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
 
 export default function CommentsScreen() {
+	// const {
+	// 	params: { postId, imageTitle, image },
+	// } = useRoute();
+	const route = useRoute();
+	console.log("CommentsScreen >> route:", route.name);
+	const { postId, imageTitle, image } = route.params;
+
 	const { hideKB } = useKeyboardState();
 	const state = useSelector((store) => store.auth);
-
-	const {
-		params: { postId, imageTitle, image },
-	} = useRoute();
 
 	const [imageComment, setImageComment] = useState("");
 	const [comments, setComments] = useState([]);

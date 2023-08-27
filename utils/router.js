@@ -8,9 +8,10 @@ import { styles } from "./routerStyles";
 // screens
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegsisterScreen";
-import PostsScreen from "../screens/tabs/PostsScreen";
-import CreateScreen from "../screens/tabs/CreateScreen";
+import Home from "../screens/tabs/Home";
+import CreatePostsScreen from "../screens/tabs/CreatePostsScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
+import PostsScreen from "../screens/tabsNested/PostsScreen";
 
 import {
 	FontAwesome5,
@@ -28,17 +29,17 @@ const MainStack = createBottomTabNavigator();
 function AuthNavigation() {
 	return (
 		<AuthStack.Navigator
-			initialRouteName="Login"
+			initialRouteName="LoginScreen"
 			screenOptions={{ headerShown: false }} // settings for all screens
 		>
 			<AuthStack.Screen
-				name="Login"
+				name="LoginScreen"
 				component={LoginScreen}
 				options={{ title: "Login screen" }} // settings for current screen
 			/>
 
 			<AuthStack.Screen
-				name="Register"
+				name="RegisterScreen"
 				component={RegisterScreen}
 				options={{ title: "Registration screen" }}
 			/>
@@ -51,14 +52,15 @@ function TabsNavigation() {
 
 	return (
 		<MainStack.Navigator
+			initialRouteName="Home"
 			screenOptions={{
 				// tabBarHideOnKeyboard: true, // Hide tab-bar when keyboard shown
 				tabBarShowLabel: false, // Show title on bottom tab-buttons
 				headerStyle: styles.headerStyle,
 			}}>
 			<MainStack.Screen
-				name="Posts"
-				component={PostsScreen}
+				name="Home"
+				component={Home}
 				options={{
 					headerShown: false,
 					// title: "Публікації",
@@ -84,8 +86,8 @@ function TabsNavigation() {
 			/>
 
 			<MainStack.Screen
-				name="Create"
-				component={CreateScreen}
+				name="CreatePostsScreen"
+				component={CreatePostsScreen}
 				options={{
 					title: "Створити публікацію",
 					headerTitleStyle: styles.headerTitleStyle,
@@ -111,7 +113,7 @@ function TabsNavigation() {
 			/>
 
 			<MainStack.Screen
-				name="Profile"
+				name="ProfileScreen"
 				component={ProfileScreen}
 				options={{
 					title: "Профіль",

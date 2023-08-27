@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
@@ -21,6 +21,9 @@ export function AuthForm({
 	submitForm,
 	loginScreen,
 }) {
+	const route = useRoute();
+	console.log("AuthForm route:", route.name);
+
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 	const { toggleField, updateField } = authSlice.actions;
@@ -45,12 +48,13 @@ export function AuthForm({
 		if (!result.canceled) {
 			console.log("run update phoneAvatar");
 			await updateCurrentField("phoneAvatar", result.assets[0].uri);
-		} else {
-			await updateCurrentField(
-				"authErrorMessage",
-				"Доступ до сховища не наданий"
-			);
 		}
+		// else {
+		// 	await updateCurrentField(
+		// 		"authErrorMessage",
+		// 		"Доступ до сховища не наданий"
+		// 	);
+		// }
 	}
 
 	return (
@@ -179,8 +183,8 @@ export function AuthForm({
 							title={secondBtnText}
 							onPress={() => {
 								loginScreen
-									? navigation.navigate("Register")
-									: navigation.navigate("Login");
+									? navigation.navigate("RegisterScreen")
+									: navigation.navigate("LoginScreen");
 							}}
 						/>
 					</>

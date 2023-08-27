@@ -4,7 +4,11 @@
 // todo: Об'єднати логінскрін і регітрскрін
 // todo: розширити натискання в TextInput, бо по краю клікаєш і воно зникає.
 
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+	useNavigation,
+	useIsFocused,
+	useRoute,
+} from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -30,7 +34,10 @@ import { useKeyboardState } from "../../utils/keyboardContext";
 import { ModalWindow } from "../../components/ModalWindow";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 
-export default function CreateScreen() {
+export default function CreatePostsScreen() {
+	const route = useRoute();
+	console.log("CreatePostsScreen >> route:", route.name);
+
 	const { hideKB } = useKeyboardState();
 	const { toggleButtonsEnabled, isTabButtonsEnabled } = useButtonState();
 
@@ -120,7 +127,7 @@ export default function CreateScreen() {
 			setImageTitle("");
 			await uploadPostToServer();
 			setCapturedPhoto(null);
-			navigation.navigate("DefaultScreenPosts");
+			navigation.navigate("PostsScreen");
 			await toggleButtonsEnabled(true); // unlock tab-btns
 			setIsRestBtnsSendEnabled(true); // unlock other btns on this screen
 		}

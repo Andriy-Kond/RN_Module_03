@@ -5,12 +5,12 @@ import Svg, { Path } from "react-native-svg";
 export function BtnGoBack({ buttonStyle }) {
 	const navigation = useNavigation();
 	const route = useRoute();
-	console.log("handleGoBack >> route.params:", route.params);
+	console.log("BtnGoBack >> route:", route.name);
 
 	const handleGoBack = () => {
-		const { originScreen: backScreen } = route.params;
-		navigation.navigate(backScreen, { originScreen: "" });
+		navigation.goBack();
 	};
+
 	// if (route.params && route.params.originScreen) {
 	// 	const { originScreen: backScreen } = route.params;
 	// 	navigation.navigate(backScreen, { originScreen: "" });

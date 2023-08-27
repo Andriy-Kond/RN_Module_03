@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 // screens
-import DefaultScreenPosts from "../tabsNested/DefaultScreenPosts";
+import PostsScreen from "../tabsNested/PostsScreen";
 import MapScreen from "../tabsNested/MapScreen";
 import CommentsScreen from "../tabsNested/CommentsScreen";
 
@@ -10,17 +10,20 @@ import { BtnLogout } from "../../components/btns/BtnLogout";
 
 const NestedStack = createStackNavigator();
 
-export default function NestedNavigation() {
+export default function Home() {
+	const route = useRoute();
+	console.log("Home >> route:", route);
+
 	return (
 		<NestedStack.Navigator
-			initialRouteName="DefaultScreenPosts"
+			initialRouteName="PostsScreen"
 			screenOptions={{
 				headerStyle: styles.headerStyle,
 				headerTitleStyle: styles.headerTitleStyle,
 			}}>
 			<NestedStack.Screen
-				name="DefaultScreenPosts"
-				component={DefaultScreenPosts}
+				name="PostsScreen"
+				component={PostsScreen}
 				options={{
 					title: "Публікації",
 					headerTitleStyle: styles.headerTitleStyle,
@@ -58,6 +61,10 @@ export default function NestedNavigation() {
 }
 
 import { StyleSheet } from "react-native";
+import {
+	getFocusedRouteNameFromRoute,
+	useRoute,
+} from "@react-navigation/native";
 
 export const styles = StyleSheet.create({
 	container: {

@@ -16,8 +16,20 @@ import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./LoginScreenStyles";
+import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useEffect } from "react";
 
 export default function LoginScreen() {
+	const route = useRoute();
+	console.log("LoginScreen >> route:", route.name);
+	const isFocused = useIsFocused();
+
+	useEffect(() => {
+		if (isFocused) {
+			console.log("LoginScreen focused");
+		}
+	}, [isFocused]);
+
 	const initState = useSelector((state) => state.auth);
 	const { authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();

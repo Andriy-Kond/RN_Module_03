@@ -15,6 +15,9 @@ import { collection, query, onSnapshot, doc, where } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
 
 export default function ProfileScreen() {
+	const route = useRoute();
+	console.log("ProfileScreen >> route:", route.name);
+
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
 	const [currentUserPosts, setCurrentUserPosts] = useState([]);
@@ -70,7 +73,7 @@ export default function ProfileScreen() {
 										onPress={() =>
 											navigation.navigate("MapScreen", {
 												location: item.data.location,
-												originScreen: "Profile",
+												originScreen: "ProfileScreen",
 											})
 										}>
 										<Text>Go to MAP</Text>
@@ -82,7 +85,7 @@ export default function ProfileScreen() {
 												imageTitle: item.data.imageTitle,
 												postId: item.id,
 												image: item.data.photo,
-												originScreen: "Profile",
+												originScreen: "ProfileScreen",
 											})
 										}>
 										<Text>Add COMMENT</Text>
