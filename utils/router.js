@@ -25,7 +25,7 @@ import { TabBtnHome } from "../components/btns/TabBtnHome";
 import { TabBtnCreatePost } from "../components/btns/TabBtnCreatePost";
 import { TabBtnProfile } from "../components/btns/TabBtnProfile";
 import { TabBtnProfileOnProfileScreen } from "../components/btns/TabBtnProfileOnProfileScreen";
-import { TabBtnCreatePostOnProfileScreen } from "../components/btns/TabBtnCreatePostonProfileScreen";
+import { TabBtnCreatePostOnProfileScreen } from "../components/btns/TabBtnCreatePostOnProfileScreen";
 import { useState } from "react";
 
 const AuthStack = createStackNavigator();
@@ -57,10 +57,11 @@ function TabsNavigation() {
 	// const routeName = route.name;
 	// console.log("TabsNavigation >> routeName:", routeName);
 
-	const { isTabButtonsEnabled, previousScreen } = useButtonState();
+	const { isTabButtonsEnabled, previousScreen, activeScreen, setActiveScreen } =
+		useButtonState();
 	const navigation = useNavigation();
-	const navigationState = useNavigationState((state) => state);
-	const activeScreenIndex = navigationState?.index;
+	// const navigationState = useNavigationState((state) => state);
+	// const activeScreenIndex = navigationState?.index;
 	// console.log("TabsNavigation >> activeScreenIndex:", activeScreenIndex === 1);
 
 	const handleHomePress = () => {
@@ -109,7 +110,7 @@ function TabsNavigation() {
 					tabBarIcon: ({ focused, color, size }) => {
 						return (
 							<>
-								{activeScreenIndex !== 2 ? (
+								{activeScreen !== "ProfileScreen" ? (
 									<TabBtnCreatePost
 										focused={focused}
 										size={size}
@@ -131,7 +132,7 @@ function TabsNavigation() {
 				listeners={{
 					tabPress: (e) => {
 						// setActiveScreen("CreatePostsScreen");
-						if (!isTabButtonsEnabled) {
+						if (!isTabButtonsEnabled || activeScreen === "ProfileScreen") {
 							e.preventDefault();
 						}
 					},
@@ -149,7 +150,7 @@ function TabsNavigation() {
 					tabBarIcon: ({ focused, color, size }) => {
 						return (
 							<>
-								{activeScreenIndex !== 2 ? (
+								{activeScreen !== "ProfileScreen" ? (
 									<TabBtnProfile focused={focused} color={color} size={size} />
 								) : (
 									<TabBtnCreatePostOnProfileScreen

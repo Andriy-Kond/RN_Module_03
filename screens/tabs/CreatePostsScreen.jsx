@@ -44,7 +44,9 @@ export default function CreatePostsScreen() {
 	// }, [isFocused]);
 
 	const { hideKB } = useKeyboardState();
-	const { toggleButtonsEnabled, isTabButtonsEnabled } = useButtonState();
+	const { toggleButtonsEnabled, isTabButtonsEnabled, setActiveScreen } =
+		useButtonState();
+	isFocused && setActiveScreen("CreatePostsScreen");
 
 	// navigation
 	const navigation = useNavigation();

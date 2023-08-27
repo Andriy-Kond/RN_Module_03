@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 import { useButtonState } from "../../utils/tabBtnsContext";
 

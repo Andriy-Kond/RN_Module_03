@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
@@ -9,10 +9,13 @@ export function TabBtnProfileOnProfileScreen({ color, size }) {
 		navigation.navigate("ProfileScreen");
 	};
 
-	const { isTabButtonsEnabled } = useButtonState();
+	const { isTabButtonsEnabled, activeScreen } = useButtonState();
 
 	return (
-		<TouchableOpacity onPress={handleTabBtnPress} style={styles.activeBtn}>
+		<TouchableOpacity
+			onPress={handleTabBtnPress}
+			style={styles.activeBtn}
+			disabled>
 			<Svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="70"

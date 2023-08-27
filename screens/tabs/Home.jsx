@@ -10,17 +10,23 @@ import CommentsScreen from "../tabsNested/CommentsScreen";
 
 import { BtnGoBack } from "../../components/btns/BtnGoBack";
 import { BtnLogout } from "../../components/btns/BtnLogout";
+import { useIsFocused } from "@react-navigation/native";
+import { useButtonState } from "../../utils/tabBtnsContext";
 
 const NestedStack = createStackNavigator();
 
 export default function Home() {
 	// const route = useRoute();
-	// const isFocused = useIsFocused();
+
+	const isFocused = useIsFocused();
 	// useEffect(() => {
 	// 	if (isFocused) {
 	// 		console.log("Home >> route:", route.name);
 	// 	}
 	// }, [isFocused]);
+
+	const { setActiveScreen } = useButtonState();
+	isFocused && setActiveScreen("Home");
 
 	return (
 		<NestedStack.Navigator

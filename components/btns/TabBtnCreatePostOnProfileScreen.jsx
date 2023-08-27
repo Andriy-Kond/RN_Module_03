@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 export function TabBtnCreatePostOnProfileScreen({ focused, color, size }) {

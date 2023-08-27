@@ -1,4 +1,5 @@
 import {
+	useIsFocused,
 	// useIsFocused,
 	useNavigation,
 	// useRoute,
@@ -17,16 +18,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { authSingOutUser } from "../../redux/auth/authOperations";
 import { collection, query, onSnapshot, where } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
+import { useButtonState } from "../../utils/tabBtnsContext";
 // import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function ProfileScreen() {
 	// const route = useRoute();
-	// const isFocused = useIsFocused();
+	const isFocused = useIsFocused();
 	// useEffect(() => {
 	// 	if (isFocused) {
 	// 		console.log("ProfileScreen >> route:", route.name);
 	// 	}
 	// }, [isFocused]);
+
+	const { setActiveScreen } = useButtonState();
+	isFocused && setActiveScreen("ProfileScreen");
 
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
