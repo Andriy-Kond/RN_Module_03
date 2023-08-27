@@ -35,15 +35,19 @@ import { ModalWindow } from "../../components/ModalWindow";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 
 export default function CreatePostsScreen() {
-	const route = useRoute();
-	console.log("CreatePostsScreen >> route:", route.name);
+	// const route = useRoute();
+	const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("CreatePostsScreen >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	const { hideKB } = useKeyboardState();
 	const { toggleButtonsEnabled, isTabButtonsEnabled } = useButtonState();
 
 	// navigation
 	const navigation = useNavigation();
-	const isFocused = useIsFocused();
 
 	// reference on camera in DOM
 	const cameraRef = useRef(null);

@@ -8,14 +8,14 @@ import {
 	FlatList,
 	Image,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 
 import { dbFirestore } from "../../firebase/config";
 import { collection, doc, addDoc, query, onSnapshot } from "firebase/firestore";
 
 import { useKeyboardState } from "../../utils/keyboardContext";
 import { useSelector } from "react-redux";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "./CommentsScreenStyles";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
@@ -25,7 +25,12 @@ export default function CommentsScreen() {
 	// 	params: { postId, imageTitle, image },
 	// } = useRoute();
 	const route = useRoute();
-	console.log("CommentsScreen >> route:", route.name);
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("CommentsScreen >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 	const { postId, imageTitle, image } = route.params;
 
 	const { hideKB } = useKeyboardState();

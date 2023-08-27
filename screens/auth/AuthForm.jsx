@@ -1,4 +1,8 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+	// useIsFocused,
+	useNavigation,
+	// useRoute,
+} from "@react-navigation/native";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
@@ -13,6 +17,7 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 
 import { styles } from "./AuthFormStyles";
+// import { useEffect } from "react";
 // import { updateCurrentField } from "../../redux/auth/authOperations";
 
 export function AuthForm({
@@ -21,8 +26,13 @@ export function AuthForm({
 	submitForm,
 	loginScreen,
 }) {
-	const route = useRoute();
-	console.log("AuthForm route:", route.name);
+	// const route = useRoute();
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("AuthForm >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	const navigation = useNavigation();
 	const dispatch = useDispatch();

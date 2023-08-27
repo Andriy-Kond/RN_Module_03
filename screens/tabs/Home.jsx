@@ -1,4 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
+// import { useIsFocused, useRoute } from "@react-navigation/native";
+// import { useEffect } from "react";
+import { StyleSheet } from "react-native";
 
 // screens
 import PostsScreen from "../tabsNested/PostsScreen";
@@ -11,8 +14,13 @@ import { BtnLogout } from "../../components/btns/BtnLogout";
 const NestedStack = createStackNavigator();
 
 export default function Home() {
-	const route = useRoute();
-	console.log("Home >> route:", route);
+	// const route = useRoute();
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("Home >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	return (
 		<NestedStack.Navigator
@@ -37,7 +45,6 @@ export default function Home() {
 				name="MapScreen"
 				component={MapScreen}
 				options={{
-					// headerShown: false,
 					title: "Мапа",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
@@ -49,7 +56,6 @@ export default function Home() {
 				name="CommentsScreen"
 				component={CommentsScreen}
 				options={{
-					// headerShown: false,
 					title: "Коментарі",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
@@ -59,12 +65,6 @@ export default function Home() {
 		</NestedStack.Navigator>
 	);
 }
-
-import { StyleSheet } from "react-native";
-import {
-	getFocusedRouteNameFromRoute,
-	useRoute,
-} from "@react-navigation/native";
 
 export const styles = StyleSheet.create({
 	container: {

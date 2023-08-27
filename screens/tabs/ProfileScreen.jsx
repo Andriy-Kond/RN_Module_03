@@ -1,4 +1,8 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+	// useIsFocused,
+	useNavigation,
+	// useRoute,
+} from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
 	Button,
@@ -11,12 +15,18 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { authSingOutUser } from "../../redux/auth/authOperations";
-import { collection, query, onSnapshot, doc, where } from "firebase/firestore";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
+// import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function ProfileScreen() {
-	const route = useRoute();
-	console.log("ProfileScreen >> route:", route.name);
+	// const route = useRoute();
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("ProfileScreen >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	const dispatch = useDispatch();
 	const navigation = useNavigation();

@@ -1,9 +1,12 @@
-import { useRoute } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function MapScreen() {
+	const { previousScreen, setPreviousScreen } = useButtonState();
+
 	// const {
 	// 	params: {
 	// 		location: { latitude, longitude },
@@ -11,25 +14,23 @@ export default function MapScreen() {
 	// 	},
 	// } = useRoute();
 	const route = useRoute();
-	console.log("MapScreen >> route:", route.name);
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		// console.log("MapScreen >> route.name:", route.name);
+	// 		// console.log("MapScreen >> route.params:", route.params.originScreen);
+	// 	}
+	// }, [isFocused]);
 	const {
 		location: { latitude, longitude },
 		originScreen,
 	} = route.params;
 
-	const [navOriginScreen, setNavOriginScreen] = useState(
-		route.params?.originScreen
-	);
-
-	useEffect(() => {
-		return () => {
-			setNavOriginScreen(""); // Очищення під час розмонтовування компонента
-		};
-	}, []);
+	console.log("MapScreen >> originScreen:", originScreen);
+	setPreviousScreen(originScreen);
 
 	return (
 		<View style={styles.container}>
-			{/* <Text>It is MapScreen</Text> */}
 			<MapView
 				style={styles.map}
 				initialRegion={{

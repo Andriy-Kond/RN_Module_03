@@ -8,6 +8,7 @@ export const useButtonState = () => {
 
 export const ButtonStateProvider = ({ children }) => {
 	const [isTabButtonsEnabled, setIsTabButtonsEnabled] = useState(true);
+	const [previousScreen, setPreviousScreen] = useState(true);
 
 	const toggleButtonsEnabled = (btnsState) => {
 		setIsTabButtonsEnabled(btnsState);
@@ -15,7 +16,12 @@ export const ButtonStateProvider = ({ children }) => {
 
 	return (
 		<ButtonStateContext.Provider
-			value={{ isTabButtonsEnabled, toggleButtonsEnabled }}>
+			value={{
+				isTabButtonsEnabled,
+				toggleButtonsEnabled,
+				previousScreen,
+				setPreviousScreen,
+			}}>
 			{children}
 		</ButtonStateContext.Provider>
 	);

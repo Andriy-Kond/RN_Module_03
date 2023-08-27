@@ -6,7 +6,11 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+	// useIsFocused,
+	useNavigation,
+	// useRoute,
+} from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
@@ -15,8 +19,13 @@ import { useSelector } from "react-redux";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 
 export default function PostsScreen() {
-	const route = useRoute();
-	console.log("PostsScreen >> route:", route.name);
+	// const route = useRoute();
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("PostsScreen >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	const state = useSelector((state) => state.auth);
 	const navigation = useNavigation();
@@ -47,7 +56,6 @@ export default function PostsScreen() {
 					style={styles.userImg}
 					source={
 						state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
-						// state?.avatar ? { uri: state.avatar } : regEmptyImg
 					}
 				/>
 				<View>

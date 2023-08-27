@@ -11,20 +11,17 @@ import RegisterScreen from "../screens/auth/RegsisterScreen";
 import Home from "../screens/tabs/Home";
 import CreatePostsScreen from "../screens/tabs/CreatePostsScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
-import PostsScreen from "../screens/tabsNested/PostsScreen";
 
-import {
-	FontAwesome5,
-	MaterialCommunityIcons,
-	SimpleLineIcons,
-} from "@expo/vector-icons";
+import { FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 
 // components
 import { useButtonState } from "../utils/tabBtnsContext";
 import { BtnGoBack } from "../components/btns/BtnGoBack";
+import { useNavigation } from "@react-navigation/native";
+import { HomeTabBtn } from "../components/btns/HomeTabBtn";
+import { useState } from "react";
 
 const AuthStack = createStackNavigator();
-const MainStack = createBottomTabNavigator();
 
 function AuthNavigation() {
 	return (
@@ -47,8 +44,15 @@ function AuthNavigation() {
 	);
 }
 
+const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
-	const { isTabButtonsEnabled } = useButtonState();
+	const { isTabButtonsEnabled, previousScreen } = useButtonState();
+	const navigation = useNavigation();
+	const handleHomePress = () => {
+		navigation.navigate("Home", { screen: "PostsScreen" });
+	};
+
+	// const [activeScreen, setActiveScreen] = useState("Home");
 
 	return (
 		<MainStack.Navigator
@@ -63,23 +67,18 @@ function TabsNavigation() {
 				component={Home}
 				options={{
 					headerShown: false,
-					// title: "Публікації",
-					// headerTitleStyle: styles.headerTitleStyle,
-					// headerTitleAlign: "center",
 
 					tabBarIcon: ({ focused, color, size }) => (
-						<MaterialCommunityIcons
-							name="postage-stamp"
-							size={size}
-							color={isTabButtonsEnabled ? color : "#d7d7d7"}
-						/>
+						<HomeTabBtn focused={focused} color={color} size={size} />
 					),
 				}}
 				listeners={{
 					tabPress: (e) => {
+						// setActiveScreen("Home");
 						if (!isTabButtonsEnabled) {
-							e.preventDefault(); // Prohibit switching to another screen
+							e.preventDefault(); // Disable switching to another screen
 							// someFn(); // Call function before transition to another screen
+							() => handleHomePress();
 						}
 					},
 				}}
@@ -98,13 +97,20 @@ function TabsNavigation() {
 						<FontAwesome5
 							name="plus"
 							size={35}
-							color={isTabButtonsEnabled ? color : "#d7d7d7"}
+							color={
+								!isTabButtonsEnabled
+									? "#d7d7d7"
+									: previousScreen === "PostsScreen"
+									? "#212121"
+									: color
+							}
 						/>
 					),
 				}}
 				// unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
 				listeners={{
 					tabPress: (e) => {
+						// setActiveScreen("CreatePostsScreen");
 						if (!isTabButtonsEnabled) {
 							e.preventDefault();
 						}
@@ -130,6 +136,7 @@ function TabsNavigation() {
 				}}
 				listeners={{
 					tabPress: (e) => {
+						// setActiveScreen("ProfileScreen");
 						if (!isTabButtonsEnabled) {
 							e.preventDefault();
 						}

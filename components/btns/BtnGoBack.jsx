@@ -1,22 +1,32 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+	// useIsFocused,
+	useNavigation,
+	useRoute,
+} from "@react-navigation/native";
+// import { useEffect } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
+// import { useButtonState } from "../../utils/tabBtnsContext";
 
 export function BtnGoBack({ buttonStyle }) {
 	const navigation = useNavigation();
 	const route = useRoute();
-	console.log("BtnGoBack >> route:", route.name);
+
+	// const isFocused = useIsFocused();
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		console.log("BtnGoBack >> route:", route.name);
+	// 	}
+	// }, [isFocused]);
 
 	const handleGoBack = () => {
-		navigation.goBack();
-	};
+		const { originScreen } = route.params;
+		// console.log("handleGoBack >> originScreen:", originScreen);
+		// console.log("BtnGoBack >> originScreen:", originScreen);
 
-	// if (route.params && route.params.originScreen) {
-	// 	const { originScreen: backScreen } = route.params;
-	// 	navigation.navigate(backScreen, { originScreen: "" });
-	// } else {
-	// 	navigation.goBack();
-	// }
+		navigation.navigate(originScreen, { sourceScreen: originScreen });
+		// navigation.goBack();
+	};
 
 	return (
 		// Button for GoBack
@@ -51,9 +61,5 @@ export function BtnGoBack({ buttonStyle }) {
 const styles = StyleSheet.create({
 	button: {
 		marginLeft: 16,
-		// backgroundColor: "#FF6C00",
-		// paddingVertical: 16,
-		// paddingHorizontal: 32,
-		// borderRadius: 100,
 	},
 });
