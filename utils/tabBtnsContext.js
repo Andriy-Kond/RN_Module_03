@@ -9,11 +9,14 @@ export const useButtonState = () => {
 export const ButtonStateProvider = ({ children }) => {
 	const [isTabButtonsEnabled, setIsTabButtonsEnabled] = useState(true);
 	const [previousScreen, setPreviousScreen] = useState(true);
-	const [activeScreen, setActiveScreen] = useState(true);
-	console.log("ButtonStateProvider >> activeScreen:", activeScreen);
+	const [activeScreen, setActiveScreen] = useState("Home");
 
 	const toggleButtonsEnabled = (btnsState) => {
 		setIsTabButtonsEnabled(btnsState);
+	};
+
+	const setCurrentScreen = (screen) => {
+		setActiveScreen(screen);
 	};
 
 	return (
@@ -24,7 +27,7 @@ export const ButtonStateProvider = ({ children }) => {
 				previousScreen,
 				setPreviousScreen,
 				activeScreen,
-				setActiveScreen,
+				setCurrentScreen,
 			}}>
 			{children}
 		</ButtonStateContext.Provider>

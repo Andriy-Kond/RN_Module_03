@@ -13,7 +13,6 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
 	Image,
-	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View,
@@ -33,20 +32,22 @@ import { useKeyboardState } from "../../utils/keyboardContext";
 
 import { ModalWindow } from "../../components/ModalWindow";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
+import { styles } from "./CreatePostsScreenStyles";
 
 export default function CreatePostsScreen() {
 	// const route = useRoute();
 	const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("CreatePostsScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
-
 	const { hideKB } = useKeyboardState();
-	const { toggleButtonsEnabled, isTabButtonsEnabled, setActiveScreen } =
+	const { toggleButtonsEnabled, isTabButtonsEnabled, setCurrentScreen } =
 		useButtonState();
-	isFocused && setActiveScreen("CreatePostsScreen");
+	// isFocused && setCurrentScreen("CreatePostsScreen");
+
+	useEffect(() => {
+		if (isFocused) {
+			// navigation.setParams({ activeScreen: "CreatePostsScreen" });
+			setCurrentScreen("CreatePostsScreen");
+		}
+	}, [isFocused, setCurrentScreen]);
 
 	// navigation
 	const navigation = useNavigation();
@@ -237,83 +238,3 @@ export default function CreatePostsScreen() {
 		</TouchableWithoutFeedback>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: "flex-end",
-		paddingHorizontal: 10,
-	},
-
-	sendingMessageContainer: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	sendingMessage: {
-		textAlign: "center",
-		fontSize: 36,
-		lineHeight: 50,
-	},
-
-	camera: {
-		flex: 1,
-	},
-
-	photoImgContainer: {
-		flex: 1,
-		borderWidth: 3,
-		borderWidth: 15,
-		borderColor: "#0021f9",
-		backgroundColor: "#e5d310",
-	},
-
-	photoImg: {
-		alignSelf: "center",
-		width: 350,
-		height: "100%",
-		resizeMode: "contain",
-		borderWidth: 15,
-		borderColor: "#f90000",
-	},
-
-	// buttons
-	buttonContainer: {
-		paddingHorizontal: 20,
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-
-	button: {
-		alignItems: "center",
-		justifyContent: "center",
-		marginBottom: 15,
-		padding: 10,
-		borderWidth: 2,
-		borderRadius: 50,
-		borderColor: "#0d0d0d7f",
-	},
-
-	disabled: {
-		borderColor: "#d7d7d7",
-		color: "#d7d7d7",
-	},
-
-	text: {
-		color: "#000",
-	},
-
-	// Image Comment
-	imageTitleContainer: {
-		marginHorizontal: 10,
-		borderWidth: 2,
-		borderRadius: 50,
-		borderColor: "#007BFF",
-		marginVertical: 10,
-	},
-	imageTitle: {
-		color: "#000",
-	},
-});

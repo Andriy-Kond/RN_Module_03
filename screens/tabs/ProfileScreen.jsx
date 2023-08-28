@@ -24,14 +24,15 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 export default function ProfileScreen() {
 	// const route = useRoute();
 	const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("ProfileScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
+	const { setCurrentScreen } = useButtonState();
+	// isFocused && setCurrentScreen("ProfileScreen");
 
-	const { setActiveScreen } = useButtonState();
-	isFocused && setActiveScreen("ProfileScreen");
+	useEffect(() => {
+		if (isFocused) {
+			// navigation.setParams({ activeScreen: "ProfileScreen" });
+			setCurrentScreen("ProfileScreen");
+		}
+	}, [isFocused, setCurrentScreen]);
 
 	const dispatch = useDispatch();
 	const navigation = useNavigation();

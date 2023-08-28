@@ -13,7 +13,7 @@ import CreatePostsScreen from "../screens/tabs/CreatePostsScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
 
 // components
-import { useButtonState } from "../utils/tabBtnsContext";
+import { useButtonState } from "./tabBtnsContext";
 import { BtnGoBack } from "../components/btns/BtnGoBack";
 import {
 	useNavigation,
@@ -54,11 +54,14 @@ function AuthNavigation() {
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
 	// const route = useRoute();
-	// const routeName = route.name;
+	// const routeName = route.name; // definition the active screen
 	// console.log("TabsNavigation >> routeName:", routeName);
+	// const activeCurrentScreen = route.params?.activeScreen; // accessing the active screen
+	// console.log("TabsNavigation >> activeCurrentScreen:", activeCurrentScreen);
 
-	const { isTabButtonsEnabled, previousScreen, activeScreen, setActiveScreen } =
+	const { isTabButtonsEnabled, previousScreen, activeScreen } =
 		useButtonState();
+	console.log("router >> activeScreen:", activeScreen);
 	const navigation = useNavigation();
 	// const navigationState = useNavigationState((state) => state);
 	// const activeScreenIndex = navigationState?.index;

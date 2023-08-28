@@ -5,7 +5,8 @@ import MapView, { Marker } from "react-native-maps";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function MapScreen() {
-	const { previousScreen, setPreviousScreen } = useButtonState();
+	const { previousScreen, setPreviousScreen, setCurrentScreen } =
+		useButtonState();
 
 	// const {
 	// 	params: {
@@ -14,20 +15,18 @@ export default function MapScreen() {
 	// 	},
 	// } = useRoute();
 	const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		// console.log("MapScreen >> route.name:", route.name);
-	// 		// console.log("MapScreen >> route.params:", route.params.originScreen);
-	// 	}
-	// }, [isFocused]);
+
 	const {
 		location: { latitude, longitude },
 		originScreen,
 	} = route.params;
 
-	console.log("MapScreen >> originScreen:", originScreen);
-	setPreviousScreen(originScreen);
+	const isFocused = useIsFocused();
+	useEffect(() => {
+		if (isFocused) {
+			setPreviousScreen(originScreen);
+		}
+	}, [isFocused, setCurrentScreen, setPreviousScreen]);
 
 	return (
 		<View style={styles.container}>
