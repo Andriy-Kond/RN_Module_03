@@ -15,11 +15,19 @@ export const ButtonStateProvider = ({ children }) => {
 		setIsTabButtonsEnabled(btnsState);
 	};
 
-	const setCurrentScreen = (screen) => {
-		if (activeScreen !== screen) {
-			setPreviousScreen(activeScreen);
+	const setCurrentScreen = (newScreen) => {
+		console.log("newScreen ::", newScreen);
+		console.log("Previous:", previousScreen);
+		console.log("active:", activeScreen);
+		if (newScreen === "Home" && previousScreen === "PostsScreen") {
+			return;
+		} else {
+			if (activeScreen !== newScreen) {
+				console.log("ЗАПИС ПРЕВІОУС!");
+				setPreviousScreen(activeScreen);
+			}
+			setActiveScreen(newScreen);
 		}
-		setActiveScreen(screen);
 	};
 
 	return (

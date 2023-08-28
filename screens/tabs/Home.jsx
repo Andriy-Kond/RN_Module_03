@@ -22,12 +22,12 @@ export default function Home() {
 	const { setCurrentScreen } = useButtonState();
 	const isFocused = useIsFocused();
 	const navigation = useNavigation();
-	useEffect(() => {
-		if (isFocused) {
-			// navigation.setParams({ activeScreen: "Home" });
-			setCurrentScreen("Home");
-		}
-	}, [isFocused, setCurrentScreen]);
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		// navigation.setParams({ activeScreen: "Home" });
+	// 		setCurrentScreen("Home");
+	// 	}
+	// }, [isFocused, setCurrentScreen]);
 
 	// isFocused && setCurrentScreen("Home");
 
@@ -54,9 +54,11 @@ export default function Home() {
 				name="MapScreen"
 				component={MapScreen}
 				options={{
+					tabBarStyle: { display: "none" },
 					title: "Мапа",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
+
 					headerLeft: () => <BtnGoBack />,
 				}}
 			/>
@@ -65,9 +67,11 @@ export default function Home() {
 				name="CommentsScreen"
 				component={CommentsScreen}
 				options={{
+					tabBarStyle: { display: "none" },
 					title: "Коментарі",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",
+
 					headerLeft: () => <BtnGoBack />,
 				}}
 			/>

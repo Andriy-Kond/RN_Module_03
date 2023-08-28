@@ -16,8 +16,6 @@ export function BtnGoBack({ buttonStyle }) {
 
 	const { isTabButtonsEnabled, previousScreen, activeScreen } =
 		useButtonState();
-	console.log("BtnGoBack >> previousScreen:", previousScreen);
-	console.log("BtnGoBack >> activeScreen:", activeScreen);
 
 	// const isFocused = useIsFocused();
 	// const handleGoBack = () => {

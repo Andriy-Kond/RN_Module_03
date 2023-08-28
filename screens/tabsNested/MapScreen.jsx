@@ -24,9 +24,9 @@ export default function MapScreen() {
 	const isFocused = useIsFocused();
 	useEffect(() => {
 		if (isFocused) {
-			setPreviousScreen(originScreen);
+			setCurrentScreen("MapScreen");
 		}
-	}, [isFocused, setCurrentScreen, setPreviousScreen]);
+	}, [isFocused, setCurrentScreen]);
 
 	return (
 		<View style={styles.container}>

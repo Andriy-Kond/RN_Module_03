@@ -19,29 +19,33 @@ import { useSelector } from "react-redux";
 import { styles } from "./CommentsScreenStyles";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
+import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function CommentsScreen() {
 	// const {
 	// 	params: { postId, imageTitle, image },
 	// } = useRoute();
 	const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("CommentsScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
 	const { postId, imageTitle, image } = route.params;
-
 	const { hideKB } = useKeyboardState();
 	const state = useSelector((store) => store.auth);
 
 	const [imageComment, setImageComment] = useState("");
 	const [comments, setComments] = useState([]);
 
+	const { previousScreen, setPreviousScreen, setCurrentScreen } =
+		useButtonState();
+
 	useEffect(() => {
 		getAllComments();
 	}, []);
+
+	const isFocused = useIsFocused();
+	useEffect(() => {
+		if (isFocused) {
+			setCurrentScreen("CommentsScreen");
+		}
+	}, [isFocused, setCurrentScreen]);
 
 	const getAllComments = async () => {
 		const currentPostRef = doc(dbFirestore, "dcim", postId);

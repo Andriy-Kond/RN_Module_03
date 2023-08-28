@@ -55,8 +55,6 @@ const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
 	const { isTabButtonsEnabled, previousScreen, activeScreen } =
 		useButtonState();
-	console.log("TabsNavigation >> activeScreen:", activeScreen);
-	console.log("TabsNavigation >> previousScreen:", previousScreen);
 
 	const navigation = useNavigation();
 	// const navigationState = useNavigationState((state) => state);
@@ -80,7 +78,7 @@ function TabsNavigation() {
 				component={Home}
 				options={{
 					headerShown: false,
-
+					// tabBarStyle: { display: "none" },
 					tabBarIcon: ({ focused, color, size }) => (
 						<TabBtnHome focused={focused} color={color} size={size} />
 					),
