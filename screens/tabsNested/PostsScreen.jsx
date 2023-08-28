@@ -7,7 +7,7 @@ import {
 	View,
 } from "react-native";
 import {
-	// useIsFocused,
+	useIsFocused,
 	useNavigation,
 	// useRoute,
 } from "@react-navigation/native";
@@ -17,23 +17,24 @@ import { dbFirestore } from "../../firebase/config";
 import { useSelector } from "react-redux";
 
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
+import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function PostsScreen() {
-	// const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("PostsScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
-
 	const state = useSelector((state) => state.auth);
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
+	const { setCurrentScreen } = useButtonState();
 
 	useEffect(() => {
 		getAllPosts();
 	}, []);
+
+	const isFocused = useIsFocused();
+	useEffect(() => {
+		if (isFocused) {
+			setCurrentScreen("PostsScreen");
+		}
+	}, [isFocused, setCurrentScreen]);
 
 	const getAllPosts = async () => {
 		const dcimCollection = query(collection(dbFirestore, "dcim"));

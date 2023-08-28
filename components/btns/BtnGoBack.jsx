@@ -1,4 +1,5 @@
 import {
+	useIsFocused,
 	// useIsFocused,
 	useNavigation,
 	useRoute,
@@ -6,26 +7,41 @@ import {
 // import { useEffect } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { useButtonState } from "../../utils/tabBtnsContext";
 // import { useButtonState } from "../../utils/tabBtnsContext";
 
 export function BtnGoBack({ buttonStyle }) {
 	const navigation = useNavigation();
 	const route = useRoute();
 
+	const { isTabButtonsEnabled, previousScreen, activeScreen } =
+		useButtonState();
+	console.log("BtnGoBack >> previousScreen:", previousScreen);
+	console.log("BtnGoBack >> activeScreen:", activeScreen);
+
 	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("BtnGoBack >> route:", route.name);
+	// const handleGoBack = () => {
+	// 	const originScreen = route.params?.originScreen;
+	// 	if (originScreen) {
+	// 		navigation.navigate(route.params?.originScreen, {
+	// 			sourceScreen: originScreen,
+	// 		});
+	// 	} else {
+	// 		navigation.goBack();
 	// 	}
-	// }, [isFocused]);
+
+	// 	// navigation.goBack();
+	// };
 
 	const handleGoBack = () => {
-		const { originScreen } = route.params;
+		// const { originScreen } = route.params;
 		// console.log("handleGoBack >> originScreen:", originScreen);
 		// console.log("BtnGoBack >> originScreen:", originScreen);
-
-		navigation.navigate(originScreen, { sourceScreen: originScreen });
-		// navigation.goBack();
+		if (previousScreen !== "Home") {
+			navigation.navigate(previousScreen);
+		} else {
+			navigation.navigate("Home", { screen: "PostsScreen" });
+		}
 	};
 
 	return (

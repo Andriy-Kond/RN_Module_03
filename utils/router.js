@@ -53,15 +53,11 @@ function AuthNavigation() {
 
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
-	// const route = useRoute();
-	// const routeName = route.name; // definition the active screen
-	// console.log("TabsNavigation >> routeName:", routeName);
-	// const activeCurrentScreen = route.params?.activeScreen; // accessing the active screen
-	// console.log("TabsNavigation >> activeCurrentScreen:", activeCurrentScreen);
-
 	const { isTabButtonsEnabled, previousScreen, activeScreen } =
 		useButtonState();
-	console.log("router >> activeScreen:", activeScreen);
+	console.log("TabsNavigation >> activeScreen:", activeScreen);
+	console.log("TabsNavigation >> previousScreen:", previousScreen);
+
 	const navigation = useNavigation();
 	// const navigationState = useNavigationState((state) => state);
 	// const activeScreenIndex = navigationState?.index;
@@ -105,6 +101,7 @@ function TabsNavigation() {
 				name="CreatePostsScreen"
 				component={CreatePostsScreen}
 				options={{
+					tabBarStyle: { display: "none" },
 					title: "Створити публікацію",
 					headerTitleStyle: styles.headerTitleStyle,
 					headerTitleAlign: "center",

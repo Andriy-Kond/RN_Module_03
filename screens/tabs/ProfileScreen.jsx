@@ -2,7 +2,7 @@ import {
 	useIsFocused,
 	// useIsFocused,
 	useNavigation,
-	// useRoute,
+	useRoute,
 } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
@@ -23,6 +23,7 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 
 export default function ProfileScreen() {
 	// const route = useRoute();
+	// console.log("ProfileScreen >> route:", route);
 	const isFocused = useIsFocused();
 	const { setCurrentScreen } = useButtonState();
 	// isFocused && setCurrentScreen("ProfileScreen");
