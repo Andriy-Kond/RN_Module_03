@@ -14,14 +14,19 @@ import { dbFirestore } from "../../firebase/config";
 import { collection, doc, addDoc, query, onSnapshot } from "firebase/firestore";
 
 import { useKeyboardState } from "../../utils/keyboardContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "./CommentsScreenStyles";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
+import { authSlice } from "../../redux/auth/authReducer";
+
 export default function CommentsScreen() {
+	const { updateField } = authSlice.actions;
+	const dispatch = useDispatch();
+
 	// const {
 	// 	params: { postId, imageTitle, image },
 	// } = useRoute();
@@ -45,7 +50,12 @@ export default function CommentsScreen() {
 		if (isFocused) {
 			setCurrentScreen("CommentsScreen");
 		}
+		// dispatch(updateField({ tabNavigation: false }));
 	}, [isFocused, setCurrentScreen]);
+
+	useEffect(() => {
+		dispatch(updateField({ tabNavigation: true }));
+	}, []);
 
 	const getAllComments = async () => {
 		const currentPostRef = doc(dbFirestore, "dcim", postId);

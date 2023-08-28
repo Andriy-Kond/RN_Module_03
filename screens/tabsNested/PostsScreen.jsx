@@ -14,13 +14,18 @@ import {
 import { useEffect, useState } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { dbFirestore } from "../../firebase/config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
+import { authSlice } from "../../redux/auth/authReducer";
+
 export default function PostsScreen() {
 	const state = useSelector((state) => state.auth);
+	const { updateTabNavigation } = authSlice.actions;
+	const dispatch = useDispatch();
+
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
 	const { setCurrentScreen } = useButtonState();

@@ -27,6 +27,7 @@ import { TabBtnProfile } from "../components/btns/TabBtnProfile";
 import { TabBtnProfileOnProfileScreen } from "../components/btns/TabBtnProfileOnProfileScreen";
 import { TabBtnCreatePostOnProfileScreen } from "../components/btns/TabBtnCreatePostOnProfileScreen";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const AuthStack = createStackNavigator();
 
@@ -65,6 +66,10 @@ function TabsNavigation() {
 		navigation.navigate("Home", { screen: "PostsScreen" });
 	};
 
+	// const isActiveTabNavigation = useSelector(
+	// 	(state) => state.auth.tabNavigation
+	// );
+
 	return (
 		<MainStack.Navigator
 			initialRouteName="Home"
@@ -78,7 +83,9 @@ function TabsNavigation() {
 				component={Home}
 				options={{
 					headerShown: false,
-					// tabBarStyle: { display: "none" },
+					tabBarStyle: {
+						display: activeScreen === "PostsScreen" ? "flex" : "none",
+					},
 					tabBarIcon: ({ focused, color, size }) => (
 						<TabBtnHome focused={focused} color={color} size={size} />
 					),

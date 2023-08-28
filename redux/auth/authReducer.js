@@ -21,6 +21,8 @@ const initState = {
 	phoneAvatar: null,
 	serverAvatar: null,
 	error: null,
+
+	tabNavigation: true,
 };
 
 const actions = {
@@ -30,6 +32,13 @@ const actions = {
 			authErrorMessage: action.payload,
 		};
 	},
+
+	// updateTabNavigation: (state, action) => {
+	// 	return {
+	// 		...state,
+	// 		tabNavigation: action.payload,
+	// 	};
+	// },
 
 	// updateField: (state, action) => {
 	// 	const { field, value } = action.payload;
