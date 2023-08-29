@@ -97,30 +97,6 @@ export default function CreatePostsScreen() {
 		);
 	}
 
-	const getCityAndCountry = async (latitude, longitude) => {
-		try {
-			const response = await fetch(
-				`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-			);
-
-			if (response.ok) {
-				const data = await response.json();
-				// console.log("getCityAndCountry >> data.address:", data.address);
-				const city =
-					data.address.city || data.address.town || data.address.village;
-				const state = data.address.state;
-				const country = data.address.country;
-
-				return { city, state, country };
-			} else {
-				throw new Error("Error fetching data");
-			}
-		} catch (error) {
-			console.error("Error:", error);
-			return null;
-		}
-	};
-
 	const takePhoto = async () => {
 		try {
 			if (permissionCamera && cameraRef.current) {
@@ -143,21 +119,27 @@ export default function CreatePostsScreen() {
 
 					if (permissionLocation) {
 						const newLocation = await Location.getCurrentPositionAsync();
-						const { latitude, longitude } = newLocation?.coords;
+						const { latitude, longitude } = newLocation.coords;
 
-						// const latitude = 50.425038;
-						// const longitude = 30.333454;
 						// take posision name from google API
-						const { city, state, country } = await getCityAndCountry(
-							latitude,
-							longitude
-						);
+						// try {
+						// 	const response = await axios.get(
+						// 		`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDKueXjSqrcUrzv9mEjMdfLOCckux_1OVw`
+						// 	);
+						// 	console.log("takePhoto >> response:", response);
 
-						// newLocation.coords.latitude = latitude;
-						// newLocation.coords.longitude = longitude;
-						newLocation.coords.city = city;
-						newLocation.coords.state = state;
-						newLocation.coords.country = country;
+						// 	const { results } = response.data;
+						// 	if (results.length > 0) {
+						// 		const formattedAddress = results[0].formatted_address;
+						// 		const address = {
+						// 			address: formattedAddress,
+						// 		};
+						// 		console.log("takePhoto >> address:", address);
+						// 		newLocation.coords.address = address;
+						// 	}
+						// } catch (error) {
+						// 	console.error("Error fetching location name:", error);
+						// }
 
 						setCapturedLocation(newLocation);
 						setIsBtnSendEnabled(true); // unlock SEND-btn
@@ -172,15 +154,15 @@ export default function CreatePostsScreen() {
 	const uploadPostToServer = async () => {
 		const photo = await uploadPhotoToServer(capturedPhoto);
 		// send to db
-
-		await addDoc(collection(dbFirestore, "dcim"), {
-			photo,
-			imageTitle,
-			location: capturedLocation?.coords,
-			userId,
-			nickname,
-			postsCount: 0,
-		});
+		if (capturedLocation) {
+			await addDoc(collection(dbFirestore, "dcim"), {
+				photo,
+				imageTitle,
+				location: capturedLocation.coords,
+				userId,
+				nickname,
+			});
+		}
 	};
 
 	const sendPhoto = async () => {

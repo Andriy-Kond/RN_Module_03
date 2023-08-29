@@ -18,12 +18,12 @@ export const ButtonStateProvider = ({ children }) => {
 	const setCurrentScreen = (newScreen) => {
 		// console.log("newScreen ::", newScreen);
 		// console.log("Previous:", previousScreen);
-		console.log("active:", activeScreen);
+		// console.log("active:", activeScreen);
 		if (newScreen === "Home" && previousScreen === "PostsScreen") {
 			return;
 		} else {
 			if (activeScreen !== newScreen) {
-				console.log("ЗАПИС ПРЕВІОУС!");
+				// console.log("ЗАПИС ПРЕВІОУС!");
 				setPreviousScreen(activeScreen);
 			}
 			setActiveScreen(newScreen);

@@ -1,33 +1,26 @@
-import {
-	FlatList,
-	Image,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import {
-	useIsFocused,
-	useNavigation,
-	// useRoute,
-} from "@react-navigation/native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
+
 import { dbFirestore } from "../../firebase/config";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
-import { authSlice } from "../../redux/auth/authReducer";
+import { styles } from "./PostsScreenStyles";
+
+import { CommentBtn } from "../../components/btns/CommentBtn";
+import { MapPinBtn } from "../../components/btns/MapPinBtn";
+// import { getCurrentPostComments } from "../../utils/getAllComments";
 
 export default function PostsScreen() {
 	const state = useSelector((state) => state.auth);
-	const { updateTabNavigation } = authSlice.actions;
-	const dispatch = useDispatch();
 
 	const navigation = useNavigation();
 	const [posts, setPosts] = useState([]);
+
 	const { setCurrentScreen } = useButtonState();
 
 	useEffect(() => {
@@ -45,19 +38,20 @@ export default function PostsScreen() {
 		const dcimCollection = query(collection(dbFirestore, "dcim"));
 
 		onSnapshot(dcimCollection, (snapshot) => {
-			const arr = snapshot.docs.map((doc) => {
+			const postsArr = snapshot.docs.map((doc) => {
 				return {
 					id: doc.id,
 					data: doc.data(),
 				};
 			});
-			setPosts(arr);
+
+			setPosts(postsArr);
 		});
 	};
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.item}>
+			<View style={styles.user}>
 				<Image
 					style={styles.userImg}
 					source={
@@ -74,39 +68,64 @@ export default function PostsScreen() {
 				data={posts}
 				keyExtractor={(item, indx) => item.id}
 				renderItem={({ item }) => {
-					const indx = posts.indexOf(item);
-
 					return (
 						<View style={styles.imgContainer}>
-							<Text Style={styles.imgTitle}>Image #{indx + 1}</Text>
 							<Image
-								source={{ uri: item.data.photo }}
 								style={styles.currentImg}
+								source={{ uri: item.data.photo }}
 							/>
-							<Text>{item.data.imageTitle}</Text>
+							<Text style={styles.imgTitle}>{item.data.imageTitle}</Text>
 
 							<View style={styles.buttonsWrapper}>
-								<TouchableOpacity
-									onPress={() =>
-										navigation.navigate("MapScreen", {
-											location: item.data.location,
-											originScreen: "PostsScreen",
-										})
-									}>
-									<Text>Go to MAP</Text>
-								</TouchableOpacity>
+								<View>
+									<TouchableOpacity
+										onPress={() =>
+											navigation.navigate("CommentsScreen", {
+												imageTitle: item.data.imageTitle,
+												postId: item.id,
+												image: item.data.photo,
+												originScreen: "PostsScreen",
+											})
+										}>
+										<View style={styles.commentBtnWrapper}>
+											<CommentBtn commentsQty={item.data.postsCount} />
+											<Text
+												style={[
+													styles.commentBtnText,
+													{
+														color:
+															item.data.postsCount === 0
+																? "#BDBDBD"
+																: "#212121",
+													},
+												]}>
+												{`${item.data.postsCount}`}
+											</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
 
-								<TouchableOpacity
-									onPress={() =>
-										navigation.navigate("CommentsScreen", {
-											imageTitle: item.data.imageTitle,
-											postId: item.id,
-											image: item.data.photo,
-											originScreen: "PostsScreen",
-										})
-									}>
-									<Text>Add COMMENT</Text>
-								</TouchableOpacity>
+								<View>
+									<TouchableOpacity
+										style={styles.mapPin}
+										onPress={() =>
+											navigation.navigate("MapScreen", {
+												location: item.data.location,
+												originScreen: "PostsScreen",
+											})
+										}>
+										<View style={styles.commentBtnWrapper}>
+											<MapPinBtn />
+											<Text style={styles.commentBtnText}>
+												{`${
+													item.data.location.city
+														? item.data.location.city
+														: item.data.location.state
+												}, ${item.data.location.country}`}
+											</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
 							</View>
 						</View>
 					);
@@ -115,61 +134,3 @@ export default function PostsScreen() {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		paddingHorizontal: 16,
-		paddingTop: 32,
-		flex: 1,
-		width: "100%",
-		backgroundColor: "white",
-	},
-
-	item: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-
-	userImg: {
-		borderRadius: 16,
-		marginRight: 8,
-		width: 60,
-		height: 60,
-	},
-	userName: {
-		color: "#212121",
-		fontFamily: "RobotoBold700",
-		fontSize: 13,
-	},
-
-	userEmail: {
-		color: "rgba(33, 33, 33, 0.80)",
-		fontFamily: "RobotoRegular400",
-		fontSize: 11,
-	},
-
-	imgContainer: {
-		alignItems: "center",
-		marginBottom: 30,
-	},
-
-	imgTitle: {
-		marginBottom: 100,
-	},
-
-	currentImg: {
-		width: "100%",
-		height: 200,
-		borderRadius: 8,
-		borderColor: "#fff",
-		marginTop: 10,
-		marginBottom: 10,
-	},
-
-	buttonsWrapper: {
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingHorizontal: 15,
-	},
-});

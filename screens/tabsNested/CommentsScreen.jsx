@@ -11,7 +11,15 @@ import {
 import { useIsFocused, useRoute } from "@react-navigation/native";
 
 import { dbFirestore } from "../../firebase/config";
-import { collection, doc, addDoc, query, onSnapshot } from "firebase/firestore";
+import {
+	collection,
+	doc,
+	addDoc,
+	query,
+	onSnapshot,
+	increment,
+	updateDoc,
+} from "firebase/firestore";
 
 import { useKeyboardState } from "../../utils/keyboardContext";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,14 +43,17 @@ export default function CommentsScreen() {
 	const { hideKB } = useKeyboardState();
 	const state = useSelector((store) => store.auth);
 
-	const [imageComment, setImageComment] = useState("");
+	const [inputComment, setInputComment] = useState("");
 	const [comments, setComments] = useState([]);
+	// console.log("CommentsScreen >> comments:", comments);
 
 	const { previousScreen, setPreviousScreen, setCurrentScreen } =
 		useButtonState();
 
 	useEffect(() => {
-		getAllComments();
+		const arr = getAllComments(postId);
+		console.log("useEffect >> arr:", arr);
+		setComments(arr);
 	}, []);
 
 	const isFocused = useIsFocused();
@@ -53,11 +64,12 @@ export default function CommentsScreen() {
 		// dispatch(updateField({ tabNavigation: false }));
 	}, [isFocused, setCurrentScreen]);
 
+	// ???
 	useEffect(() => {
 		dispatch(updateField({ tabNavigation: true }));
 	}, []);
 
-	const getAllComments = async () => {
+	const getAllComments = (postId) => {
 		const currentPostRef = doc(dbFirestore, "dcim", postId);
 		const commentsCollection = query(collection(currentPostRef, "comments"));
 
@@ -79,13 +91,17 @@ export default function CommentsScreen() {
 		console.log("запуск addDoc :>> ");
 		await addDoc(collection(currentPostRef, "comments"), {
 			// userNickName: state.nickname,
-			comment: imageComment,
+			comment: inputComment,
 			avatar: state.serverAvatar,
 			commentDate: Date.now(),
 			userId: state.userId,
 		});
 
-		setImageComment("");
+		await updateDoc(currentPostRef, {
+			postsCount: increment(1),
+		});
+
+		setInputComment("");
 	};
 
 	const months = [
@@ -169,21 +185,21 @@ export default function CommentsScreen() {
 				<View
 					style={[
 						styles.addCommentContainer,
-						state?.currentFocusInput === "imageComment" && styles.inputFocused,
+						state?.currentFocusInput === "inputComment" && styles.inputFocused,
 					]}>
 					<TextInput
-						value={imageComment}
+						value={inputComment}
 						placeholder={"Коментувати..."}
 						placeholderTextColor={"#BDBDBD"}
 						style={styles.inputComment}
 						multiline
 						onChangeText={(value) => {
-							setImageComment(value);
+							setInputComment(value);
 						}}
 					/>
 					{/* ADD COMMENT BTN */}
-					<TouchableOpacity disabled={!imageComment} onPress={createComment}>
-						<AddCommentBtn imageComment={imageComment} />
+					<TouchableOpacity disabled={!inputComment} onPress={createComment}>
+						<AddCommentBtn inputComment={inputComment} />
 					</TouchableOpacity>
 				</View>
 			</View>

@@ -47,14 +47,14 @@ export const styles = StyleSheet.create({
 		paddingBottom: 8,
 
 		color: "#212121",
-		fontFamily: "RobotoRegular400",
+		fontFamily: "RobotoNormal400",
 		fontSize: 13,
 		lineHeight: 18,
 	},
 
 	currentCommentDateTime: {
 		color: "#BDBDBD",
-		fontFamily: "RobotoRegular400",
+		fontFamily: "RobotoNormal400",
 		fontSize: 10,
 		// alignSelf: "flex-end", //* or alignSelf: "flex-start"
 	},

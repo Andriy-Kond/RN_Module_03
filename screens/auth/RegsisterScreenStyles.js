@@ -108,7 +108,7 @@ export const styles = StyleSheet.create({
 		borderColor: "#E8E8E8",
 
 		color: "#212121",
-		fontFamily: "RobotoRegular400",
+		fontFamily: "RobotoNormal400",
 		fontSize: 16,
 
 		alignItems: "center",
