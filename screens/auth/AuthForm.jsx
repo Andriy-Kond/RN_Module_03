@@ -1,8 +1,4 @@
-import {
-	// useIsFocused,
-	useNavigation,
-	// useRoute,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
@@ -17,8 +13,6 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 
 import { styles } from "./AuthFormStyles";
-// import { useEffect } from "react";
-// import { updateCurrentField } from "../../redux/auth/authOperations";
 
 export function AuthForm({
 	mainBtnText,
@@ -26,14 +20,6 @@ export function AuthForm({
 	submitForm,
 	loginScreen,
 }) {
-	// const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("AuthForm >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
-
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 	const { toggleField, updateField } = authSlice.actions;
@@ -46,8 +32,6 @@ export function AuthForm({
 
 	// set avatar to initial state
 	async function addAvatar() {
-		console.log("run addAvatar");
-
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
 			allowsEditing: true,
@@ -56,15 +40,8 @@ export function AuthForm({
 		});
 
 		if (!result.canceled) {
-			console.log("run update phoneAvatar");
 			await updateCurrentField("phoneAvatar", result.assets[0].uri);
 		}
-		// else {
-		// 	await updateCurrentField(
-		// 		"authErrorMessage",
-		// 		"Доступ до сховища не наданий"
-		// 	);
-		// }
 	}
 
 	return (
@@ -82,6 +59,7 @@ export function AuthForm({
 					<Image
 						style={styles.avatarImg}
 						source={
+							// state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
 							state?.phoneAvatar ? { uri: state.phoneAvatar } : regEmptyImg
 						}
 					/>

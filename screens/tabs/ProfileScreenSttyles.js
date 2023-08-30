@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
 
+const regImgHeight = 120;
+const regAddImgBtnHeight = 25;
+
 export const styles = StyleSheet.create({
 	container: {
-		// paddingHorizontal: 16,
-		// paddingTop: 32,
-		// width: "100%",
 		flex: 1,
 		backgroundColor: "#fff",
+		paddingTop: 148,
 	},
 
 	imgBg: {
@@ -23,27 +24,64 @@ export const styles = StyleSheet.create({
 
 	formContainer: {
 		flex: 1,
+		width: "100%",
+		paddingLeft: 16,
+		paddingRight: 16,
+
+		alignItems: "center",
 		backgroundColor: "#fff",
-		// paddingHorizontal: 16,
-		// paddingTop: 32,
-		// width: "100%",
+		borderTopLeftRadius: 25,
+		borderTopRightRadius: 25,
+
+		justifyContent: "flex-end",
 	},
 
-	user: {
-		flexDirection: "row",
+	headerContainer: {
+		width: "100%",
 		alignItems: "center",
-		marginBottom: 32,
 	},
-	userImg: {
+
+	regImageContainer: {
+		position: "relative",
+	},
+
+	avatarImg: {
+		position: "absolute",
+		width: regImgHeight,
+		height: regImgHeight,
+
 		borderRadius: 16,
-		width: 120,
-		height: 120,
+		backgroundColor: "#F6F6F6",
+
+		top: 0,
+		left: 0,
+		transform: [
+			{ translateY: -regImgHeight / 2 },
+			{ translateX: -regImgHeight / 2 },
+		],
 	},
+	regAddImgBtn: {
+		position: "absolute",
+		top: 20,
+		transform: [{ translateX: regImgHeight / 2 - regAddImgBtnHeight / 2 }],
+
+		width: regAddImgBtnHeight,
+		height: regAddImgBtnHeight,
+	},
+
+	btnLogout: {
+		alignSelf: "flex-end",
+		marginTop: 22,
+	},
+
 	userName: {
 		color: "#212121",
 		fontFamily: "RobotoMedium500",
 		fontSize: 30,
 		letterSpacing: 0.3,
+
+		marginTop: 46,
+		marginBottom: 32,
 	},
 
 	imgContainer: {
@@ -74,11 +112,14 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 
-	commentBtnText: {
+	btnText: {
 		marginLeft: 6,
 		color: "#212121",
 		fontFamily: "RobotoNormal400",
 		fontSize: 16,
+	},
+
+	underline: {
 		textDecorationLine: "underline",
 	},
 });

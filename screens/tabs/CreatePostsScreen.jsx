@@ -180,6 +180,8 @@ export default function CreatePostsScreen() {
 			userId,
 			nickname,
 			postsCount: 0,
+			likesCount: 0,
+			usersLikedPost: [],
 		});
 	};
 

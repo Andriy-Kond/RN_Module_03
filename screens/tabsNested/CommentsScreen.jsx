@@ -88,9 +88,7 @@ export default function CommentsScreen() {
 		hideKB();
 		const currentPostRef = doc(dbFirestore, "dcim", postId);
 
-		console.log("запуск addDoc :>> ");
 		await addDoc(collection(currentPostRef, "comments"), {
-			// userNickName: state.nickname,
 			comment: inputComment,
 			avatar: state.serverAvatar,
 			commentDate: Date.now(),
