@@ -60,13 +60,21 @@ export const styles = StyleSheet.create({
 			{ translateX: -regImgHeight / 2 },
 		],
 	},
-	regAddImgBtn: {
+
+	regAddImgBtnWrapper: {
 		position: "absolute",
 		top: 20,
 		transform: [{ translateX: regImgHeight / 2 - regAddImgBtnHeight / 2 }],
 
 		width: regAddImgBtnHeight,
 		height: regAddImgBtnHeight,
+	},
+
+	regAddImgBtn: {
+		width: regAddImgBtnHeight,
+		height: regAddImgBtnHeight,
+		alignItems: "center",
+		justifyContent: "center",
 	},
 
 	btnLogout: {

@@ -12,9 +12,12 @@ import { CommentBtn } from "../../components/btns/CommentBtn";
 import { MapPinBtn } from "../../components/btns/MapPinBtn";
 
 import { styles } from "./PostsScreenStyles";
+import { addLike } from "../../utils/addLike";
+import { LikeBtn } from "../../components/btns/LikeBtn";
 
 export default function PostsScreen() {
 	const state = useSelector((state) => state.auth);
+	const currentUser = useSelector((store) => store.auth.userId);
 
 	const navigation = useNavigation();
 	const [allPosts, setAllPosts] = useState([]);
@@ -88,13 +91,37 @@ export default function PostsScreen() {
 										<CommentBtn commentsQty={item.data.postsCount} />
 										<Text
 											style={[
-												styles.commentBtnText,
+												styles.btnText,
 												{
 													color:
 														item.data.postsCount === 0 ? "#BDBDBD" : "#212121",
 												},
 											]}>
 											{`${item.data.postsCount}`}
+										</Text>
+									</View>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() =>
+										addLike(
+											item.id,
+											item.data.usersLikedPost,
+											item.data.likesCount,
+											currentUser
+										)
+									}>
+									<View style={styles.commentBtnWrapper}>
+										<LikeBtn commentsQty={item.data.likesCount} />
+										<Text
+											style={[
+												styles.btnText,
+												{
+													color:
+														item.data.likesCount === 0 ? "#BDBDBD" : "#212121",
+												},
+											]}>
+											{`${item.data.likesCount}`}
 										</Text>
 									</View>
 								</TouchableOpacity>
@@ -108,7 +135,7 @@ export default function PostsScreen() {
 									}>
 									<View style={styles.commentBtnWrapper}>
 										<MapPinBtn />
-										<Text style={styles.commentBtnText}>
+										<Text style={[styles.btnText, styles.underline]}>
 											{`${
 												item.data.location.city
 													? item.data.location.city

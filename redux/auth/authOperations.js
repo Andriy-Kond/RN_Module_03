@@ -25,7 +25,7 @@ export const authSingUpUser = ({
 	email,
 	password,
 	nickname,
-	phoneAvatar,
+	// phoneAvatar,
 	serverAvatar,
 }) => {
 	return async (dispatch, getState) => {
@@ -42,9 +42,11 @@ export const authSingUpUser = ({
 				await dispatch(updateField({ userId: userCredential.user.uid }));
 				let serverUrlAvatar = null;
 
-				if (phoneAvatar) {
+				// if (phoneAvatar) {
+				if (serverAvatar) {
 					// Upload avatar to server
-					serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
+					// serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
+					serverUrlAvatar = await uploadPhotoToServer(serverAvatar);
 
 					// Update field "serverAvatar" in state
 					dispatch(updateField({ serverAvatar: serverUrlAvatar }));
@@ -58,14 +60,13 @@ export const authSingUpUser = ({
 				});
 			}
 
-			// ? нащо воно тут?
-			// const userUpdateProfile = {
-			// 	userId: userCredential.user.uid,
-			// 	nickname: userCredential.user.displayName,
-			// 	phoneAvatar: userCredential.user.photoURL,
-			// 	serverAvatar: userCredential.user.photoURL,
-			// };
-			// await dispatch(updateUserProfile(userUpdateProfile));
+			const userUpdateProfile = {
+				// 	userId: userCredential.user.uid,
+				nickname: userCredential.user.displayName,
+				// 	phoneAvatar: userCredential.user.photoURL,
+				// 	serverAvatar: userCredential.user.photoURL,
+			};
+			await dispatch(updateUserProfile(userUpdateProfile));
 		} catch (error) {
 			console.error(
 				"createUserWithEmailAndPassword >> error.code:",

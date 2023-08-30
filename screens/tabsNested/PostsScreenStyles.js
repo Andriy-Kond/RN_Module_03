@@ -59,11 +59,13 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 
-	commentBtnText: {
+	btnText: {
 		marginLeft: 6,
 		color: "#212121",
 		fontFamily: "RobotoNormal400",
 		fontSize: 16,
+	},
+	underline: {
 		textDecorationLine: "underline",
 	},
 });

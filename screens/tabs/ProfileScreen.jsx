@@ -1,20 +1,8 @@
-import {
-	useIsFocused,
-	useNavigation,
-	useRoute,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Text, View, FlatList, Image, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	collection,
-	query,
-	onSnapshot,
-	where,
-	doc,
-	updateDoc,
-	increment,
-} from "firebase/firestore";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
 
 import { dbFirestore } from "../../firebase/config";
 
@@ -28,6 +16,9 @@ import bgImage from "../../assets/img/bg_photo.jpg";
 import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 import { authSlice } from "../../redux/auth/authReducer";
 import { LikeBtn } from "../../components/btns/LikeBtn";
+import { addLike } from "../../utils/addLike";
+
+import { getImageFromLibrary } from "../../utils/getImageFromLibrary";
 
 export default function ProfileScreen() {
 	const navigation = useNavigation();
@@ -72,41 +63,12 @@ export default function ProfileScreen() {
 
 	// set avatar to initial state
 	async function addAvatar() {
-		const result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [3, 3],
-			quality: 1,
-		});
+		const result = await getImageFromLibrary();
 
 		if (!result.canceled) {
-			dispatch(updateField({ phoneAvatar: result.assets[0].uri }));
-			// await updateCurrentField("phoneAvatar", result.assets[0].uri);
+			dispatch(updateField({ serverAvatar: result.assets[0].uri }));
 		}
 	}
-
-	const addLike = async (postId, usersLikedPost, likesCount) => {
-		const currentPostRef = doc(dbFirestore, "dcim", postId);
-
-		if (usersLikedPost.includes(currentUser)) {
-			// delete user's like
-			const updateUsersLikedPost = usersLikedPost.filter(
-				(userId) => userId !== currentUser
-			);
-
-			await updateDoc(currentPostRef, {
-				likesCount: Number(likesCount) - 1,
-				usersLikedPost: updateUsersLikedPost,
-			});
-		} else {
-			// add user's like
-			const updateUsersLikedPost = [...usersLikedPost, currentUser];
-			await updateDoc(currentPostRef, {
-				likesCount: increment(1),
-				usersLikedPost: updateUsersLikedPost,
-			});
-		}
-	};
 
 	return (
 		<View style={styles.container}>
@@ -120,9 +82,16 @@ export default function ProfileScreen() {
 								state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
 							}
 						/>
+
 						{/* ADD AVATAR BTN */}
-						<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
-							<AddAvatarBtn />
+
+						<TouchableOpacity
+							style={styles.regAddImgBtnWrapper}
+							onPress={addAvatar}>
+							<AddAvatarBtn
+								isAvatar={state.serverAvatar}
+								buttonStyles={styles.regAddImgBtn}
+							/>
 						</TouchableOpacity>
 					</View>
 					<BtnLogout buttonStyle={styles.btnLogout} />
@@ -174,7 +143,8 @@ export default function ProfileScreen() {
 											addLike(
 												item.id,
 												item.data.usersLikedPost,
-												item.data.likesCount
+												item.data.likesCount,
+												currentUser
 											)
 										}>
 										<View style={styles.commentBtnWrapper}>

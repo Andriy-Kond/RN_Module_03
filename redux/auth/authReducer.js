@@ -18,7 +18,7 @@ const initState = {
 	password: "",
 	currentFocusInput: "",
 	showPassword: false,
-	phoneAvatar: null,
+	// phoneAvatar: null,
 	serverAvatar: null,
 	error: null,
 

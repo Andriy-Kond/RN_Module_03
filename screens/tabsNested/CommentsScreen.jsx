@@ -52,7 +52,7 @@ export default function CommentsScreen() {
 
 	useEffect(() => {
 		const arr = getAllComments(postId);
-		console.log("useEffect >> arr:", arr);
+		// console.log("useEffect >> arr:", arr);
 		setComments(arr);
 	}, []);
 

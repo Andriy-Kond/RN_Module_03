@@ -13,6 +13,7 @@ import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddAvatarBtn } from "../../components/btns/AddAvatarBtn";
 
 import { styles } from "./AuthFormStyles";
+import { getImageFromLibrary } from "../../utils/getImageFromLibrary";
 
 export function AuthForm({
 	mainBtnText,
@@ -32,15 +33,11 @@ export function AuthForm({
 
 	// set avatar to initial state
 	async function addAvatar() {
-		const result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
-			aspect: [3, 3],
-			quality: 1,
-		});
+		const result = await getImageFromLibrary();
 
 		if (!result.canceled) {
-			await updateCurrentField("phoneAvatar", result.assets[0].uri);
+			// await updateCurrentField("phoneAvatar", result.assets[0].uri);
+			await updateCurrentField("serverAvatar", result.assets[0].uri);
 		}
 	}
 
@@ -59,13 +56,18 @@ export function AuthForm({
 					<Image
 						style={styles.avatarImg}
 						source={
-							// state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
-							state?.phoneAvatar ? { uri: state.phoneAvatar } : regEmptyImg
+							state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
+							// state?.phoneAvatar ? { uri: state.phoneAvatar } : regEmptyImg
 						}
 					/>
 					{/* ADD AVATAR BTN */}
-					<TouchableOpacity style={[styles.regAddImgBtn]} onPress={addAvatar}>
-						<AddAvatarBtn />
+					<TouchableOpacity
+						style={styles.regAddImgBtnWrapper}
+						onPress={addAvatar}>
+						<AddAvatarBtn
+							isAvatar={state.serverAvatar}
+							buttonStyles={styles.regAddImgBtn}
+						/>
 					</TouchableOpacity>
 				</View>
 			)}
