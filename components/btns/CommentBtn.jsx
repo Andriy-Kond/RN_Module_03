@@ -1,7 +1,6 @@
 import Svg, { Path } from "react-native-svg";
 
 export const CommentBtn = ({ commentsQty }) => {
-	console.log("CommentBtn >> commentsQty:", commentsQty);
 	return (
 		<>
 			<Svg

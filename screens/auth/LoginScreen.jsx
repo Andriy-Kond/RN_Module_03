@@ -16,18 +16,8 @@ import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./LoginScreenStyles";
-// import { useIsFocused, useRoute } from "@react-navigation/native";
-// import { useEffect } from "react";
 
 export default function LoginScreen() {
-	// const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("LoginScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
-
 	const initState = useSelector((state) => state.auth);
 	const { authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();
@@ -56,6 +46,7 @@ export default function LoginScreen() {
 			<View style={styles.container}>
 				{initState.authErrorMessage && <ModalWindow />}
 				<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
+
 				<KeyboardAvoidingView
 					style={styles.kbAvoidingContainer}
 					behavior={Platform.OS === "ios" ? "padding" : null}>
@@ -63,7 +54,8 @@ export default function LoginScreen() {
 						mainBtnText={mainBtnText}
 						secondBtnText={secondBtnText}
 						submitForm={submitForm}
-						loginScreen={loginScreen}></AuthForm>
+						loginScreen={loginScreen}
+					/>
 				</KeyboardAvoidingView>
 			</View>
 		</TouchableWithoutFeedback>

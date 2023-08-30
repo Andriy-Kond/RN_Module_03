@@ -34,13 +34,6 @@ export const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 	},
 
-	kbAvoidingContainer: {
-		flex: 1,
-		justifyContent: "flex-end",
-		alignItems: "center",
-		width: "100%",
-	},
-
 	registrationContainer: {
 		flexGrow: 1,
 		alignItems: "center",

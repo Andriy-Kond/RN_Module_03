@@ -16,18 +16,8 @@ import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./RegsisterScreenStyles";
-// import { useIsFocused, useRoute } from "@react-navigation/native";
-// import { useEffect } from "react";
 
 export default function RegisterScreen() {
-	// const route = useRoute();
-	// const isFocused = useIsFocused();
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		console.log("RegisterScreen >> route:", route.name);
-	// 	}
-	// }, [isFocused]);
-
 	const state = useSelector((state) => state.auth);
 	const { authSignError } = authSlice.actions;
 	const { hideKB } = useKeyboardState();

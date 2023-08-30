@@ -2,11 +2,31 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	container: {
-		paddingHorizontal: 16,
-		paddingTop: 32,
+		// paddingHorizontal: 16,
+		// paddingTop: 32,
+		// width: "100%",
 		flex: 1,
+		backgroundColor: "#fff",
+	},
+
+	imgBg: {
+		flex: 1,
+		position: "absolute",
+		resizeMode: "cover",
+		justifyContent: "center",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
 		width: "100%",
-		backgroundColor: "white",
+	},
+
+	formContainer: {
+		flex: 1,
+		backgroundColor: "#fff",
+		// paddingHorizontal: 16,
+		// paddingTop: 32,
+		// width: "100%",
 	},
 
 	user: {
@@ -16,19 +36,14 @@ export const styles = StyleSheet.create({
 	},
 	userImg: {
 		borderRadius: 16,
-		marginRight: 8,
-		width: 60,
-		height: 60,
+		width: 120,
+		height: 120,
 	},
 	userName: {
 		color: "#212121",
-		fontFamily: "RobotoBold700",
-		fontSize: 13,
-	},
-	userEmail: {
-		color: "rgba(33, 33, 33, 0.80);",
-		fontFamily: "RobotoNormal400",
-		fontSize: 11,
+		fontFamily: "RobotoMedium500",
+		fontSize: 30,
+		letterSpacing: 0.3,
 	},
 
 	imgContainer: {

@@ -1,52 +1,37 @@
-import {
-	useIsFocused,
-	// useIsFocused,
-	useNavigation,
-	useRoute,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { Text, View, FlatList, Image, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import {
-	Button,
-	StyleSheet,
-	Text,
-	View,
-	FlatList,
-	Image,
-	TouchableOpacity,
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { authSingOutUser } from "../../redux/auth/authOperations";
+import { useSelector } from "react-redux";
 import { collection, query, onSnapshot, where } from "firebase/firestore";
+
 import { dbFirestore } from "../../firebase/config";
+
 import { useButtonState } from "../../utils/tabBtnsContext";
-// import { useButtonState } from "../../utils/tabBtnsContext";
+
+import { styles } from "./ProfileScreenSttyles";
+import { BtnLogout } from "../../components/btns/BtnLogout";
+import { CommentBtn } from "../../components/btns/CommentBtn";
+import { MapPinBtn } from "../../components/btns/MapPinBtn";
+import bgImage from "../../assets/img/bg_photo.jpg";
 
 export default function ProfileScreen() {
-	// const route = useRoute();
-	// console.log("ProfileScreen >> route:", route);
+	const navigation = useNavigation();
 	const isFocused = useIsFocused();
 	const { setCurrentScreen } = useButtonState();
-	// isFocused && setCurrentScreen("ProfileScreen");
+
+	const [userPosts, setUserPosts] = useState([]);
+	const state = useSelector((state) => state.auth);
+	const currentUser = useSelector((store) => store.auth.userId);
 
 	useEffect(() => {
 		if (isFocused) {
-			// navigation.setParams({ activeScreen: "ProfileScreen" });
 			setCurrentScreen("ProfileScreen");
 		}
 	}, [isFocused, setCurrentScreen]);
 
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
-	const [currentUserPosts, setCurrentUserPosts] = useState([]);
-	const currentUser = useSelector((store) => store.auth.userId);
-
 	useEffect(() => {
 		getAllCurrentUserPosts();
 	}, []);
-
-	const signOut = () => {
-		dispatch(authSingOutUser());
-	};
 
 	const getAllCurrentUserPosts = async () => {
 		const dcimCurrentUserCollection = query(
@@ -55,47 +40,44 @@ export default function ProfileScreen() {
 		);
 
 		onSnapshot(dcimCurrentUserCollection, (snapshot) => {
-			const arr = snapshot.docs.map((doc) => {
+			const currentUserPosts = snapshot.docs.map((doc) => {
 				return {
 					id: doc.id,
 					data: doc.data(),
 				};
 			});
-			setCurrentUserPosts(arr);
+			setUserPosts(currentUserPosts);
 		});
 	};
 
 	return (
 		<View style={styles.container}>
-			<Text>It is ProfileScreen</Text>
-			<View>
-				<Button title="SIGN OUT" onPress={signOut} />
+			<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
+			<View style={styles.formContainer}>
+				<BtnLogout />
+
+				<View style={styles.user}>
+					<Image
+						style={styles.userImg}
+						source={
+							state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
+						}
+					/>
+					<Text style={styles.userName}>{state.nickname}</Text>
+				</View>
 
 				<FlatList
-					data={currentUserPosts}
+					data={userPosts}
 					keyExtractor={(item, indx) => item.id}
 					renderItem={({ item }) => {
-						const indx = currentUserPosts.indexOf(item);
-
 						return (
 							<View style={styles.imgContainer}>
-								<Text Style={styles.imgTitle}>Image #{indx + 1}</Text>
 								<Image
-									source={{ uri: item.data.photo }}
 									style={styles.currentImg}
+									source={{ uri: item.data.photo }}
 								/>
-								<Text>{item.data.imageTitle}</Text>
+								<Text style={styles.imgTitle}>{item.data.imageTitle}</Text>
 								<View style={styles.buttonsWrapper}>
-									<TouchableOpacity
-										onPress={() =>
-											navigation.navigate("MapScreen", {
-												location: item.data.location,
-												originScreen: "ProfileScreen",
-											})
-										}>
-										<Text>Go to MAP</Text>
-									</TouchableOpacity>
-
 									<TouchableOpacity
 										onPress={() =>
 											navigation.navigate("CommentsScreen", {
@@ -105,7 +87,40 @@ export default function ProfileScreen() {
 												originScreen: "ProfileScreen",
 											})
 										}>
-										<Text>Add COMMENT</Text>
+										<View style={styles.commentBtnWrapper}>
+											<CommentBtn commentsQty={item.data.postsCount} />
+											<Text
+												style={[
+													styles.commentBtnText,
+													{
+														color:
+															item.data.postsCount === 0
+																? "#BDBDBD"
+																: "#212121",
+													},
+												]}>
+												{`${item.data.postsCount}`}
+											</Text>
+										</View>
+									</TouchableOpacity>
+
+									<TouchableOpacity
+										onPress={() =>
+											navigation.navigate("MapScreen", {
+												location: item.data.location,
+												originScreen: "ProfileScreen",
+											})
+										}>
+										<View style={styles.commentBtnWrapper}>
+											<MapPinBtn />
+											<Text style={styles.commentBtnText}>
+												{`${
+													item.data.location.city
+														? item.data.location.city
+														: item.data.location.state
+												}, ${item.data.location.country}`}
+											</Text>
+										</View>
 									</TouchableOpacity>
 								</View>
 							</View>
@@ -116,36 +131,3 @@ export default function ProfileScreen() {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingHorizontal: 30,
-		paddingVertical: 30,
-	},
-
-	imgContainer: {
-		alignItems: "center",
-		marginBottom: 30,
-	},
-
-	imgTitle: {
-		marginBottom: 100,
-	},
-
-	currentImg: {
-		width: "100%",
-		height: 200,
-		borderRadius: 20,
-		borderColor: "#fff",
-		marginTop: 10,
-		marginBottom: 10,
-	},
-
-	buttonsWrapper: {
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingHorizontal: 15,
-	},
-});
