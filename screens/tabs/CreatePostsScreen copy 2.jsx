@@ -4,7 +4,11 @@
 // todo: Об'єднати логінскрін і регітрскрін
 // todo: розширити натискання в TextInput, бо по краю клікаєш і воно зникає.
 
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+	useNavigation,
+	useIsFocused,
+	useRoute,
+} from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -15,6 +19,8 @@ import {
 	TextInput,
 	TouchableWithoutFeedback,
 } from "react-native";
+
+import axios from "axios";
 
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
@@ -29,17 +35,18 @@ import { useKeyboardState } from "../../utils/keyboardContext";
 import { ModalWindow } from "../../components/ModalWindow";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 import { styles } from "./CreatePostsScreenStyles";
-import { CreatePhotoBtn } from "../../components/btns/CreatePhotoBtn";
-import { MapPinBtn } from "../../components/btns/MapPinBtn";
 
 export default function CreatePostsScreen() {
+	// const route = useRoute();
 	const isFocused = useIsFocused();
 	const { hideKB } = useKeyboardState();
 	const { toggleButtonsEnabled, isTabButtonsEnabled, setCurrentScreen } =
 		useButtonState();
+	// isFocused && setCurrentScreen("CreatePostsScreen");
 
 	useEffect(() => {
 		if (isFocused) {
+			// navigation.setParams({ activeScreen: "CreatePostsScreen" });
 			setCurrentScreen("CreatePostsScreen");
 		}
 	}, [isFocused, setCurrentScreen]);
@@ -63,10 +70,11 @@ export default function CreatePostsScreen() {
 	// captured photo, location
 	const [capturedPhoto, setCapturedPhoto] = useState(null); // photo link
 	const [capturedLocation, setCapturedLocation] = useState(null);
-	const [photoName, setPhotoName] = useState("");
-	const [photoPlace, setPhotoPlace] = useState("");
+	// console.log("CreatePostsScreen >> capturedLocation:", capturedLocation);
 
+	const [imageTitle, setImageTitle] = useState("");
 	const { userId, nickname } = useSelector((state) => state.auth);
+
 	const initState = useSelector((state) => state.auth);
 
 	// request accesses to camera, location and mediaLibrary
@@ -163,29 +171,26 @@ export default function CreatePostsScreen() {
 
 	const uploadPostToServer = async () => {
 		const photo = await uploadPhotoToServer(capturedPhoto);
-
 		// send to db
+
 		await addDoc(collection(dbFirestore, "dcim"), {
 			photo,
-			imageTitle: photoName,
+			imageTitle,
 			location: capturedLocation?.coords,
 			userId,
 			nickname,
 			postsCount: 0,
 			likesCount: 0,
 			usersLikedPost: [],
-			manualPhotoPlace: photoPlace,
 		});
 	};
-
-	// todo Зробити перевірку на наявність поля manualPhotoPlace коли рендеряться дані з mapPin на PostScreen і ProfileScreen
 
 	const sendPhoto = async () => {
 		if (capturedPhoto) {
 			setIsBtnSendEnabled(false); // lock SEND-btn
 			setIsRestBtnsSendEnabled(false); // lock other btns on this screen
 			await toggleButtonsEnabled(false); // lock tab-btns
-			setPhotoName("");
+			setImageTitle("");
 			await uploadPostToServer();
 			setCapturedPhoto(null);
 			navigation.navigate("PostsScreen");
@@ -197,80 +202,50 @@ export default function CreatePostsScreen() {
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
-				{/* Camera field */}
-				<View style={styles.cameraFieldContainer}>
-					<TouchableOpacity
-						style={[styles.button, !isRestBtnsSendEnabled && styles.disabled]}
-						onPress={takePhoto}
-						disabled={!isRestBtnsSendEnabled}>
-						<CreatePhotoBtn />
-						{/* <Text
-							style={[styles.buttonText, !isRestBtnsSendEnabled && styles.disabled]}>
-							SNAP
-						</Text> */}
-					</TouchableOpacity>
-
-					{/* {permissionCamera === null ? (
-						<Text>Очікую доступу до камери...</Text>
-					) : !permissionCamera ? (
-						<Text>Немає доступу до камери. Надайте доступ у налаштуваннях</Text>
+				{permissionCamera === null ? (
+					<Text>Очікую доступу до камери...</Text>
+				) : !permissionCamera ? (
+					<Text>Немає доступу до камери. Надайте доступ у налаштуваннях</Text>
+				) : (
+					isFocused &&
+					(!isTabButtonsEnabled ? (
+						<View style={styles.sendingMessageContainer}>
+							<Text style={styles.sendingMessage}>
+								Sending data to the server.{"\n"}Please wait.
+							</Text>
+						</View>
 					) : (
-						isFocused &&
-						(!isTabButtonsEnabled ? (
-							<View style={styles.sendingMessageContainer}>
-								<Text style={styles.sendingMessage}>
-									Sending data to the server.{"\n"}Please wait.
-								</Text>
-							</View>
-						) : (
-							<Camera ref={cameraRef} style={styles.camera} type={type}>
-								{capturedPhoto && (
-									<View style={styles.photoImgContainer}>
-										{!isBtnSendEnabled ? (
-											<Text style={styles.sendingMessage}>
-												Saving data to the phone.{"\n"}Please wait
-											</Text>
-										) : (
-											<Image
-												source={{ uri: capturedPhoto }}
-												style={styles.photoImg}
-											/>
-										)}
-									</View>
-								)}
-							</Camera>
-						))
-					)} */}
-				</View>
-				{/* /Camera field */}
+						<Camera ref={cameraRef} style={styles.camera} type={type}>
+							{capturedPhoto && (
+								<View style={styles.photoImgContainer}>
+									{!isBtnSendEnabled ? (
+										<Text style={styles.sendingMessage}>
+											Saving data to the phone.{"\n"}Please wait
+										</Text>
+									) : (
+										<Image
+											source={{ uri: capturedPhoto }}
+											style={styles.photoImg}
+										/>
+									)}
+								</View>
+							)}
+						</Camera>
+					))
+				)}
 
-				<Text style={styles.cameraFieldTitle}>Завантажте фото</Text>
-
-				<TextInput
-					placeholder="Назва..."
-					placeholderTextColor={"#BDBDBD"}
-					style={styles.photoText}
-					value={photoName}
-					onChangeText={(value) => {
-						setPhotoName(value);
-					}}
-				/>
-
-				<View style={[styles.photoPlaceWrapper, styles.photoText]}>
-					<MapPinBtn buttonStyle={styles.mapPin} />
+				<View style={styles.imageTitleContainer}>
 					<TextInput
-						placeholder="Місцевість..."
-						placeholderTextColor={"#BDBDBD"}
-						// style={styles.photoText}
-						value={photoPlace}
+						style={styles.imageTitle}
+						value={imageTitle}
 						onChangeText={(value) => {
-							setPhotoPlace(value);
+							setImageTitle(value);
 						}}
 					/>
 				</View>
 
-				{/* <View style={styles.buttonContainer}> */}
-				{/* <TouchableOpacity
+				<View style={styles.buttonContainer}>
+					<TouchableOpacity
 						style={[styles.button, !isRestBtnsSendEnabled && styles.disabled]}
 						onPress={toggleCameraType}
 						disabled={!isRestBtnsSendEnabled}>
@@ -278,18 +253,28 @@ export default function CreatePostsScreen() {
 							style={[styles.text, !isRestBtnsSendEnabled && styles.disabled]}>
 							Flip Camera
 						</Text>
-					</TouchableOpacity> */}
+					</TouchableOpacity>
 
-				<TouchableOpacity
-					style={[styles.button, !isBtnSendEnabled && styles.disabled]}
-					onPress={sendPhoto}
-					disabled={!isBtnSendEnabled}>
-					<Text
-						style={[styles.buttonText, !isBtnSendEnabled && styles.disabled]}>
-						Опублікувати
-					</Text>
-				</TouchableOpacity>
-				{/* </View> */}
+					<TouchableOpacity
+						style={[styles.button, !isRestBtnsSendEnabled && styles.disabled]}
+						onPress={takePhoto}
+						disabled={!isRestBtnsSendEnabled}>
+						<Text
+							style={[styles.text, !isRestBtnsSendEnabled && styles.disabled]}>
+							SNAP
+						</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={[styles.button, !isBtnSendEnabled && styles.disabled]}
+						onPress={sendPhoto}
+						disabled={!isBtnSendEnabled}>
+						<Text
+							style={[styles.text, !isRestBtnsSendEnabled && styles.disabled]}>
+							SEND PHOTO
+						</Text>
+					</TouchableOpacity>
+				</View>
 				{initState.authErrorMessage && (
 					<ModalWindow modalMessage={authErrorMessage} />
 				)}

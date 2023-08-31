@@ -3,9 +3,22 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// justifyContent: "flex-end",
 		paddingHorizontal: 16,
 		paddingVertical: 32,
+		backgroundColor: "#fff",
+	},
+
+	// Camera field
+	cameraFieldContainer: {
+		height: 240,
+		// width: "100%",
+		borderRadius: 8,
+		borderColor: "#E8E8E8",
+		borderWidth: 1,
+		backgroundColor: "#F6F6F6",
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: 8,
 	},
 
 	sendingMessageContainer: {
@@ -39,44 +52,51 @@ export const styles = StyleSheet.create({
 		borderWidth: 15,
 		borderColor: "#f90000",
 	},
+	// /Camera field
 
-	// buttons
-	buttonContainer: {
-		paddingHorizontal: 20,
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
+	cameraFieldTitle: {
+		marginBottom: 32,
+
+		color: "#BDBDBD",
+		fontFamily: "RobotoNormal400",
+		fontSize: 16,
 	},
 
 	button: {
+		paddingVertical: 16,
+		paddingHorizontal: 32,
 		alignItems: "center",
-		justifyContent: "center",
-		marginBottom: 15,
-		padding: 10,
-		borderWidth: 2,
-		borderRadius: 50,
-		borderColor: "#0d0d0d7f",
+
+		borderRadius: 100,
+		backgroundColor: "#FF6C00",
+	},
+
+	buttonText: {
+		color: "#fff",
 	},
 
 	disabled: {
-		borderColor: "#d7d7d7",
-		color: "#d7d7d7",
-	},
-
-	text: {
-		color: "#000",
+		backgroundColor: "#F6F6F6",
+		color: "#BDBDBD",
 	},
 
 	// Image Comment
-	imageTitleContainer: {
-		marginHorizontal: 10,
-		borderWidth: 2,
-		borderRadius: 50,
-		borderColor: "#007BFF",
-		marginVertical: 10,
+	photoText: {
+		paddingVertical: 16,
+		borderBottomWidth: 1,
+		borderColor: "#E8E8E8",
+		fontFamily: "RobotoNormal400",
+		fontSize: 16,
+		color: "#212121",
 	},
-	imageTitle: {
-		color: "#000",
+
+	photoPlaceWrapper: {
+		flexDirection: "row",
+		marginTop: 16,
+		marginBottom: 32,
+	},
+
+	mapPin: {
+		marginRight: 4,
 	},
 });
