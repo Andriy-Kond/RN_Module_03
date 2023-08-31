@@ -130,7 +130,7 @@ export function AuthForm({
 						state?.currentFocusInput === "password" && styles.inputFocused,
 					]}>
 					<TextInput
-						value={state?.password}
+						// value={state?.password}
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[styles.passwordInput]}

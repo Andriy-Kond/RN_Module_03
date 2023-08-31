@@ -10,15 +10,21 @@ export const styles = StyleSheet.create({
 
 	// Camera field
 	cameraFieldContainer: {
+		position: "relative",
 		height: 240,
-		// width: "100%",
+		width: "100%",
 		borderRadius: 8,
 		borderColor: "#E8E8E8",
 		borderWidth: 1,
+
 		backgroundColor: "#F6F6F6",
 		alignItems: "center",
 		justifyContent: "center",
 		marginBottom: 8,
+	},
+
+	takePhotoIcon: {
+		position: "absolute",
 	},
 
 	sendingMessageContainer: {
@@ -32,16 +38,25 @@ export const styles = StyleSheet.create({
 		lineHeight: 50,
 	},
 
-	camera: {
-		flex: 1,
+	cameraContainer: {
+		height: 240,
+		width: "100%",
+		borderRadius: 8,
+		borderColor: "#E8E8E8",
+		borderWidth: 1,
+		backgroundColor: "#F6F6F6",
+		// alignItems: "center",
+		// justifyContent: "center",
 	},
 
-	photoImgContainer: {
+	camera: {
 		flex: 1,
-		borderWidth: 3,
-		borderWidth: 15,
-		borderColor: "#0021f9",
-		backgroundColor: "#e5d310",
+		height: 240,
+		width: "100%",
+		borderRadius: 8,
+		borderWidth: 1,
+		overflow: "hidden",
+		borderColor: "#E8E8E8",
 	},
 
 	photoImg: {
@@ -50,6 +65,8 @@ export const styles = StyleSheet.create({
 		height: "100%",
 		resizeMode: "contain",
 		borderWidth: 15,
+		borderRadius: 20,
+		overflow: "hidden",
 		borderColor: "#f90000",
 	},
 	// /Camera field
@@ -60,6 +77,19 @@ export const styles = StyleSheet.create({
 		color: "#BDBDBD",
 		fontFamily: "RobotoNormal400",
 		fontSize: 16,
+	},
+
+	buttonsWrapper: {
+		flex: 1,
+		justifyContent: "space-between",
+	},
+
+	deleteButton: {
+		width: 60,
+		height: 40,
+		alignSelf: "center",
+
+		borderRadius: 20,
 	},
 
 	button: {
@@ -81,6 +111,12 @@ export const styles = StyleSheet.create({
 	},
 
 	// Image Comment
+	kbAvoidingContainer: {
+		flex: 1,
+		// justifyContent: "flex-end",
+		// alignItems: "center",
+		// width: "100%",
+	},
 	photoText: {
 		paddingVertical: 16,
 		borderBottomWidth: 1,
@@ -90,10 +126,26 @@ export const styles = StyleSheet.create({
 		color: "#212121",
 	},
 
+	photoTextInput: {
+		flex: 1,
+		// height: "100%",
+		// paddingHorizontal: 16,
+		paddingVertical: 16,
+	},
+
 	photoPlaceWrapper: {
 		flexDirection: "row",
 		marginTop: 16,
 		marginBottom: 32,
+
+		// paddingVertical: 16,
+		borderBottomWidth: 1,
+		borderColor: "#E8E8E8",
+		fontFamily: "RobotoNormal400",
+		fontSize: 16,
+		color: "#212121",
+
+		alignItems: "center",
 	},
 
 	mapPin: {

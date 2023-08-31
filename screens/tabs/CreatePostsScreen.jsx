@@ -14,6 +14,7 @@ import {
 	View,
 	TextInput,
 	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
 } from "react-native";
 
 import * as Location from "expo-location";
@@ -31,10 +32,11 @@ import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 import { styles } from "./CreatePostsScreenStyles";
 import { CreatePhotoBtn } from "../../components/btns/CreatePhotoBtn";
 import { MapPinBtn } from "../../components/btns/MapPinBtn";
+import { DeleteBtn } from "../../components/btns/DeleteBtn";
 
 export default function CreatePostsScreen() {
 	const isFocused = useIsFocused();
-	const { hideKB } = useKeyboardState();
+	const { isKeyboardShown, hideKB } = useKeyboardState();
 	const { toggleButtonsEnabled, isTabButtonsEnabled, setCurrentScreen } =
 		useButtonState();
 
@@ -62,6 +64,7 @@ export default function CreatePostsScreen() {
 
 	// captured photo, location
 	const [capturedPhoto, setCapturedPhoto] = useState(null); // photo link
+
 	const [capturedLocation, setCapturedLocation] = useState(null);
 	const [photoName, setPhotoName] = useState("");
 	const [photoPlace, setPhotoPlace] = useState("");
@@ -194,58 +197,71 @@ export default function CreatePostsScreen() {
 		}
 	};
 
+	const deletePhoto = () => {
+		setCapturedPhoto(null);
+		setIsBtnSendEnabled(false);
+	};
+
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
 			<View style={styles.container}>
 				{/* Camera field */}
 				<View style={styles.cameraFieldContainer}>
+					{permissionCamera === null ? (
+						<Text>Очікую доступу до камери...</Text>
+					) : !permissionCamera ? (
+						<Text>Немає доступу до камери. Надайте доступ у налаштуваннях</Text>
+					) : // isFocused &&
+					!isTabButtonsEnabled ? (
+						<View style={styles.sendingMessageContainer}>
+							<Text style={styles.sendingMessage}>
+								Sending data to the server.{"\n"}Please wait.
+							</Text>
+						</View>
+					) : (
+						<View style={styles.cameraContainer}>
+							<Camera style={styles.camera} ref={cameraRef} type={type}>
+								{/* {capturedPhoto ? ( */}
+								<>
+									{/* {capturedPhoto && !isBtnSendEnabled && (
+											<Text style={styles.sendingMessage}>
+												Saving data to the phone.{"\n"}Please wait
+											</Text>
+										)} */}
+
+									{capturedPhoto && (
+										<Image
+											style={styles.photoImg}
+											source={{ uri: capturedPhoto }}
+										/>
+									)}
+								</>
+								{/* ) : null} */}
+							</Camera>
+						</View>
+					)}
+
 					<TouchableOpacity
-						style={[styles.button, !isRestBtnsSendEnabled && styles.disabled]}
+						style={[
+							styles.takePhotoIcon,
+							!isRestBtnsSendEnabled && styles.disabled,
+						]}
 						onPress={takePhoto}
 						disabled={!isRestBtnsSendEnabled}>
-						<CreatePhotoBtn />
+						<CreatePhotoBtn permissionCamera={permissionCamera} />
 						{/* <Text
 							style={[styles.buttonText, !isRestBtnsSendEnabled && styles.disabled]}>
 							SNAP
 						</Text> */}
 					</TouchableOpacity>
-
-					{/* {permissionCamera === null ? (
-						<Text>Очікую доступу до камери...</Text>
-					) : !permissionCamera ? (
-						<Text>Немає доступу до камери. Надайте доступ у налаштуваннях</Text>
-					) : (
-						isFocused &&
-						(!isTabButtonsEnabled ? (
-							<View style={styles.sendingMessageContainer}>
-								<Text style={styles.sendingMessage}>
-									Sending data to the server.{"\n"}Please wait.
-								</Text>
-							</View>
-						) : (
-							<Camera ref={cameraRef} style={styles.camera} type={type}>
-								{capturedPhoto && (
-									<View style={styles.photoImgContainer}>
-										{!isBtnSendEnabled ? (
-											<Text style={styles.sendingMessage}>
-												Saving data to the phone.{"\n"}Please wait
-											</Text>
-										) : (
-											<Image
-												source={{ uri: capturedPhoto }}
-												style={styles.photoImg}
-											/>
-										)}
-									</View>
-								)}
-							</Camera>
-						))
-					)} */}
 				</View>
 				{/* /Camera field */}
 
 				<Text style={styles.cameraFieldTitle}>Завантажте фото</Text>
 
+				{/* <KeyboardAvoidingView
+					style={styles.kbAvoidingContainer}
+					behavior={Platform.OS === "ios" ? "padding" : null}> */}
 				<TextInput
 					placeholder="Назва..."
 					placeholderTextColor={"#BDBDBD"}
@@ -256,18 +272,19 @@ export default function CreatePostsScreen() {
 					}}
 				/>
 
-				<View style={[styles.photoPlaceWrapper, styles.photoText]}>
+				<View style={[styles.photoPlaceWrapper]}>
 					<MapPinBtn buttonStyle={styles.mapPin} />
 					<TextInput
 						placeholder="Місцевість..."
 						placeholderTextColor={"#BDBDBD"}
-						// style={styles.photoText}
+						style={styles.photoTextInput}
 						value={photoPlace}
 						onChangeText={(value) => {
 							setPhotoPlace(value);
 						}}
 					/>
 				</View>
+				{/* </KeyboardAvoidingView> */}
 
 				{/* <View style={styles.buttonContainer}> */}
 				{/* <TouchableOpacity
@@ -279,21 +296,28 @@ export default function CreatePostsScreen() {
 							Flip Camera
 						</Text>
 					</TouchableOpacity> */}
+				<View style={styles.buttonsWrapper}>
+					<TouchableOpacity
+						style={[styles.button, !isBtnSendEnabled && styles.disabled]}
+						onPress={sendPhoto}
+						disabled={!isBtnSendEnabled}>
+						<Text
+							style={[styles.buttonText, !isBtnSendEnabled && styles.disabled]}>
+							Опублікувати
+						</Text>
+					</TouchableOpacity>
 
-				<TouchableOpacity
-					style={[styles.button, !isBtnSendEnabled && styles.disabled]}
-					onPress={sendPhoto}
-					disabled={!isBtnSendEnabled}>
-					<Text
-						style={[styles.buttonText, !isBtnSendEnabled && styles.disabled]}>
-						Опублікувати
-					</Text>
-				</TouchableOpacity>
-				{/* </View> */}
+					<TouchableOpacity
+						style={[styles.deleteButton, !isBtnSendEnabled && styles.disabled]}
+						onPress={deletePhoto}
+						disabled={!isBtnSendEnabled}>
+						<DeleteBtn active={isBtnSendEnabled} />
+					</TouchableOpacity>
+				</View>
+
 				{initState.authErrorMessage && (
 					<ModalWindow modalMessage={authErrorMessage} />
 				)}
-				{/* <ModalWindow /> */}
 			</View>
 		</TouchableWithoutFeedback>
 	);
