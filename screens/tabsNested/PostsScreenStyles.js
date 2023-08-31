@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
 		paddingTop: 32,
 		flex: 1,
 		width: "100%",
-		backgroundColor: "white",
+		backgroundColor: "#fff",
 	},
 
 	user: {
@@ -54,9 +54,16 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
-
-	commentBtnWrapper: {
+	commentLikeWrapper: {
 		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+
+	btnWrapper: {
+		flexDirection: "row",
+	},
+	btnMarginLeft: {
+		marginLeft: 24,
 	},
 
 	btnText: {

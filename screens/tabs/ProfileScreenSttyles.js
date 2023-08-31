@@ -24,16 +24,15 @@ export const styles = StyleSheet.create({
 
 	formContainer: {
 		flex: 1,
-		width: "100%",
-		paddingLeft: 16,
-		paddingRight: 16,
+		// width: "100%",
+		paddingHorizontal: 16,
 
-		alignItems: "center",
+		// alignItems: "center",
 		backgroundColor: "#fff",
 		borderTopLeftRadius: 25,
 		borderTopRightRadius: 25,
 
-		justifyContent: "flex-end",
+		// justifyContent: "flex-end",
 	},
 
 	headerContainer: {
@@ -90,10 +89,13 @@ export const styles = StyleSheet.create({
 
 		marginTop: 46,
 		marginBottom: 32,
+		alignSelf: "center",
 	},
 
 	imgContainer: {
 		marginBottom: 30,
+		width: "100%",
+		// paddingHorizontal: 16,
 	},
 
 	currentImg: {
@@ -111,13 +113,20 @@ export const styles = StyleSheet.create({
 	},
 
 	buttonsWrapper: {
-		width: "100%",
+		// width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	commentLikeWrapper: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
 
-	commentBtnWrapper: {
+	btnWrapper: {
 		flexDirection: "row",
+	},
+	btnMarginLeft: {
+		marginLeft: 24,
 	},
 
 	btnText: {

@@ -84,7 +84,6 @@ export default function ProfileScreen() {
 						/>
 
 						{/* ADD AVATAR BTN */}
-
 						<TouchableOpacity
 							style={styles.regAddImgBtnWrapper}
 							onPress={addAvatar}>
@@ -112,57 +111,59 @@ export default function ProfileScreen() {
 								<Text style={styles.imgTitle}>{item.data.imageTitle}</Text>
 
 								<View style={styles.buttonsWrapper}>
-									<TouchableOpacity
-										onPress={() =>
-											navigation.navigate("CommentsScreen", {
-												imageTitle: item.data.imageTitle,
-												postId: item.id,
-												image: item.data.photo,
-												originScreen: "ProfileScreen",
-											})
-										}>
-										<View style={styles.commentBtnWrapper}>
-											<CommentBtn commentsQty={item.data.postsCount} />
-											<Text
-												style={[
-													styles.btnText,
-													{
-														color:
-															item.data.postsCount === 0
-																? "#BDBDBD"
-																: "#212121",
-													},
-												]}>
-												{`${item.data.postsCount}`}
-											</Text>
-										</View>
-									</TouchableOpacity>
+									<View style={styles.commentLikeWrapper}>
+										<TouchableOpacity
+											onPress={() =>
+												navigation.navigate("CommentsScreen", {
+													imageTitle: item.data.imageTitle,
+													postId: item.id,
+													image: item.data.photo,
+													originScreen: "ProfileScreen",
+												})
+											}>
+											<View style={styles.btnWrapper}>
+												<CommentBtn commentsQty={item.data.postsCount} />
+												<Text
+													style={[
+														styles.btnText,
+														{
+															color:
+																item.data.postsCount === 0
+																	? "#BDBDBD"
+																	: "#212121",
+														},
+													]}>
+													{`${item.data.postsCount}`}
+												</Text>
+											</View>
+										</TouchableOpacity>
 
-									<TouchableOpacity
-										onPress={() =>
-											addLike(
-												item.id,
-												item.data.usersLikedPost,
-												item.data.likesCount,
-												currentUser
-											)
-										}>
-										<View style={styles.commentBtnWrapper}>
-											<LikeBtn commentsQty={item.data.likesCount} />
-											<Text
-												style={[
-													styles.btnText,
-													{
-														color:
-															item.data.likesCount === 0
-																? "#BDBDBD"
-																: "#212121",
-													},
-												]}>
-												{`${item.data.likesCount}`}
-											</Text>
-										</View>
-									</TouchableOpacity>
+										<TouchableOpacity
+											onPress={() =>
+												addLike(
+													item.id,
+													item.data.usersLikedPost,
+													item.data.likesCount,
+													currentUser
+												)
+											}>
+											<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
+												<LikeBtn commentsQty={item.data.likesCount} />
+												<Text
+													style={[
+														styles.btnText,
+														{
+															color:
+																item.data.likesCount === 0
+																	? "#BDBDBD"
+																	: "#212121",
+														},
+													]}>
+													{`${item.data.likesCount}`}
+												</Text>
+											</View>
+										</TouchableOpacity>
+									</View>
 
 									<TouchableOpacity
 										onPress={() =>
@@ -171,14 +172,16 @@ export default function ProfileScreen() {
 												originScreen: "ProfileScreen",
 											})
 										}>
-										<View style={styles.commentBtnWrapper}>
+										<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
 											<MapPinBtn />
 											<Text style={[styles.btnText, styles.underline]}>
-												{`${
-													item.data.location.city
-														? item.data.location.city
-														: item.data.location.state
-												}, ${item.data.location.country}`}
+												{item.data.manualPhotoPlace
+													? item.data.manualPhotoPlace
+													: `${
+															item.data.location.city
+																? item.data.location.city
+																: item.data.location.state
+													  }, ${item.data.location.country}`}
 											</Text>
 										</View>
 									</TouchableOpacity>

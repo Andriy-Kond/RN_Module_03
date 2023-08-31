@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 32,
 		backgroundColor: "#fff",
+		justifyContent: "flex-end",
 	},
 
 	// Camera field
@@ -28,7 +29,7 @@ export const styles = StyleSheet.create({
 	},
 
 	sendingMessageContainer: {
-		flex: 1,
+		// flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -50,7 +51,7 @@ export const styles = StyleSheet.create({
 	},
 
 	camera: {
-		flex: 1,
+		// flex: 1,
 		height: 240,
 		width: "100%",
 		borderRadius: 8,
@@ -60,14 +61,21 @@ export const styles = StyleSheet.create({
 	},
 
 	photoImg: {
-		alignSelf: "center",
-		width: 350,
-		height: "100%",
-		resizeMode: "contain",
-		borderWidth: 15,
-		borderRadius: 20,
+		// alignSelf: "center",
+		// width: 350,
+		// height: "100%",
+		// resizeMode: "contain",
+		// borderWidth: 15,
+		// borderRadius: 20,
+		// overflow: "hidden",
+		// borderColor: "#f90000",
+
+		height: 240,
+		width: "100%",
+		borderRadius: 8,
+		borderWidth: 1,
 		overflow: "hidden",
-		borderColor: "#f90000",
+		borderColor: "#E8E8E8",
 	},
 	// /Camera field
 
@@ -86,9 +94,8 @@ export const styles = StyleSheet.create({
 
 	deleteButton: {
 		width: 60,
-		height: 40,
+		minHeight: 40,
 		alignSelf: "center",
-
 		borderRadius: 20,
 	},
 
@@ -112,7 +119,7 @@ export const styles = StyleSheet.create({
 
 	// Image Comment
 	kbAvoidingContainer: {
-		flex: 1,
+		// flex: 1,
 		// justifyContent: "flex-end",
 		// alignItems: "center",
 		// width: "100%",
@@ -127,7 +134,7 @@ export const styles = StyleSheet.create({
 	},
 
 	photoTextInput: {
-		flex: 1,
+		// flex: 1,
 		// height: "100%",
 		// paddingHorizontal: 16,
 		paddingVertical: 16,
