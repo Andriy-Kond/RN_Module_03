@@ -1,7 +1,7 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { dbFirestore } from "../../firebase/config";
@@ -18,9 +18,13 @@ import { isUserLikedPost } from "../../utils/isUserLikedPost";
 import { compareDates } from "../../utils/compareDates";
 import { useNavScreen } from "../../utils/navContext";
 
+import { authSlice } from "../../redux/auth/authReducer";
+
 export default function PostsScreen() {
+	const { updateField } = authSlice.actions;
 	const navigation = useNavigation();
 	const isFocused = useIsFocused();
+	const dispatch = useDispatch();
 
 	const state = useSelector((state) => state.auth);
 	const currentUser = useSelector((store) => store.auth.userId);
@@ -35,6 +39,7 @@ export default function PostsScreen() {
 
 	useEffect(() => {
 		getAllUsersPosts();
+		// dispatch(updateField({ startSession: true }));
 	}, []);
 
 	const getAllUsersPosts = async () => {
@@ -92,7 +97,7 @@ export default function PostsScreen() {
 												imageTitle: item.data.imageTitle,
 												postId: item.id,
 												image: item.data.photo,
-												originScreen: "PostsScreen",
+												// originScreen: "PostsScreen",
 											})
 										}>
 										<View style={styles.btnWrapper}>
@@ -146,7 +151,7 @@ export default function PostsScreen() {
 									onPress={() =>
 										navigation.navigate("MapScreen", {
 											location: item.data.location,
-											originScreen: "PostsScreen",
+											// originScreen: "PostsScreen",
 										})
 									}>
 									<View style={[styles.btnWrapper, styles.btnMarginLeft]}>

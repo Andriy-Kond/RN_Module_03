@@ -32,11 +32,6 @@ export default function MapScreen() {
 		}
 	}, [isFocused]);
 
-	// ???
-	useEffect(() => {
-		dispatch(updateField({ tabNavigation: true }));
-	}, []);
-
 	return (
 		<View style={styles.container}>
 			<MapView

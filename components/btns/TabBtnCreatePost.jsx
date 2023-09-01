@@ -7,6 +7,9 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 export function TabBtnCreatePost({ color, size }) {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
+		console.log(
+			'handleTabBtnPress >> navigation.navigate TO ("CreatePostsScreen")'
+		);
 		navigation.navigate("CreatePostsScreen");
 	};
 

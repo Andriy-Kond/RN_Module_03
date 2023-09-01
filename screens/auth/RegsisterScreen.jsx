@@ -16,9 +16,6 @@ import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./RegsisterScreenStyles";
-import { useIsFocused } from "@react-navigation/native";
-import { useButtonState } from "../../utils/tabBtnsContext";
-import { useEffect } from "react";
 
 export default function RegisterScreen() {
 	const state = useSelector((state) => state.auth);

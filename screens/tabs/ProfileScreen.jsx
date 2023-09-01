@@ -29,13 +29,14 @@ export default function ProfileScreen() {
 
 	const [userPosts, setUserPosts] = useState([]);
 	const state = useSelector((state) => state.auth);
+	const { startSession } = useSelector((store) => store.auth);
 	const currentUser = useSelector((store) => store.auth.userId);
 	const { updateField } = authSlice.actions;
 
 	useEffect(() => {
 		if (isFocused) {
-			console.log("Profile Focused");
 			setCurrentScreen("ProfileScreen");
+			console.log('useEffect >> setCurrentScreen("ProfileScreen")');
 		}
 	}, [isFocused]);
 
@@ -126,7 +127,7 @@ export default function ProfileScreen() {
 													imageTitle: item.data.imageTitle,
 													postId: item.id,
 													image: item.data.photo,
-													originScreen: "ProfileScreen",
+													// originScreen: "ProfileScreen",
 												})
 											}>
 											<View style={styles.btnWrapper}>
@@ -181,7 +182,7 @@ export default function ProfileScreen() {
 											onPress={() =>
 												navigation.navigate("MapScreen", {
 													location: item.data.location,
-													originScreen: "ProfileScreen",
+													// originScreen: "ProfileScreen",
 												})
 											}>
 											{/* Two <View> for push mapLinkWrapper in end of father (mapLinkWrapper -> justifyContent: "flex-end") */}

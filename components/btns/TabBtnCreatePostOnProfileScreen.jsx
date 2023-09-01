@@ -6,6 +6,9 @@ export function TabBtnCreatePostOnProfileScreen({ focused, color, size }) {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
 		navigation.navigate("CreatePostsScreen");
+		console.log(
+			'handleTabBtnPress >> navigation.navigate TO ("CreatePostsScreen")'
+		);
 	};
 
 	return (

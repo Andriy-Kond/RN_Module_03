@@ -86,13 +86,19 @@ export const authSingInUser =
 				email,
 				password
 			);
-			console.log("authSingInUser:", userCredential.user);
+
+			console.log(
+				"ОТРИМАВ authSingInUser >>> userCredential.user:",
+				userCredential.user
+			);
 
 			const newProfileFields = {
 				userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
 				serverAvatar: userCredential.user.photoURL,
 			};
+
+			console.log("  ЗАПУСКАЮ dispatch(updateUserProfile(newProfileFields)):");
 			dispatch(updateUserProfile(newProfileFields));
 		} catch (error) {
 			console.error("signInWithEmailAndPassword >> error.code:", error.code);
@@ -105,6 +111,7 @@ export const authSingInUser =
 export const authStateChangeUser = () => async (dispatch, getState) => {
 	try {
 		onAuthStateChanged(auth, (user) => {
+			console.log("ВИКОНУЮ onAuthStateChanged -- ЗАПИТ НА СЕРВЕР");
 			if (user) {
 				// Update Redux state
 				const userUpdateProfile = {
@@ -120,6 +127,10 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 				// Set routing in Main.jsx ->
 				// Set isAuth in router.js ->
 				// "true" will show <TabsNavigation />
+
+				console.log(
+					" ЗАПУСКАЮ В authStateChangeUser -->>> dispatch(updateStateChange({ stateChange: true }));"
+				);
 				dispatch(updateStateChange({ stateChange: true }));
 			}
 		});

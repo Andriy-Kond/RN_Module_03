@@ -63,11 +63,6 @@ export default function CommentsScreen() {
 		}
 	}, [isFocused]);
 
-	// ???
-	useEffect(() => {
-		dispatch(updateField({ tabNavigation: true }));
-	}, []);
-
 	const getAllComments = (postId) => {
 		const currentPostRef = doc(dbFirestore, "dcim", postId);
 		const commentsCollection = query(collection(currentPostRef, "comments"));

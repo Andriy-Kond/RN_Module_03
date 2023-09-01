@@ -20,9 +20,8 @@ const initState = {
 	showPassword: false,
 
 	serverAvatar: null,
-	error: null,
 
-	tabNavigation: true,
+	// startSession: false,
 };
 
 const actions = {
@@ -65,6 +64,8 @@ const actions = {
 	},
 
 	updateUserProfile: (state, action) => {
+		console.log("   У СЕРЕДИНІ actions.updateUserProfile");
+		console.log("action.payload ЗАРАЗ:", action.payload);
 		return {
 			...state,
 			...action.payload,
@@ -72,6 +73,7 @@ const actions = {
 	},
 
 	updateStateChange: (state, action) => {
+		console.log("ВСТАНОВЛЮЮ stateChange  У:", action.payload.stateChange);
 		return {
 			...state,
 			stateChange: action.payload.stateChange,

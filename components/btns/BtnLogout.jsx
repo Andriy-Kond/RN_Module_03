@@ -4,14 +4,17 @@ import Svg, { Path } from "react-native-svg";
 import { authSingOutUser } from "../../redux/auth/authOperations";
 
 import { useNavScreen } from "../../utils/navContext";
+import { authSlice } from "../../redux/auth/authReducer";
 
 export function BtnLogout({ buttonStyle }) {
+	// const { updateField } = authSlice.actions;
 	const dispatch = useDispatch();
 
-	const { setLogoutScreen } = useNavScreen();
+	// const { setLogoutScreen } = useNavScreen();
 
 	const handleLogout = () => {
-		setLogoutScreen();
+		// setLogoutScreen();
+		// dispatch(updateField({ startSession: false }));
 		dispatch(authSingOutUser());
 	};
 

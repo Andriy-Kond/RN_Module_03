@@ -10,8 +10,12 @@ export function BtnGoBack({ buttonStyle }) {
 
 	const handleGoBack = () => {
 		if (previousScreen !== "Home") {
+			console.log(`handleGoBack >> navigation.navigate TO ${previousScreen}`);
 			navigation.navigate(previousScreen);
 		} else {
+			console.log(
+				'handleGoBack >> navigation.navigate TO ("Home", { screen: "PostsScreen" })'
+			);
 			navigation.navigate("Home", { screen: "PostsScreen" });
 		}
 	};

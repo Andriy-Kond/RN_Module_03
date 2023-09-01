@@ -6,6 +6,9 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 export function TabBtnProfileOnProfileScreen({ color, size }) {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
+		console.log(
+			'TabBtnProfileOnProfileScreen >> navigation.navigate TO ("ProfileScreen")'
+		);
 		navigation.navigate("ProfileScreen");
 	};
 

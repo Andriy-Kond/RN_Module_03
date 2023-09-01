@@ -2,17 +2,28 @@ import { useNavigation } from "@react-navigation/native";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { useButtonState } from "../../utils/tabBtnsContext";
 import Svg, { Path, Rect } from "react-native-svg";
+import { useNavScreen } from "../../utils/navContext";
 
-export function TabBtnHome({ focused, color, size }) {
+export function TabBtnHome({ focused, color, size, isDisabled }) {
 	const navigation = useNavigation();
 	const { isTabButtonsEnabled } = useButtonState();
 
 	const handleTabBtnPress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
+		console.log(
+			'TabBtnHome >> navigation.navigate TO ("Home", { screen: "PostsScreen" })'
+		);
 	};
 
+	const { activeScreen, previousScreen } = useNavScreen();
+	// console.log("TabBtnHome >> previousScreen:", previousScreen);
+	console.log("TabBtnHome >> activeScreen:", activeScreen);
+
 	return (
-		<TouchableOpacity onPress={handleTabBtnPress} style={styles.activeBtn}>
+		<TouchableOpacity
+			onPress={handleTabBtnPress}
+			style={styles.activeBtn}
+			disabled={isDisabled}>
 			<Svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="24"

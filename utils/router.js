@@ -49,13 +49,15 @@ function AuthNavigation() {
 
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
+	const navigation = useNavigation();
 	const { isTabButtonsEnabled } = useButtonState();
 	const { activeScreen } = useNavScreen();
 
-	const navigation = useNavigation();
-
 	const handleHomePress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
+		console.log(
+			'handleHomePress >> navigation.navigate TO ("Home", { screen: "PostsScreen" })'
+		);
 	};
 
 	return (
@@ -75,13 +77,15 @@ function TabsNavigation() {
 						display: activeScreen === "PostsScreen" ? "flex" : "none",
 					},
 					tabBarIcon: ({ focused, color, size }) => (
-						<TabBtnHome focused={focused} color={color} size={size} />
+						<TabBtnHome
+							isDisabled={activeScreen === "PostsScreen"}
+							// focused={focused} color={color} size={size}
+						/>
 					),
 				}}
 				listeners={{
 					tabPress: (e) => {
-						// setActiveScreen("Home");
-						if (!isTabButtonsEnabled) {
+						if (!isTabButtonsEnabled || activeScreen === "PostsScreen") {
 							e.preventDefault(); // Disable switching to another screen
 							// someFn(); // Call function before transition to another screen
 							() => handleHomePress();
@@ -105,15 +109,11 @@ function TabsNavigation() {
 							<>
 								{activeScreen !== "ProfileScreen" ? (
 									<TabBtnCreatePost
-										focused={focused}
-										size={size}
-										color={color}
+									// focused={focused} size={size} color={color}
 									/>
 								) : (
 									<TabBtnProfileOnProfileScreen
-										focused={focused}
-										size={size}
-										color={color}
+									// focused={focused} size={size} color={color}
 									/>
 								)}
 							</>
@@ -123,7 +123,6 @@ function TabsNavigation() {
 				// unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
 				listeners={{
 					tabPress: (e) => {
-						// setActiveScreen("CreatePostsScreen");
 						if (!isTabButtonsEnabled || activeScreen === "ProfileScreen") {
 							e.preventDefault();
 						}
@@ -135,7 +134,6 @@ function TabsNavigation() {
 				name="ProfileScreen"
 				component={ProfileScreen}
 				options={{
-					// title: "Профіль",
 					headerTitleAlign: "center",
 					headerShown: false,
 
@@ -143,12 +141,12 @@ function TabsNavigation() {
 						return (
 							<>
 								{activeScreen !== "ProfileScreen" ? (
-									<TabBtnProfile focused={focused} color={color} size={size} />
+									<TabBtnProfile
+									// focused={focused} size={size} color={color}
+									/>
 								) : (
 									<TabBtnCreatePostOnProfileScreen
-										focused={focused}
-										size={size}
-										color={color}
+									// focused={focused} size={size} color={color}
 									/>
 								)}
 							</>
@@ -157,7 +155,6 @@ function TabsNavigation() {
 				}}
 				listeners={{
 					tabPress: (e) => {
-						// setActiveScreen("ProfileScreen");
 						if (!isTabButtonsEnabled) {
 							e.preventDefault();
 						}
