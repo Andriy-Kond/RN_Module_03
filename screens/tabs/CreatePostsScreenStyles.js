@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 32,
 		backgroundColor: "#fff",
-		justifyContent: "flex-end",
+		justifyContent: "flex-end", //! Show Input when KB is active
 	},
 
 	// Camera field

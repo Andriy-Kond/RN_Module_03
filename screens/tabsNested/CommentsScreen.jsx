@@ -30,30 +30,30 @@ import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
 import { authSlice } from "../../redux/auth/authReducer";
+import { compareDates } from "../../utils/compareDates";
+
+import { months } from "../../utils/months";
+import { useNavScreen } from "../../utils/navContext";
 
 export default function CommentsScreen() {
-	const { updateField } = authSlice.actions;
-	const dispatch = useDispatch();
-
+	const route = useRoute();
+	const { postId, image } = route.params;
 	// const {
 	// 	params: { postId, imageTitle, image },
 	// } = useRoute();
-	const route = useRoute();
-	const { postId, imageTitle, image } = route.params;
-	const { hideKB } = useKeyboardState();
+	const dispatch = useDispatch();
 	const state = useSelector((store) => store.auth);
+	const { updateField } = authSlice.actions;
+
+	const { hideKB } = useKeyboardState();
+	const { setCurrentScreen } = useNavScreen();
 
 	const [inputComment, setInputComment] = useState("");
 	const [comments, setComments] = useState([]);
-	// console.log("CommentsScreen >> comments:", comments);
-
-	const { previousScreen, setPreviousScreen, setCurrentScreen } =
-		useButtonState();
 
 	useEffect(() => {
-		const arr = getAllComments(postId);
-		// console.log("useEffect >> arr:", arr);
-		setComments(arr);
+		const allComments = getAllComments(postId);
+		setComments(allComments);
 	}, []);
 
 	const isFocused = useIsFocused();
@@ -61,8 +61,7 @@ export default function CommentsScreen() {
 		if (isFocused) {
 			setCurrentScreen("CommentsScreen");
 		}
-		// dispatch(updateField({ tabNavigation: false }));
-	}, [isFocused, setCurrentScreen]);
+	}, [isFocused]);
 
 	// ???
 	useEffect(() => {
@@ -74,48 +73,47 @@ export default function CommentsScreen() {
 		const commentsCollection = query(collection(currentPostRef, "comments"));
 
 		onSnapshot(commentsCollection, (snapshot) => {
-			const arr = snapshot.docs.map((doc) => {
+			const allCommentsSnapshot = snapshot.docs.map((doc) => {
 				return {
 					id: doc.id,
 					data: doc.data(),
 				};
 			});
-			setComments(arr);
+			setComments(allCommentsSnapshot);
 		});
 	};
 
 	const createComment = async () => {
+		setInputComment("");
 		hideKB();
 		const currentPostRef = doc(dbFirestore, "dcim", postId);
 
 		await addDoc(collection(currentPostRef, "comments"), {
 			comment: inputComment,
 			avatar: state.serverAvatar,
-			commentDate: Date.now(),
+			createDate: Date.now(),
 			userId: state.userId,
 		});
 
 		await updateDoc(currentPostRef, {
 			postsCount: increment(1),
 		});
-
-		setInputComment("");
 	};
 
-	const months = [
-		"січня",
-		"лютого",
-		"березня",
-		"квітня",
-		"травня",
-		"червня",
-		"липня",
-		"серпня",
-		"вересня",
-		"жовтня",
-		"листопада",
-		"грудня",
-	];
+	// const months = [
+	// 	"січня",
+	// 	"лютого",
+	// 	"березня",
+	// 	"квітня",
+	// 	"травня",
+	// 	"червня",
+	// 	"липня",
+	// 	"серпня",
+	// 	"вересня",
+	// 	"жовтня",
+	// 	"листопада",
+	// 	"грудня",
+	// ];
 
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
@@ -126,7 +124,7 @@ export default function CommentsScreen() {
 
 				<View style={styles.commentsContainer}>
 					<FlatList
-						data={comments}
+						data={comments?.sort(compareDates)}
 						keyExtractor={(item, indx) => item.id}
 						renderItem={({ item }) => {
 							const commentDate = new Date(item.data.commentDate);

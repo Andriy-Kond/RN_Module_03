@@ -6,8 +6,6 @@ import { collection, query, onSnapshot, where } from "firebase/firestore";
 
 import { dbFirestore } from "../../firebase/config";
 
-import { useButtonState } from "../../utils/tabBtnsContext";
-
 import { styles } from "./ProfileScreenSttyles";
 import { BtnLogout } from "../../components/btns/BtnLogout";
 import { CommentBtn } from "../../components/btns/CommentBtn";
@@ -19,11 +17,14 @@ import { LikeBtn } from "../../components/btns/LikeBtn";
 import { addLike } from "../../utils/addLike";
 
 import { getImageFromLibrary } from "../../utils/getImageFromLibrary";
+import { isUserLikedPost } from "../../utils/isUserLikedPost";
+import { compareDates } from "../../utils/compareDates";
+import { useNavScreen } from "../../utils/navContext";
 
 export default function ProfileScreen() {
 	const navigation = useNavigation();
 	const isFocused = useIsFocused();
-	const { setCurrentScreen } = useButtonState();
+	const { setCurrentScreen } = useNavScreen();
 	const dispatch = useDispatch();
 
 	const [userPosts, setUserPosts] = useState([]);
@@ -31,20 +32,18 @@ export default function ProfileScreen() {
 	const currentUser = useSelector((store) => store.auth.userId);
 	const { updateField } = authSlice.actions;
 
-	// const route = useRoute();
-	// const { postId, imageTitle, image } = route.params;
-
 	useEffect(() => {
 		if (isFocused) {
+			console.log("Profile Focused");
 			setCurrentScreen("ProfileScreen");
 		}
-	}, [isFocused, setCurrentScreen]);
+	}, [isFocused]);
 
 	useEffect(() => {
-		getAllCurrentUserPosts();
-	}, []);
+		getAllCurrentUserPosts(currentUser);
+	}, [currentUser]);
 
-	const getAllCurrentUserPosts = async () => {
+	const getAllCurrentUserPosts = async (currentUser) => {
 		const dcimCurrentUserCollection = query(
 			collection(dbFirestore, "dcim"),
 			where("userId", "==", currentUser)
@@ -70,6 +69,11 @@ export default function ProfileScreen() {
 		}
 	}
 
+	// const isUserLikedPost = (usersLikedPost, currentUser) => {
+	// 	const isUser = usersLikedPost.includes(currentUser);
+	// 	return isUser;
+	// };
+
 	return (
 		<View style={styles.container}>
 			<Image source={bgImage} style={styles.imgBg} resizeMode="cover" />
@@ -83,7 +87,6 @@ export default function ProfileScreen() {
 							}
 						/>
 
-						{/* ADD AVATAR BTN */}
 						<TouchableOpacity
 							style={styles.regAddImgBtnWrapper}
 							onPress={addAvatar}>
@@ -99,9 +102,14 @@ export default function ProfileScreen() {
 				<Text style={styles.userName}>{state.nickname}</Text>
 
 				<FlatList
-					data={userPosts}
+					data={userPosts?.sort(compareDates)}
 					keyExtractor={(item, indx) => item.id}
 					renderItem={({ item }) => {
+						const isUserLikedCurrentPost = isUserLikedPost(
+							item.data.usersLikedPost,
+							currentUser
+						);
+
 						return (
 							<View style={styles.imgContainer}>
 								<Image
@@ -147,8 +155,11 @@ export default function ProfileScreen() {
 													currentUser
 												)
 											}>
-											<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
-												<LikeBtn commentsQty={item.data.likesCount} />
+											<View style={[styles.btnWrapper, styles.btnMargin]}>
+												<LikeBtn
+													likesQty={item.data.likesCount}
+													isUserLikedCurrentPost={isUserLikedCurrentPost}
+												/>
 												<Text
 													style={[
 														styles.btnText,
@@ -165,26 +176,33 @@ export default function ProfileScreen() {
 										</TouchableOpacity>
 									</View>
 
-									<TouchableOpacity
-										onPress={() =>
-											navigation.navigate("MapScreen", {
-												location: item.data.location,
-												originScreen: "ProfileScreen",
-											})
-										}>
-										<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
-											<MapPinBtn />
-											<Text style={[styles.btnText, styles.underline]}>
-												{item.data.manualPhotoPlace
-													? item.data.manualPhotoPlace
-													: `${
-															item.data.location.city
-																? item.data.location.city
-																: item.data.location.state
-													  }, ${item.data.location.country}`}
-											</Text>
-										</View>
-									</TouchableOpacity>
+									<View style={styles.mapWrapper}>
+										<TouchableOpacity
+											onPress={() =>
+												navigation.navigate("MapScreen", {
+													location: item.data.location,
+													originScreen: "ProfileScreen",
+												})
+											}>
+											{/* Two <View> for push mapLinkWrapper in end of father (mapLinkWrapper -> justifyContent: "flex-end") */}
+											<View style={[styles.mapLinkWrapper]}>
+												<View>
+													<MapPinBtn />
+												</View>
+												<View>
+													<Text style={[styles.btnText, styles.underline]}>
+														{item.data.manualPhotoPlace
+															? item.data.manualPhotoPlace
+															: `${
+																	item.data.location.city
+																		? item.data.location.city
+																		: item.data.location.state
+															  }, ${item.data.location.country}`}
+													</Text>
+												</View>
+											</View>
+										</TouchableOpacity>
+									</View>
 								</View>
 							</View>
 						);

@@ -6,33 +6,33 @@ import { useButtonState } from "../../utils/tabBtnsContext";
 
 import { authSlice } from "../../redux/auth/authReducer";
 import { useDispatch } from "react-redux";
+import { useNavScreen } from "../../utils/navContext";
 
 export default function MapScreen() {
-	const { previousScreen, setPreviousScreen, setCurrentScreen } =
-		useButtonState();
-
-	const { updateField } = authSlice.actions;
+	const route = useRoute();
+	const {
+		location: { latitude, longitude },
+		originScreen,
+	} = route.params;
 	// const {
 	// 	params: {
 	// 		location: { latitude, longitude },
 	// 		originScreen,
 	// 	},
 	// } = useRoute();
-	const route = useRoute();
+
 	const dispatch = useDispatch();
-
-	const {
-		location: { latitude, longitude },
-		originScreen,
-	} = route.params;
-
+	const { updateField } = authSlice.actions;
+	const { setCurrentScreen } = useNavScreen();
 	const isFocused = useIsFocused();
+
 	useEffect(() => {
 		if (isFocused) {
 			setCurrentScreen("MapScreen");
 		}
-	}, [isFocused, setCurrentScreen]);
+	}, [isFocused]);
 
+	// ???
 	useEffect(() => {
 		dispatch(updateField({ tabNavigation: true }));
 	}, []);

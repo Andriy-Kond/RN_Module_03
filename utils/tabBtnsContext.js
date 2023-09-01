@@ -8,37 +8,42 @@ export const useButtonState = () => {
 
 export const ButtonStateProvider = ({ children }) => {
 	const [isTabButtonsEnabled, setIsTabButtonsEnabled] = useState(true);
-	const [previousScreen, setPreviousScreen] = useState("Home");
-	const [activeScreen, setActiveScreen] = useState("Home");
+
+	// const [previousScreen, setPreviousScreen] = useState("PostsScreen");
+	// const [activeScreen, setActiveScreen] = useState("PostsScreen");
 
 	const toggleButtonsEnabled = (btnsState) => {
 		setIsTabButtonsEnabled(btnsState);
 	};
 
-	const setCurrentScreen = (newScreen) => {
-		// console.log("newScreen ::", newScreen);
-		// console.log("Previous:", previousScreen);
-		// console.log("active:", activeScreen);
-		if (newScreen === "Home" && previousScreen === "PostsScreen") {
-			return;
-		} else {
-			if (activeScreen !== newScreen) {
-				// console.log("ЗАПИС ПРЕВІОУС!");
-				setPreviousScreen(activeScreen);
-			}
-			setActiveScreen(newScreen);
-		}
-	};
+	// const setCurrentScreen = (newScreen) => {
+	// 	if (newScreen === "Home" && previousScreen === "PostsScreen") {
+	// 		return;
+	// 	} else {
+	// 		if (activeScreen === newScreen) {
+	// 			return;
+	// 		} else {
+	// 			setPreviousScreen(activeScreen);
+	// 			setActiveScreen(newScreen);
+	// 		}
+	// 	}
+	// };
+
+	// const setLogoutScreen = () => {
+	// 	setPreviousScreen(activeScreen);
+	// 	setActiveScreen("PostsScreen");
+	// };
 
 	return (
 		<ButtonStateContext.Provider
 			value={{
 				isTabButtonsEnabled,
 				toggleButtonsEnabled,
-				previousScreen,
-				setPreviousScreen,
-				activeScreen,
-				setCurrentScreen,
+				// previousScreen,
+				// setPreviousScreen,
+				// activeScreen,
+				// setCurrentScreen,
+				// setLogoutScreen,
 			}}>
 			{children}
 		</ButtonStateContext.Provider>

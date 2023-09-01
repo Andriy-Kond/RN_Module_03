@@ -9,13 +9,12 @@ import { authStateChangeUser } from "../redux/auth/authOperations";
 
 import { ButtonStateProvider } from "../utils/tabBtnsContext";
 import { KeyboardStateProvider } from "../utils/keyboardContext";
+import { NavScreenProvider } from "../utils/navContext";
 
 const Main = () => {
 	const dispatch = useDispatch();
 
 	const stateChange = useSelector((state) => state.auth.stateChange);
-
-	const state = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		dispatch(authStateChangeUser());
@@ -25,12 +24,14 @@ const Main = () => {
 
 	return (
 		<KeyboardStateProvider>
-			<ButtonStateProvider>
-				<NavigationContainer>
-					<StatusBar />
-					{routing}
-				</NavigationContainer>
-			</ButtonStateProvider>
+			<NavScreenProvider>
+				<ButtonStateProvider>
+					<NavigationContainer>
+						<StatusBar />
+						{routing}
+					</NavigationContainer>
+				</ButtonStateProvider>
+			</NavScreenProvider>
 		</KeyboardStateProvider>
 	);
 };

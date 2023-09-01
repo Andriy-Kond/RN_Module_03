@@ -6,7 +6,6 @@ export const getCityAndCountry = async (latitude, longitude) => {
 
 		if (response.ok) {
 			const data = await response.json();
-			// console.log("getCityAndCountry >> data.address:", data.address);
 			const city =
 				data.address.city || data.address.town || data.address.village;
 			const state = data.address.state;

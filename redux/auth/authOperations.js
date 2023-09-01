@@ -6,11 +6,11 @@ import {
 	updateProfile,
 	signOut,
 } from "firebase/auth";
-
 import { auth } from "../../firebase/config";
+
+import { authSlice } from "./authReducer";
 import { switchError } from "../../utils/switchError";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
-import { authSlice } from "./authReducer";
 
 const {
 	updateUserProfile,
@@ -21,13 +21,7 @@ const {
 	toggleField,
 } = authSlice.actions;
 
-export const authSingUpUser = ({
-	email,
-	password,
-	nickname,
-	// phoneAvatar,
-	serverAvatar,
-}) => {
+export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 	return async (dispatch, getState) => {
 		try {
 			// Create new user on the Firebase
@@ -42,10 +36,8 @@ export const authSingUpUser = ({
 				await dispatch(updateField({ userId: userCredential.user.uid }));
 				let serverUrlAvatar = null;
 
-				// if (phoneAvatar) {
 				if (serverAvatar) {
 					// Upload avatar to server
-					// serverUrlAvatar = await uploadPhotoToServer(phoneAvatar);
 					serverUrlAvatar = await uploadPhotoToServer(serverAvatar);
 
 					// Update field "serverAvatar" in state
@@ -63,7 +55,6 @@ export const authSingUpUser = ({
 			const userUpdateProfile = {
 				// 	userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
-				// 	phoneAvatar: userCredential.user.photoURL,
 				// 	serverAvatar: userCredential.user.photoURL,
 			};
 			await dispatch(updateUserProfile(userUpdateProfile));

@@ -26,21 +26,20 @@ import { styles } from "./CreatePostsScreenStyles";
 import { CreatePhotoBtn } from "../../components/btns/CreatePhotoBtn";
 import { MapPinBtn } from "../../components/btns/MapPinBtn";
 import { DeleteBtn } from "../../components/btns/DeleteBtn";
+import { getCityAndCountry } from "../../utils/getCityAndCountry";
+import { useNavScreen } from "../../utils/navContext";
 
 export default function CreatePostsScreen() {
-	const isFocused = useIsFocused();
-	const { isKeyboardShown, hideKB } = useKeyboardState();
-	const { toggleButtonsEnabled, isTabButtonsEnabled, setCurrentScreen } =
-		useButtonState();
-
-	useEffect(() => {
-		if (isFocused) {
-			setCurrentScreen("CreatePostsScreen");
-		}
-	}, [isFocused, setCurrentScreen]);
-
 	// navigation
 	const navigation = useNavigation();
+
+	const isFocused = useIsFocused();
+	const { isKeyboardShown, hideKB } = useKeyboardState();
+	const { toggleButtonsEnabled, isTabButtonsEnabled } = useButtonState();
+	const { setCurrentScreen } = useNavScreen();
+
+	const { userId, nickname } = useSelector((state) => state.auth);
+	const initState = useSelector((state) => state.auth);
 
 	// reference on camera in DOM
 	const cameraRef = useRef(null);
@@ -57,13 +56,16 @@ export default function CreatePostsScreen() {
 
 	// captured photo, location
 	const [capturedPhoto, setCapturedPhoto] = useState(null); // photo link
-
 	const [capturedLocation, setCapturedLocation] = useState(null);
+
 	const [photoName, setPhotoName] = useState("");
 	const [photoPlace, setPhotoPlace] = useState("");
 
-	const { userId, nickname } = useSelector((state) => state.auth);
-	const initState = useSelector((state) => state.auth);
+	useEffect(() => {
+		if (isFocused) {
+			setCurrentScreen("CreatePostsScreen");
+		}
+	}, [isFocused]);
 
 	// request accesses to camera, location and mediaLibrary
 	useEffect(() => {
@@ -79,29 +81,29 @@ export default function CreatePostsScreen() {
 		})();
 	}, [permissionCamera, permissionLocation, permissionMediaLibrary]);
 
-	const getCityAndCountry = async (latitude, longitude) => {
-		try {
-			const response = await fetch(
-				`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-			);
+	// const getCityAndCountry = async (latitude, longitude) => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+	// 		);
 
-			if (response.ok) {
-				const data = await response.json();
+	// 		if (response.ok) {
+	// 			const data = await response.json();
 
-				const city =
-					data.address.city || data.address.town || data.address.village;
-				const state = data.address.state;
-				const country = data.address.country;
+	// 			const city =
+	// 				data.address.city || data.address.town || data.address.village;
+	// 			const state = data.address.state;
+	// 			const country = data.address.country;
 
-				return { city, state, country };
-			} else {
-				throw new Error("Error fetching data");
-			}
-		} catch (error) {
-			console.error("Error:", error);
-			return null;
-		}
-	};
+	// 			return { city, state, country };
+	// 		} else {
+	// 			throw new Error("Error fetching data");
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error:", error);
+	// 		return null;
+	// 	}
+	// };
 
 	const takePhoto = async () => {
 		try {
@@ -162,6 +164,7 @@ export default function CreatePostsScreen() {
 			likesCount: 0,
 			usersLikedPost: [],
 			manualPhotoPlace: photoPlace,
+			createDate: Date.now(),
 		});
 	};
 

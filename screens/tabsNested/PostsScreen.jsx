@@ -14,22 +14,24 @@ import { MapPinBtn } from "../../components/btns/MapPinBtn";
 import { styles } from "./PostsScreenStyles";
 import { addLike } from "../../utils/addLike";
 import { LikeBtn } from "../../components/btns/LikeBtn";
+import { isUserLikedPost } from "../../utils/isUserLikedPost";
+import { compareDates } from "../../utils/compareDates";
+import { useNavScreen } from "../../utils/navContext";
 
 export default function PostsScreen() {
+	const navigation = useNavigation();
+	const isFocused = useIsFocused();
+
 	const state = useSelector((state) => state.auth);
 	const currentUser = useSelector((store) => store.auth.userId);
-
-	const navigation = useNavigation();
+	const { setCurrentScreen } = useNavScreen();
 	const [allPosts, setAllPosts] = useState([]);
 
-	const { setCurrentScreen } = useButtonState();
-
-	const isFocused = useIsFocused();
 	useEffect(() => {
 		if (isFocused) {
 			setCurrentScreen("PostsScreen");
 		}
-	}, [isFocused, setCurrentScreen]);
+	}, [isFocused]);
 
 	useEffect(() => {
 		getAllUsersPosts();
@@ -66,9 +68,14 @@ export default function PostsScreen() {
 			</View>
 
 			<FlatList
-				data={allPosts}
+				data={allPosts?.sort(compareDates)}
 				keyExtractor={(item, indx) => item.id}
 				renderItem={({ item }) => {
+					const isUserLikedCurrentPost = isUserLikedPost(
+						item.data.usersLikedPost,
+						currentUser
+					);
+
 					return (
 						<View style={styles.imgContainer}>
 							<Image
@@ -115,7 +122,10 @@ export default function PostsScreen() {
 											)
 										}>
 										<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
-											<LikeBtn commentsQty={item.data.likesCount} />
+											<LikeBtn
+												likesQty={item.data.likesCount}
+												isUserLikedCurrentPost={isUserLikedCurrentPost}
+											/>
 											<Text
 												style={[
 													styles.btnText,

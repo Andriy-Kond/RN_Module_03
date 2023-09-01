@@ -13,21 +13,16 @@ import CreatePostsScreen from "../screens/tabs/CreatePostsScreen";
 import ProfileScreen from "../screens/tabs/ProfileScreen";
 
 // components
-import { useButtonState } from "./tabBtnsContext";
 import { BtnGoBack } from "../components/btns/BtnGoBack";
-import {
-	useNavigation,
-	useNavigationState,
-	useRoute,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { TabBtnHome } from "../components/btns/TabBtnHome";
 import { TabBtnCreatePost } from "../components/btns/TabBtnCreatePost";
 import { TabBtnProfile } from "../components/btns/TabBtnProfile";
 import { TabBtnProfileOnProfileScreen } from "../components/btns/TabBtnProfileOnProfileScreen";
 import { TabBtnCreatePostOnProfileScreen } from "../components/btns/TabBtnCreatePostOnProfileScreen";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useNavScreen } from "./navContext";
+import { useButtonState } from "./tabBtnsContext";
 
 const AuthStack = createStackNavigator();
 
@@ -54,21 +49,14 @@ function AuthNavigation() {
 
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
-	const { isTabButtonsEnabled, previousScreen, activeScreen } =
-		useButtonState();
+	const { isTabButtonsEnabled } = useButtonState();
+	const { activeScreen } = useNavScreen();
 
 	const navigation = useNavigation();
-	// const navigationState = useNavigationState((state) => state);
-	// const activeScreenIndex = navigationState?.index;
-	// console.log("TabsNavigation >> activeScreenIndex:", activeScreenIndex === 1);
 
 	const handleHomePress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
 	};
-
-	// const isActiveTabNavigation = useSelector(
-	// 	(state) => state.auth.tabNavigation
-	// );
 
 	return (
 		<MainStack.Navigator
@@ -130,7 +118,6 @@ function TabsNavigation() {
 								)}
 							</>
 						);
-						// <TabBtnCreatePost focused={focused} size={size} color={color} />;
 					},
 				}}
 				// unmountOnBlur={true} // uninstall screen in DOM when focus is outside (set settings of screen in default)
@@ -148,7 +135,7 @@ function TabsNavigation() {
 				name="ProfileScreen"
 				component={ProfileScreen}
 				options={{
-					title: "Профіль",
+					// title: "Профіль",
 					headerTitleAlign: "center",
 					headerShown: false,
 

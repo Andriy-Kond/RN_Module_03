@@ -27,7 +27,7 @@ export default function App() {
 		<Provider store={store}>
 			{/* <KeyboardStateProvider> */}
 			{/* <ButtonStateProvider> */}
-			<Main></Main>
+			<Main />
 			{/* </ButtonStateProvider> */}
 			{/* </KeyboardStateProvider> */}
 		</Provider>

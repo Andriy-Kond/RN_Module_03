@@ -1,54 +1,18 @@
 import { createStackNavigator } from "@react-navigation/stack";
-// import { useIsFocused, useRoute } from "@react-navigation/native";
-// import { useEffect } from "react";
-import { StyleSheet } from "react-native";
 
 // screens
 import PostsScreen from "../tabsNested/PostsScreen";
 import MapScreen from "../tabsNested/MapScreen";
 import CommentsScreen from "../tabsNested/CommentsScreen";
 
+// components
 import { BtnGoBack } from "../../components/btns/BtnGoBack";
 import { BtnLogout } from "../../components/btns/BtnLogout";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { useButtonState } from "../../utils/tabBtnsContext";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import { authSlice } from "../../redux/auth/authReducer";
+import { StyleSheet } from "react-native";
 
 const NestedStack = createStackNavigator();
-
 export default function Home() {
-	// const route = useRoute();
-
-	const isActiveTabNavigation = useSelector(
-		(state) => state.auth.tabNavigation
-	);
-
-	const { setCurrentScreen } = useButtonState();
-	const isFocused = useIsFocused();
-
-	const navigation = useNavigation();
-
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		// navigation.setParams({ activeScreen: "Home" });
-	// 		setCurrentScreen("Home");
-	// 	}
-	// }, [isFocused, setCurrentScreen]);
-
-	// isFocused && setCurrentScreen("Home");
-
-	const { updateTabNavigation } = authSlice.actions;
-	const dispatch = useDispatch();
-
-	// useEffect(() => {
-	// 	if (isFocused) {
-	// 		dispatch(updateTabNavigation(true));
-	// 	}
-	// }, [isFocused]);
-
 	return (
 		<NestedStack.Navigator
 			initialRouteName="PostsScreen"

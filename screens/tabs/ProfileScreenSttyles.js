@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
 
 	imgContainer: {
 		marginBottom: 30,
-		width: "100%",
+		// width: "100%",
 		// paddingHorizontal: 16,
 	},
 
@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
 	},
 
 	buttonsWrapper: {
-		// width: "100%",
+		flex: 1,
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
@@ -125,8 +125,20 @@ export const styles = StyleSheet.create({
 	btnWrapper: {
 		flexDirection: "row",
 	},
-	btnMarginLeft: {
+	btnMargin: {
 		marginLeft: 24,
+	},
+
+	mapWrapper: {
+		// borderWidth: 1,
+		marginLeft: 24,
+		flex: 1, //! hold this item in father container (in buttonsWrapper)
+	},
+
+	mapLinkWrapper: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "flex-end", //! work only if children in <View>
 	},
 
 	btnText: {
@@ -137,6 +149,7 @@ export const styles = StyleSheet.create({
 	},
 
 	underline: {
+		flex: 1, //! hold this item in father container (in mapWrapper)
 		textDecorationLine: "underline",
 	},
 });

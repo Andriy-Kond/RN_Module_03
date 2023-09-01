@@ -9,7 +9,7 @@ export function TabBtnProfileOnProfileScreen({ color, size }) {
 		navigation.navigate("ProfileScreen");
 	};
 
-	const { isTabButtonsEnabled, activeScreen } = useButtonState();
+	const { isTabButtonsEnabled } = useButtonState();
 
 	return (
 		<TouchableOpacity

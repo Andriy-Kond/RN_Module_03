@@ -16,6 +16,9 @@ import { ModalWindow } from "../../components/ModalWindow";
 import bgImage from "../../assets/img/bg_photo.jpg";
 
 import { styles } from "./LoginScreenStyles";
+import { useIsFocused } from "@react-navigation/native";
+import { useButtonState } from "../../utils/tabBtnsContext";
+import { useEffect } from "react";
 
 export default function LoginScreen() {
 	const initState = useSelector((state) => state.auth);
