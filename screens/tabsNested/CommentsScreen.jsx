@@ -22,28 +22,22 @@ import {
 } from "firebase/firestore";
 
 import { useKeyboardState } from "../../utils/keyboardContext";
-import { useDispatch, useSelector } from "react-redux";
-// import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+
 import { styles } from "./CommentsScreenStyles";
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { AddCommentBtn } from "../../components/btns/AddCommentBtn";
-import { useButtonState } from "../../utils/tabBtnsContext";
 
-import { authSlice } from "../../redux/auth/authReducer";
 import { compareDates } from "../../utils/compareDates";
 
-import { months } from "../../utils/months";
+// import { months } from "../../utils/months";
 import { useNavScreen } from "../../utils/navContext";
 
 export default function CommentsScreen() {
 	const route = useRoute();
 	const { postId, image } = route.params;
-	// const {
-	// 	params: { postId, imageTitle, image },
-	// } = useRoute();
-	const dispatch = useDispatch();
+
 	const state = useSelector((store) => store.auth);
-	const { updateField } = authSlice.actions;
 
 	const { hideKB } = useKeyboardState();
 	const { setCurrentScreen } = useNavScreen();
@@ -91,24 +85,24 @@ export default function CommentsScreen() {
 		});
 
 		await updateDoc(currentPostRef, {
-			postsCount: increment(1),
+			commentsCount: increment(1),
 		});
 	};
 
-	// const months = [
-	// 	"січня",
-	// 	"лютого",
-	// 	"березня",
-	// 	"квітня",
-	// 	"травня",
-	// 	"червня",
-	// 	"липня",
-	// 	"серпня",
-	// 	"вересня",
-	// 	"жовтня",
-	// 	"листопада",
-	// 	"грудня",
-	// ];
+	const months = [
+		"січня",
+		"лютого",
+		"березня",
+		"квітня",
+		"травня",
+		"червня",
+		"липня",
+		"серпня",
+		"вересня",
+		"жовтня",
+		"листопада",
+		"грудня",
+	];
 
 	return (
 		<TouchableWithoutFeedback onPress={hideKB}>
@@ -122,7 +116,7 @@ export default function CommentsScreen() {
 						data={comments?.sort(compareDates)}
 						keyExtractor={(item, indx) => item.id}
 						renderItem={({ item }) => {
-							const commentDate = new Date(item.data.commentDate);
+							const commentDate = new Date(item.data.createDate);
 							const day = commentDate.getDate();
 							const month = commentDate.getMonth();
 							const year = commentDate.getFullYear();

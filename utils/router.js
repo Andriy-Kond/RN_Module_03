@@ -55,9 +55,6 @@ function TabsNavigation() {
 
 	const handleHomePress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
-		console.log(
-			'handleHomePress >> navigation.navigate TO ("Home", { screen: "PostsScreen" })'
-		);
 	};
 
 	return (
@@ -78,8 +75,10 @@ function TabsNavigation() {
 					},
 					tabBarIcon: ({ focused, color, size }) => (
 						<TabBtnHome
+							focused={focused}
+							color={color}
+							size={size}
 							isDisabled={activeScreen === "PostsScreen"}
-							// focused={focused} color={color} size={size}
 						/>
 					),
 				}}
@@ -108,13 +107,9 @@ function TabsNavigation() {
 						return (
 							<>
 								{activeScreen !== "ProfileScreen" ? (
-									<TabBtnCreatePost
-									// focused={focused} size={size} color={color}
-									/>
+									<TabBtnCreatePost />
 								) : (
-									<TabBtnProfileOnProfileScreen
-									// focused={focused} size={size} color={color}
-									/>
+									<TabBtnProfileOnProfileScreen />
 								)}
 							</>
 						);
@@ -141,13 +136,9 @@ function TabsNavigation() {
 						return (
 							<>
 								{activeScreen !== "ProfileScreen" ? (
-									<TabBtnProfile
-									// focused={focused} size={size} color={color}
-									/>
+									<TabBtnProfile />
 								) : (
-									<TabBtnCreatePostOnProfileScreen
-									// focused={focused} size={size} color={color}
-									/>
+									<TabBtnCreatePostOnProfileScreen />
 								)}
 							</>
 						);

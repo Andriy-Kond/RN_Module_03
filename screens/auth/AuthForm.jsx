@@ -36,7 +36,6 @@ export function AuthForm({
 		const result = await getImageFromLibrary();
 
 		if (!result.canceled) {
-			// await updateCurrentField("phoneAvatar", result.assets[0].uri);
 			await updateCurrentField("serverAvatar", result.assets[0].uri);
 		}
 	}
@@ -57,7 +56,6 @@ export function AuthForm({
 						style={styles.avatarImg}
 						source={
 							state?.serverAvatar ? { uri: state.serverAvatar } : regEmptyImg
-							// state?.phoneAvatar ? { uri: state.phoneAvatar } : regEmptyImg
 						}
 					/>
 					{/* ADD AVATAR BTN */}
@@ -72,7 +70,7 @@ export function AuthForm({
 				</View>
 			)}
 
-			{/* Form Title */}
+			{/* FORM TITLE */}
 			<Text
 				style={[
 					styles.formTitle,
@@ -93,7 +91,7 @@ export function AuthForm({
 							styles.input,
 							state?.currentFocusInput === "nickname" && styles.inputFocused,
 						]}
-						onSubmitEditing={hideKB} // press OK key on KB
+						onSubmitEditing={hideKB} // press "OK" on KB
 						onFocus={() => {
 							setIsKeyboardShown(true);
 							updateCurrentField("currentFocusInput", "nickname");
@@ -123,14 +121,13 @@ export function AuthForm({
 				/>
 
 				<View
-					// pointerEvents="box-none"
 					style={[
 						styles.input,
 						styles.passwordInputContainer,
 						state?.currentFocusInput === "password" && styles.inputFocused,
 					]}>
 					<TextInput
-						// value={state?.password}
+						value={state?.password}
 						placeholder={"Пароль"}
 						placeholderTextColor={"#BDBDBD"}
 						style={[styles.passwordInput]}

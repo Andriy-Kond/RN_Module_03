@@ -3,23 +3,14 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { authSingOutUser } from "../../redux/auth/authOperations";
 
-import { useNavScreen } from "../../utils/navContext";
-import { authSlice } from "../../redux/auth/authReducer";
-
 export function BtnLogout({ buttonStyle }) {
-	// const { updateField } = authSlice.actions;
 	const dispatch = useDispatch();
 
-	// const { setLogoutScreen } = useNavScreen();
-
 	const handleLogout = () => {
-		// setLogoutScreen();
-		// dispatch(updateField({ startSession: false }));
 		dispatch(authSingOutUser());
 	};
 
 	return (
-		// Button for logout
 		<TouchableOpacity
 			onPress={handleLogout}
 			style={[styles.button, buttonStyle]}>
@@ -53,11 +44,5 @@ export function BtnLogout({ buttonStyle }) {
 }
 
 const styles = StyleSheet.create({
-	button: {
-		// marginLeft: 16,
-		// backgroundColor: "#FF6C00",
-		// paddingVertical: 16,
-		// paddingHorizontal: 32,
-		// borderRadius: 100,
-	},
+	button: {},
 });

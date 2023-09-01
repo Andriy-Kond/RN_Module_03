@@ -1,11 +1,10 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { dbFirestore } from "../../firebase/config";
-import { useButtonState } from "../../utils/tabBtnsContext";
 
 import regEmptyImg from "../../assets/img/reg_rectangle_grey.png";
 import { CommentBtn } from "../../components/btns/CommentBtn";
@@ -18,13 +17,9 @@ import { isUserLikedPost } from "../../utils/isUserLikedPost";
 import { compareDates } from "../../utils/compareDates";
 import { useNavScreen } from "../../utils/navContext";
 
-import { authSlice } from "../../redux/auth/authReducer";
-
 export default function PostsScreen() {
-	const { updateField } = authSlice.actions;
 	const navigation = useNavigation();
 	const isFocused = useIsFocused();
-	const dispatch = useDispatch();
 
 	const state = useSelector((state) => state.auth);
 	const currentUser = useSelector((store) => store.auth.userId);
@@ -39,7 +34,6 @@ export default function PostsScreen() {
 
 	useEffect(() => {
 		getAllUsersPosts();
-		// dispatch(updateField({ startSession: true }));
 	}, []);
 
 	const getAllUsersPosts = async () => {
@@ -97,22 +91,21 @@ export default function PostsScreen() {
 												imageTitle: item.data.imageTitle,
 												postId: item.id,
 												image: item.data.photo,
-												// originScreen: "PostsScreen",
 											})
 										}>
 										<View style={styles.btnWrapper}>
-											<CommentBtn commentsQty={item.data.postsCount} />
+											<CommentBtn commentsQty={item.data.commentsCount} />
 											<Text
 												style={[
 													styles.btnText,
 													{
 														color:
-															item.data.postsCount === 0
+															item.data.commentsCount === 0
 																? "#BDBDBD"
 																: "#212121",
 													},
 												]}>
-												{`${item.data.postsCount}`}
+												{`${item.data.commentsCount}`}
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -151,7 +144,6 @@ export default function PostsScreen() {
 									onPress={() =>
 										navigation.navigate("MapScreen", {
 											location: item.data.location,
-											// originScreen: "PostsScreen",
 										})
 									}>
 									<View style={[styles.btnWrapper, styles.btnMarginLeft]}>

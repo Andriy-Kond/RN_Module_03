@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import Svg, { Circle, ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 
 export const CreatePhotoBtn = ({ permissionCamera, buttonStyle }) => {
@@ -56,5 +56,3 @@ export const CreatePhotoBtn = ({ permissionCamera, buttonStyle }) => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({});

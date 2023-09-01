@@ -1,4 +1,4 @@
-// it is operations for actions from authReducer
+// operations for actions from authReducer
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -18,7 +18,6 @@ const {
 	authSingOut,
 	authSignError,
 	updateField,
-	toggleField,
 } = authSlice.actions;
 
 export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
@@ -48,34 +47,19 @@ export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 				await updateProfile(userCredential.user, {
 					displayName: nickname,
 					photoURL: serverUrlAvatar,
-					// photoURL: avatar,
 				});
 			}
 
 			const userUpdateProfile = {
-				// 	userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
-				// 	serverAvatar: userCredential.user.photoURL,
 			};
 			await dispatch(updateUserProfile(userUpdateProfile));
 		} catch (error) {
-			console.error(
-				"createUserWithEmailAndPassword >> error.code:",
-				error.code
-			);
 			const errorMessage = switchError(error.code);
 			await dispatch(authSignError(errorMessage));
 		}
 	};
 };
-
-// export const updateCurrentField = (field, value) => {
-// 	try {
-// 		dispatch(updateField({ [field]: value }));
-// 	} catch (error) {
-// 		console.log("updateCurrentField >> error:", error);
-// 	}
-// };
 
 export const authSingInUser =
 	({ email, password }) =>
@@ -87,21 +71,14 @@ export const authSingInUser =
 				password
 			);
 
-			console.log(
-				"ОТРИМАВ authSingInUser >>> userCredential.user:",
-				userCredential.user
-			);
-
 			const newProfileFields = {
 				userId: userCredential.user.uid,
 				nickname: userCredential.user.displayName,
 				serverAvatar: userCredential.user.photoURL,
 			};
 
-			console.log("  ЗАПУСКАЮ dispatch(updateUserProfile(newProfileFields)):");
 			dispatch(updateUserProfile(newProfileFields));
 		} catch (error) {
-			console.error("signInWithEmailAndPassword >> error.code:", error.code);
 			const errorMessage = switchError(error.code);
 			await dispatch(authSignError(errorMessage));
 		}
@@ -111,7 +88,6 @@ export const authSingInUser =
 export const authStateChangeUser = () => async (dispatch, getState) => {
 	try {
 		onAuthStateChanged(auth, (user) => {
-			console.log("ВИКОНУЮ onAuthStateChanged -- ЗАПИТ НА СЕРВЕР");
 			if (user) {
 				// Update Redux state
 				const userUpdateProfile = {
@@ -119,7 +95,6 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 					nickname: user.displayName,
 					serverAvatar: user.photoURL,
 					email: user.email,
-					// phoneAvatar: user.photoURL,
 				};
 				dispatch(updateUserProfile(userUpdateProfile));
 
@@ -127,16 +102,10 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
 				// Set routing in Main.jsx ->
 				// Set isAuth in router.js ->
 				// "true" will show <TabsNavigation />
-
-				console.log(
-					" ЗАПУСКАЮ В authStateChangeUser -->>> dispatch(updateStateChange({ stateChange: true }));"
-				);
 				dispatch(updateStateChange({ stateChange: true }));
 			}
 		});
 	} catch (error) {
-		console.error("onAuthStateChanged >> error.code:", error.code);
-
 		const errorMessage = switchError(error.code);
 		await dispatch(authSignError(errorMessage));
 	}
@@ -147,8 +116,6 @@ export const authSingOutUser = () => async (dispatch, getState) => {
 		await dispatch(authSingOut()); // clear redux
 		await signOut(auth); // exit on firebase
 	} catch (error) {
-		console.error("signOut >> error.code:", error.code);
-
 		const errorMessage = switchError(error.code);
 		await dispatch(authSignError(errorMessage));
 	}

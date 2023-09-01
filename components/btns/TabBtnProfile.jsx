@@ -8,7 +8,6 @@ export function TabBtnProfile({ focused, color, size }) {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
 		navigation.navigate("ProfileScreen");
-		console.log('TabBtnProfile >> navigation.navigate TO ("ProfileScreen")');
 	};
 
 	const { isTabButtonsEnabled } = useButtonState();

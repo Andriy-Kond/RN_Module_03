@@ -160,7 +160,7 @@ export default function CreatePostsScreen() {
 			location: capturedLocation?.coords,
 			userId,
 			nickname,
-			postsCount: 0,
+			commentsCount: 0,
 			likesCount: 0,
 			usersLikedPost: [],
 			manualPhotoPlace: photoPlace,
@@ -176,7 +176,6 @@ export default function CreatePostsScreen() {
 			setPhotoName("");
 			await uploadPostToServer();
 			setCapturedPhoto(null);
-			// navigation.navigate("PostsScreen");
 			navigation.navigate("Home", { screen: "PostsScreen" });
 			await toggleButtonsEnabled(true); // unlock tab-btns
 			setIsRestBtnsSendEnabled(true); // unlock other btns on this screen

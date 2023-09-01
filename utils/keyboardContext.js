@@ -10,7 +10,7 @@ export const useKeyboardState = () => {
 export const KeyboardStateProvider = ({ children }) => {
 	const [isKeyboardShown, setIsKeyboardShown] = useState(false);
 
-	// keyboard listeners for press btn "arrowDown" in standard bottom nav-panel
+	// KB listeners in useEffect() needs for press btn "arrowDown" in standard Phone's bottom nav-panel
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener(
 			"keyboardDidShow",

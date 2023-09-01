@@ -3,12 +3,9 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 import { useButtonState } from "../../utils/tabBtnsContext";
 
-export function TabBtnProfileOnProfileScreen({ color, size }) {
+export function TabBtnProfileOnProfileScreen() {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
-		console.log(
-			'TabBtnProfileOnProfileScreen >> navigation.navigate TO ("ProfileScreen")'
-		);
 		navigation.navigate("ProfileScreen");
 	};
 

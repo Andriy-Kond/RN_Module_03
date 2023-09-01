@@ -15,16 +15,11 @@ const Main = () => {
 	const dispatch = useDispatch();
 
 	const authState = useSelector((state) => state.auth);
-	console.log("Main >> authState:", authState);
 
 	const { stateChange } = useSelector((state) => state.auth);
 
 	useEffect(() => {
-		console.log(
-			" ЗАПУСКАЮ ВПЕРШЕ І В ОСТАННЄ: dispatch(authStateChangeUser());"
-		);
 		dispatch(authStateChangeUser());
-		console.log(" ЗАКІНЧИВ ВИКОНАННЯ: dispatch(authStateChangeUser());");
 	}, []);
 
 	const routing = useMyRoutes(stateChange);

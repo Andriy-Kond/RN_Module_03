@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// justifyContent: "flex-end",
 		paddingHorizontal: 16,
 		paddingBottom: 16,
 		paddingTop: 32,
@@ -19,20 +18,16 @@ export const styles = StyleSheet.create({
 	commentsContainer: {
 		flex: 1,
 		paddingTop: 32,
-		// marginVertical: 32,
 	},
 
 	currentCommentContainer: {
-		// flex: 1,
 		marginBottom: 24,
-		// flexDirection: "row",
 	},
 
 	avatarOfComment: {
 		width: 28,
 		height: 28,
 		borderRadius: 50,
-		// marginRight: 16, //* or marginLeft: 16,
 	},
 
 	currentCommentWrapper: {
@@ -56,7 +51,6 @@ export const styles = StyleSheet.create({
 		color: "#BDBDBD",
 		fontFamily: "RobotoNormal400",
 		fontSize: 10,
-		// alignSelf: "flex-end", //* or alignSelf: "flex-start"
 	},
 
 	// Comment Input

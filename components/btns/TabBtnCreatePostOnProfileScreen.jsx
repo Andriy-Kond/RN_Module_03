@@ -2,13 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-export function TabBtnCreatePostOnProfileScreen({ focused, color, size }) {
+export function TabBtnCreatePostOnProfileScreen() {
 	const navigation = useNavigation();
 	const handleTabBtnPress = () => {
 		navigation.navigate("CreatePostsScreen");
-		console.log(
-			'handleTabBtnPress >> navigation.navigate TO ("CreatePostsScreen")'
-		);
 	};
 
 	return (

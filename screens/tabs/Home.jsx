@@ -9,7 +9,7 @@ import CommentsScreen from "../tabsNested/CommentsScreen";
 import { BtnGoBack } from "../../components/btns/BtnGoBack";
 import { BtnLogout } from "../../components/btns/BtnLogout";
 
-import { StyleSheet } from "react-native";
+import { styles } from "./HomeStyles";
 
 const NestedStack = createStackNavigator();
 export default function Home() {
@@ -60,25 +60,3 @@ export default function Home() {
 		</NestedStack.Navigator>
 	);
 }
-
-export const styles = StyleSheet.create({
-	container: {
-		paddingHorizontal: 16,
-	},
-
-	headerStyle: {
-		borderBottomWidth: 0.5,
-		borderBottomColor: "rgba(0, 0, 0, 0.3)",
-		height: 88,
-	},
-
-	headerTitleStyle: {
-		alignItems: "center",
-		color: "#212121",
-
-		fontFamily: "RobotoMedium500",
-		fontSize: 17,
-		lineHeight: 22,
-		letterSpacing: -0.408,
-	},
-});

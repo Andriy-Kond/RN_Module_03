@@ -1,4 +1,4 @@
-// Модальне вікно з повідомленням
+// Modal windows for showing messages
 import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 
@@ -12,6 +12,7 @@ const { updateField } = authSlice.actions;
 export function ModalWindow() {
 	const modalMessage = useSelector((state) => state.auth.authErrorMessage);
 	const dispatch = useDispatch();
+
 	const hideMOdalMessagePopup = () => {
 		dispatch(updateField({ authErrorMessage: "" }));
 	};
@@ -22,6 +23,7 @@ export function ModalWindow() {
 			onBackdropPress={hideMOdalMessagePopup}>
 			<View style={styles.modalContent}>
 				<Text style={styles.modalText}>{modalMessage}</Text>
+
 				<TouchableOpacity
 					onPress={hideMOdalMessagePopup}
 					style={styles.modalButton}>
@@ -33,7 +35,6 @@ export function ModalWindow() {
 }
 
 const styles = StyleSheet.create({
-	// Modal styles
 	modalContent: {
 		backgroundColor: "white",
 		padding: 20,

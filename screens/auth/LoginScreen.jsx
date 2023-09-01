@@ -32,12 +32,12 @@ export default function LoginScreen() {
 
 			// Call login operation
 			dispatch(authSingInUser(initState));
-			console.log("     ВИКОНАВ >> dispatch(authSingInUser(initState));:");
 		} catch (error) {
 			console.error("submitForm >>> error:", error);
 		}
 	};
 
+	// Props for AuthForm:
 	const mainBtnText = "Увійти";
 	const secondBtnText = "Немає акаунту? Зареєструватися";
 	const loginScreen = true;

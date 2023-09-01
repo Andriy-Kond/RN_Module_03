@@ -17,22 +17,16 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		top: 0,
 		left: 0,
-		// right: 0,
-		// bottom: 0,
 		width: "100%",
 	},
 
 	formContainer: {
 		flex: 1,
-		// width: "100%",
 		paddingHorizontal: 16,
 
-		// alignItems: "center",
 		backgroundColor: "#fff",
 		borderTopLeftRadius: 25,
 		borderTopRightRadius: 25,
-
-		// justifyContent: "flex-end",
 	},
 
 	headerContainer: {
@@ -94,8 +88,6 @@ export const styles = StyleSheet.create({
 
 	imgContainer: {
 		marginBottom: 30,
-		// width: "100%",
-		// paddingHorizontal: 16,
 	},
 
 	currentImg: {
@@ -130,9 +122,8 @@ export const styles = StyleSheet.create({
 	},
 
 	mapWrapper: {
-		// borderWidth: 1,
 		marginLeft: 24,
-		flex: 1, //! hold this item in father container (in buttonsWrapper)
+		flex: 1, //! keep this item in father container (in buttonsWrapper) bounds
 	},
 
 	mapLinkWrapper: {
@@ -149,7 +140,7 @@ export const styles = StyleSheet.create({
 	},
 
 	underline: {
-		flex: 1, //! hold this item in father container (in mapWrapper)
+		flex: 1, //! keep this item in father container (in mapWrapper) bounds
 		textDecorationLine: "underline",
 	},
 });

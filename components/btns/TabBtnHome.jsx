@@ -10,14 +10,7 @@ export function TabBtnHome({ focused, color, size, isDisabled }) {
 
 	const handleTabBtnPress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });
-		console.log(
-			'TabBtnHome >> navigation.navigate TO ("Home", { screen: "PostsScreen" })'
-		);
 	};
-
-	const { activeScreen, previousScreen } = useNavScreen();
-	// console.log("TabBtnHome >> previousScreen:", previousScreen);
-	console.log("TabBtnHome >> activeScreen:", activeScreen);
 
 	return (
 		<TouchableOpacity

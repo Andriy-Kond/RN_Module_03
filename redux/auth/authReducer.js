@@ -1,12 +1,4 @@
-// slice об'єднує в собі actions та reducer
 import { createSlice } from "@reduxjs/toolkit";
-
-// експорт authSlice буде експортувати ред'юсери з reducers з іменем "auth", а його початковий стан буде ===	initialState
-
-// Extract the action creators object and the reducer
-// const { actions, reducer } = postsSlice
-// Extract and export each action creator by name
-// export const { createPost, updatePost, deletePost } = actions
 
 const initState = {
 	userId: null,
@@ -20,8 +12,6 @@ const initState = {
 	showPassword: false,
 
 	serverAvatar: null,
-
-	// startSession: false,
 };
 
 const actions = {
@@ -31,21 +21,6 @@ const actions = {
 			authErrorMessage: action.payload,
 		};
 	},
-
-	// updateTabNavigation: (state, action) => {
-	// 	return {
-	// 		...state,
-	// 		tabNavigation: action.payload,
-	// 	};
-	// },
-
-	// updateField: (state, action) => {
-	// 	const { field, value } = action.payload;
-	// 	return {
-	// 		...state,
-	// 		[field]: value,
-	// 	};
-	// },
 
 	updateField: (state, action) => {
 		return {
@@ -60,12 +35,9 @@ const actions = {
 			...state,
 			[field]: !state[field],
 		};
-		// state[field] = !state[field];
 	},
 
 	updateUserProfile: (state, action) => {
-		console.log("   У СЕРЕДИНІ actions.updateUserProfile");
-		console.log("action.payload ЗАРАЗ:", action.payload);
 		return {
 			...state,
 			...action.payload,
@@ -73,7 +45,6 @@ const actions = {
 	},
 
 	updateStateChange: (state, action) => {
-		console.log("ВСТАНОВЛЮЮ stateChange  У:", action.payload.stateChange);
 		return {
 			...state,
 			stateChange: action.payload.stateChange,
@@ -83,7 +54,6 @@ const actions = {
 	authSingOut: (state, action) => initState,
 };
 
-// Створення slice
 export const authSlice = createSlice({
 	name: "auth",
 	initialState: initState,

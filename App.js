@@ -9,8 +9,6 @@ import RobotoBold700 from "./assets/fonts/Roboto-Bold-700.ttf";
 
 // components
 import Main from "./components/Main";
-// import { ButtonStateProvider } from "./utils/tabBtnsContext";
-// import { KeyboardStateProvider } from "./utils/keyboardContext";
 
 export default function App() {
 	const [fontsLoaded] = useFonts({
@@ -25,11 +23,7 @@ export default function App() {
 
 	return (
 		<Provider store={store}>
-			{/* <KeyboardStateProvider> */}
-			{/* <ButtonStateProvider> */}
 			<Main />
-			{/* </ButtonStateProvider> */}
-			{/* </KeyboardStateProvider> */}
 		</Provider>
 	);
 }

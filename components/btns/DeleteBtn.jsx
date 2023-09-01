@@ -68,10 +68,4 @@ export function DeleteBtn({ active, buttonStyle }) {
 
 const styles = StyleSheet.create({
 	button: {},
-	buttonText: {
-		// color: "#1B4371",
-		// textAlign: "center",
-		// fontFamily: "RobotoNormal400",
-		// fontSize: 16,
-	},
 });

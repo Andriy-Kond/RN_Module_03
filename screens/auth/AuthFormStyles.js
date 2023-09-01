@@ -4,7 +4,6 @@ const regImgHeight = 120;
 const regAddImgBtnHeight = 25;
 
 export const styles = StyleSheet.create({
-	// form styles
 	form: {
 		width: "100%",
 		paddingLeft: 16,
@@ -68,7 +67,7 @@ export const styles = StyleSheet.create({
 
 	input: {
 		height: 50,
-		width: "100%", // 343
+		width: "100%",
 		marginBottom: 16,
 		paddingHorizontal: 16,
 

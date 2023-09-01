@@ -29,14 +29,12 @@ export default function ProfileScreen() {
 
 	const [userPosts, setUserPosts] = useState([]);
 	const state = useSelector((state) => state.auth);
-	const { startSession } = useSelector((store) => store.auth);
 	const currentUser = useSelector((store) => store.auth.userId);
 	const { updateField } = authSlice.actions;
 
 	useEffect(() => {
 		if (isFocused) {
 			setCurrentScreen("ProfileScreen");
-			console.log('useEffect >> setCurrentScreen("ProfileScreen")');
 		}
 	}, [isFocused]);
 
@@ -69,11 +67,6 @@ export default function ProfileScreen() {
 			dispatch(updateField({ serverAvatar: result.assets[0].uri }));
 		}
 	}
-
-	// const isUserLikedPost = (usersLikedPost, currentUser) => {
-	// 	const isUser = usersLikedPost.includes(currentUser);
-	// 	return isUser;
-	// };
 
 	return (
 		<View style={styles.container}>
@@ -131,18 +124,18 @@ export default function ProfileScreen() {
 												})
 											}>
 											<View style={styles.btnWrapper}>
-												<CommentBtn commentsQty={item.data.postsCount} />
+												<CommentBtn commentsQty={item.data.commentsCount} />
 												<Text
 													style={[
 														styles.btnText,
 														{
 															color:
-																item.data.postsCount === 0
+																item.data.commentsCount === 0
 																	? "#BDBDBD"
 																	: "#212121",
 														},
 													]}>
-													{`${item.data.postsCount}`}
+													{`${item.data.commentsCount}`}
 												</Text>
 											</View>
 										</TouchableOpacity>

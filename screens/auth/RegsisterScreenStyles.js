@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
 
-const regImgHeight = 120;
-
 export const styles = StyleSheet.create({
 	registrationContainer: {
 		flexGrow: 1,
@@ -16,8 +14,6 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		top: 0,
 		left: 0,
-		// right: 0,
-		// bottom: 0,
 		width: "100%",
 	},
 
