@@ -1,3 +1,5 @@
+// todo: додати кнопки наближення і віддалення на мапі
+
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StatusBar } from "expo-status-bar";

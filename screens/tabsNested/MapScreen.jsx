@@ -9,6 +9,7 @@ import { styles } from "./MapScreenStyles";
 
 export default function MapScreen() {
 	const route = useRoute();
+	console.log("MapScreen >> route.params:", route.params);
 	const {
 		location: { latitude, longitude },
 	} = route.params;

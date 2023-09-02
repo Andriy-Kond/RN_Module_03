@@ -1,6 +1,6 @@
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	Image,
 	Text,
@@ -28,10 +28,14 @@ import { MapPinBtn } from "../../components/btns/MapPinBtn";
 import { DeleteBtn } from "../../components/btns/DeleteBtn";
 import { getCityAndCountry } from "../../utils/getCityAndCountry";
 import { useNavScreen } from "../../utils/navContext";
+import { authSlice } from "../../redux/auth/authReducer";
 
 export default function CreatePostsScreen() {
 	// navigation
 	const navigation = useNavigation();
+
+	const dispatch = useDispatch();
+	const { authSignError } = authSlice.actions;
 
 	const isFocused = useIsFocused();
 	const { isKeyboardShown, hideKB } = useKeyboardState();
@@ -57,6 +61,7 @@ export default function CreatePostsScreen() {
 	// captured photo, location
 	const [capturedPhoto, setCapturedPhoto] = useState(null); // photo link
 	const [capturedLocation, setCapturedLocation] = useState(null);
+	console.log("CreatePostsScreen >> capturedLocation:", capturedLocation);
 
 	const [photoName, setPhotoName] = useState("");
 	const [photoPlace, setPhotoPlace] = useState("");
@@ -81,70 +86,82 @@ export default function CreatePostsScreen() {
 		})();
 	}, [permissionCamera, permissionLocation, permissionMediaLibrary]);
 
-	// const getCityAndCountry = async (latitude, longitude) => {
-	// 	try {
-	// 		const response = await fetch(
-	// 			`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-	// 		);
-
-	// 		if (response.ok) {
-	// 			const data = await response.json();
-
-	// 			const city =
-	// 				data.address.city || data.address.town || data.address.village;
-	// 			const state = data.address.state;
-	// 			const country = data.address.country;
-
-	// 			return { city, state, country };
-	// 		} else {
-	// 			throw new Error("Error fetching data");
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error:", error);
-	// 		return null;
-	// 	}
-	// };
-
 	const takePhoto = async () => {
+		if (!permissionLocation) {
+			dispatch(
+				authSignError(
+					`Доступ до геоданих не наданий. Але ви все ще можете ввести його у відповідному полі`
+				)
+			);
+		} else {
+			//^ Phone time to time have problem to get location: after await function code stops.
+			const timeoutDuration = 3000; // max time to wait for get result from await function
+			const locationPromise = Location.getCurrentPositionAsync();
+			const timeoutPromise = new Promise((resolve, reject) => {
+				setTimeout(() => {
+					reject(new Error("Час очікування відповіді вийшов."));
+				}, timeoutDuration);
+			});
+
+			try {
+				const newLocation = await Promise.race([
+					locationPromise,
+					timeoutPromise,
+				]);
+				const { latitude, longitude } = newLocation?.coords;
+				console.log("takePhoto >> longitude:", longitude);
+
+				const { city, state, country } = await getCityAndCountry(
+					latitude,
+					longitude
+				);
+
+				newLocation.coords.city = city;
+				newLocation.coords.state = state;
+				newLocation.coords.country = country;
+
+				setCapturedLocation(newLocation.coords);
+				console.log("takePhoto >> newLocation:", newLocation);
+
+				setPhotoPlace(`${city ? city : state}, ${country}`);
+			} catch (error) {
+				dispatch(
+					authSignError(
+						`${error.message}.\n Це вказує на проблеми отримання геоданих від телефону, хоча дозвіл на них був наданий.
+								\nСпробуйте вийти на головний екран і повернутись на цей екран знову. Або перезапустіть додаток.`
+					)
+				);
+				setCapturedPhoto(null);
+				return;
+			}
+		}
+
 		try {
-			// if (permissionCamera && cameraRef.current) {
-			const photo = await cameraRef.current.takePictureAsync();
+			if (permissionCamera && cameraRef.current) {
+				const photo = await cameraRef.current.takePictureAsync();
 
-			// Обробка фото
-			if (photo && photo.uri) {
-				setCapturedPhoto(photo.uri);
+				// Photo processing
+				if (photo && photo.uri) {
+					setCapturedPhoto(photo.uri);
 
-				if (permissionMediaLibrary) {
-					await MediaLibrary.createAssetAsync(photo.uri);
-				} else {
-					dispatch(
-						updateField({
-							authErrorMessage:
-								"Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку",
-						})
-					);
-				}
+					if (permissionMediaLibrary) {
+						console.log(
+							"takePhoto >> permissionMediaLibrary:",
+							permissionMediaLibrary
+						);
+						await MediaLibrary.createAssetAsync(photo.uri);
+					} else {
+						dispatch(
+							authSignError(
+								`Немає доступу до сховища телефону, тому не можу записати ваше фото в його пам'ять. Надайте доступ до сховища в налаштуваннях доступу цього застосунку`
+							)
+						);
+						return;
+					}
 
-				if (permissionLocation) {
-					const newLocation = await Location.getCurrentPositionAsync();
-					const { latitude, longitude } = newLocation?.coords;
-
-					const { city, state, country } = await getCityAndCountry(
-						latitude,
-						longitude
-					);
-
-					newLocation.coords.city = city;
-					newLocation.coords.state = state;
-					newLocation.coords.country = country;
-
-					setCapturedLocation(newLocation);
 					setIsBtnSendEnabled(true); // unlock SEND-btn
-
-					setPhotoPlace(`${city ? city : state}, ${country}`);
 				}
 			}
-			// }
 		} catch (error) {
 			console.error("Error taking photo:", error);
 		}
@@ -157,7 +174,7 @@ export default function CreatePostsScreen() {
 		await addDoc(collection(dbFirestore, "dcim"), {
 			photo,
 			imageTitle: photoName,
-			location: capturedLocation?.coords,
+			location: capturedLocation || null,
 			userId,
 			nickname,
 			commentsCount: 0,
@@ -276,9 +293,7 @@ export default function CreatePostsScreen() {
 						</TouchableOpacity>
 					</View>
 				)}
-				{initState.authErrorMessage && (
-					<ModalWindow modalMessage={authErrorMessage} />
-				)}
+				{initState.authErrorMessage && <ModalWindow />}
 			</View>
 		</TouchableWithoutFeedback>
 	);

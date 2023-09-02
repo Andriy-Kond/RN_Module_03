@@ -75,4 +75,8 @@ export const styles = StyleSheet.create({
 	underline: {
 		textDecorationLine: "underline",
 	},
+
+	disabled: {
+		color: "#BDBDBD",
+	},
 });

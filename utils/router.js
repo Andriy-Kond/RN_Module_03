@@ -50,8 +50,8 @@ function AuthNavigation() {
 const MainStack = createBottomTabNavigator();
 function TabsNavigation() {
 	const navigation = useNavigation();
-	const { isTabButtonsEnabled } = useButtonState();
 	const { activeScreen } = useNavScreen();
+	const { isTabButtonsEnabled } = useButtonState();
 
 	const handleHomePress = () => {
 		navigation.navigate("Home", { screen: "PostsScreen" });

@@ -143,4 +143,8 @@ export const styles = StyleSheet.create({
 		flex: 1, //! keep this item in father container (in mapWrapper) bounds
 		textDecorationLine: "underline",
 	},
+
+	disabled: {
+		color: "#BDBDBD",
+	},
 });

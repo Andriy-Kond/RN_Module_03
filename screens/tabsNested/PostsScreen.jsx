@@ -141,6 +141,7 @@ export default function PostsScreen() {
 								</View>
 
 								<TouchableOpacity
+									disabled={!item.data.location}
 									onPress={() =>
 										navigation.navigate("MapScreen", {
 											location: item.data.location,
@@ -148,14 +149,21 @@ export default function PostsScreen() {
 									}>
 									<View style={[styles.btnWrapper, styles.btnMarginLeft]}>
 										<MapPinBtn />
-										<Text style={[styles.btnText, styles.underline]}>
+										<Text
+											style={[
+												styles.btnText,
+												styles.underline,
+												!item.data.location && styles.disabled,
+											]}>
 											{item.data.manualPhotoPlace
 												? item.data.manualPhotoPlace
-												: `${
+												: item.data.location
+												? `${
 														item.data.location.city
 															? item.data.location.city
 															: item.data.location.state
-												  }, ${item.data.location.country}`}
+												  }, ${item.data.location.country}`
+												: "Не вказано"}
 										</Text>
 									</View>
 								</TouchableOpacity>

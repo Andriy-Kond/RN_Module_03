@@ -120,7 +120,6 @@ export default function ProfileScreen() {
 													imageTitle: item.data.imageTitle,
 													postId: item.id,
 													image: item.data.photo,
-													// originScreen: "ProfileScreen",
 												})
 											}>
 											<View style={styles.btnWrapper}>
@@ -172,10 +171,10 @@ export default function ProfileScreen() {
 
 									<View style={styles.mapWrapper}>
 										<TouchableOpacity
+											disabled={!item.data.location}
 											onPress={() =>
 												navigation.navigate("MapScreen", {
 													location: item.data.location,
-													// originScreen: "ProfileScreen",
 												})
 											}>
 											{/* Two <View> for push mapLinkWrapper in end of father (mapLinkWrapper -> justifyContent: "flex-end") */}
@@ -184,14 +183,21 @@ export default function ProfileScreen() {
 													<MapPinBtn />
 												</View>
 												<View>
-													<Text style={[styles.btnText, styles.underline]}>
+													<Text
+														style={[
+															styles.btnText,
+															styles.underline,
+															!item.data.location && styles.disabled,
+														]}>
 														{item.data.manualPhotoPlace
 															? item.data.manualPhotoPlace
-															: `${
+															: item.data.location
+															? `${
 																	item.data.location.city
 																		? item.data.location.city
 																		: item.data.location.state
-															  }, ${item.data.location.country}`}
+															  }, ${item.data.location.country}`
+															: "Не вказано"}
 													</Text>
 												</View>
 											</View>
