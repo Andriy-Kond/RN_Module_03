@@ -20,8 +20,9 @@ const {
 	updateField,
 } = authSlice.actions;
 
-export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
-	return async (dispatch, getState) => {
+export const authSingUpUser =
+	({ email, password, nickname, serverAvatar }) =>
+	async (dispatch, getState) => {
 		try {
 			// Create new user on the Firebase
 			const userCredential = await createUserWithEmailAndPassword(
@@ -59,7 +60,6 @@ export const authSingUpUser = ({ email, password, nickname, serverAvatar }) => {
 			await dispatch(authSignError(errorMessage));
 		}
 	};
-};
 
 export const authSingInUser =
 	({ email, password }) =>

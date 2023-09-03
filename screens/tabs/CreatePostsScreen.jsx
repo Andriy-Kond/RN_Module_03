@@ -61,7 +61,7 @@ export default function CreatePostsScreen() {
 	// captured photo, location
 	const [capturedPhoto, setCapturedPhoto] = useState(null); // photo link
 	const [capturedLocation, setCapturedLocation] = useState(null);
-	console.log("CreatePostsScreen >> capturedLocation:", capturedLocation);
+	// console.log("CreatePostsScreen >> capturedLocation:", capturedLocation);
 
 	const [photoName, setPhotoName] = useState("");
 	const [photoPlace, setPhotoPlace] = useState("");
@@ -109,7 +109,6 @@ export default function CreatePostsScreen() {
 					timeoutPromise,
 				]);
 				const { latitude, longitude } = newLocation?.coords;
-				console.log("takePhoto >> longitude:", longitude);
 
 				const { city, state, country } = await getCityAndCountry(
 					latitude,
@@ -120,17 +119,20 @@ export default function CreatePostsScreen() {
 				newLocation.coords.state = state;
 				newLocation.coords.country = country;
 
-				setCapturedLocation(newLocation.coords);
-				console.log("takePhoto >> newLocation:", newLocation);
+				setCapturedLocation(newLocation);
 
 				setPhotoPlace(`${city ? city : state}, ${country}`);
 			} catch (error) {
-				dispatch(
-					authSignError(
-						`${error.message}.\n Це вказує на проблеми отримання геоданих від телефону, хоча дозвіл на них був наданий.
-								\nСпробуйте вийти на головний екран і повернутись на цей екран знову. Або перезапустіть додаток.`
-					)
-				);
+				if (error.message === "Час очікування відповіді вийшов.") {
+					dispatch(
+						authSignError(
+							`${error.message}.\n Це вказує на проблеми отримання геоданих від телефону, хоча дозвіл на них був наданий.
+									\nСпробуйте вийти на головний екран і повернутись на цей екран знову. Або перезапустіть додаток.`
+						)
+					);
+				} else {
+					dispatch(authSignError(error.message));
+				}
 				setCapturedPhoto(null);
 				return;
 			}
@@ -145,10 +147,6 @@ export default function CreatePostsScreen() {
 					setCapturedPhoto(photo.uri);
 
 					if (permissionMediaLibrary) {
-						console.log(
-							"takePhoto >> permissionMediaLibrary:",
-							permissionMediaLibrary
-						);
 						await MediaLibrary.createAssetAsync(photo.uri);
 					} else {
 						dispatch(

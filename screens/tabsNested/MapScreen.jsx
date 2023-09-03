@@ -9,10 +9,15 @@ import { styles } from "./MapScreenStyles";
 
 export default function MapScreen() {
 	const route = useRoute();
-	console.log("MapScreen >> route.params:", route.params);
+
 	const {
-		location: { latitude, longitude },
+		location: {
+			coords: { latitude, longitude },
+		},
 	} = route.params;
+
+	// const latitude = 37.4220936;
+	// const longitude = -122.083922;
 
 	const { setCurrentScreen } = useNavScreen();
 	const isFocused = useIsFocused();
